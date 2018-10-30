@@ -1,0 +1,58 @@
+enum Role {
+  SUPERADMIN,
+  ADMIN,
+  STAFF,
+}
+
+type User {
+  id: ID! @unique
+  email: String! @unique
+  name: String
+  slackHandle: String
+  tasksCreated: [Task!]! @relation(name: "TaskCreatedByUser")
+  tasksAssignedTo: [Task!]! @relation(name: "TaskAssignedToUser")
+  role: Role!
+  password: String
+  resetToken: String @unique
+  resetTokenExpiry: Float
+  signupToken: String @unique
+  signupTokenExpiry: Float
+}
+
+type Task { 
+  id: ID! @unique
+  createdBy: User! @relation(name: "TaskCreatedByUser")
+  assignedTo: User @relation(name: "TaskAssignedToUser")
+  approved: Boolean! @default(value: "false")
+  title: String!
+  description: String!
+  assets: [Asset!]!
+  category: Category!
+  comments: [Comment!]!
+  dueDate: DateTime
+  dueWhenPossible: Boolean! @default(value: "false")
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Category {
+  id: ID! @unique
+  name: String!
+}
+
+type Comment {
+  id: ID! @unique
+  comment: String!
+  user: User
+  assets: [Asset!]!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Asset {
+  id: ID! @unique
+  createdBy: User!
+  assetUrl: String!
+  createdAt: DateTime!
+}
+
