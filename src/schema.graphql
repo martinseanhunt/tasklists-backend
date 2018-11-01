@@ -1,10 +1,18 @@
 type Query {
-  user(email: String!): User
+  userByToken(token: String!): User
+  me: User
+  users: [User]
 }
 
 type Mutation {
-  createUser(email: String!, name: String, slackHandle: String, role: Role!): User
-  signUp(token: String!, password: String!): User
+  createUser(
+    email: String! 
+    name: String
+    slackHandle: String
+    role: Role
+    avatar: String
+  ): User
+  signUp(token: String!, password: String!, avatar: String): User
   signIn(email: String!, password: String!): User
   signOut: StatusMessage
 }
@@ -14,12 +22,20 @@ type User {
   email: String!
   name: String
   slackHandle: String
+  role: Role
+  status: Status
 }
 
 enum Role {
   SUPERADMIN,
   ADMIN,
   STAFF,
+}
+
+enum Status {
+  JOINED, 
+  INVITED,
+  DELETED
 }
 
 type StatusMessage {

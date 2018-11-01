@@ -274,6 +274,8 @@ export interface ClientConstructor<T> {
 
 export type Role = "SUPERADMIN" | "ADMIN" | "STAFF";
 
+export type Status = "JOINED" | "INVITED" | "DELETED";
+
 export type TaskOrderByInput =
   | "id_ASC"
   | "id_DESC"
@@ -329,6 +331,8 @@ export type UserOrderByInput =
   | "email_DESC"
   | "name_ASC"
   | "name_DESC"
+  | "avatar_ASC"
+  | "avatar_DESC"
   | "slackHandle_ASC"
   | "slackHandle_DESC"
   | "role_ASC"
@@ -343,6 +347,8 @@ export type UserOrderByInput =
   | "signupToken_DESC"
   | "signupTokenExpiry_ASC"
   | "signupTokenExpiry_DESC"
+  | "status_ASC"
+  | "status_DESC"
   | "createdAt_ASC"
   | "createdAt_DESC"
   | "updatedAt_ASC"
@@ -482,6 +488,20 @@ export interface UserWhereInput {
   name_not_starts_with?: String;
   name_ends_with?: String;
   name_not_ends_with?: String;
+  avatar?: String;
+  avatar_not?: String;
+  avatar_in?: String[] | String;
+  avatar_not_in?: String[] | String;
+  avatar_lt?: String;
+  avatar_lte?: String;
+  avatar_gt?: String;
+  avatar_gte?: String;
+  avatar_contains?: String;
+  avatar_not_contains?: String;
+  avatar_starts_with?: String;
+  avatar_not_starts_with?: String;
+  avatar_ends_with?: String;
+  avatar_not_ends_with?: String;
   slackHandle?: String;
   slackHandle_not?: String;
   slackHandle_in?: String[] | String;
@@ -564,6 +584,10 @@ export interface UserWhereInput {
   signupTokenExpiry_lte?: Float;
   signupTokenExpiry_gt?: Float;
   signupTokenExpiry_gte?: Float;
+  status?: Status;
+  status_not?: Status;
+  status_in?: Status[] | Status;
+  status_not_in?: Status[] | Status;
   AND?: UserWhereInput[] | UserWhereInput;
   OR?: UserWhereInput[] | UserWhereInput;
   NOT?: UserWhereInput[] | UserWhereInput;
@@ -732,15 +756,17 @@ export interface UserCreateOneInput {
 export interface UserCreateInput {
   email: String;
   name?: String;
+  avatar?: String;
   slackHandle?: String;
   tasksCreated?: TaskCreateManyWithoutCreatedByInput;
   tasksAssignedTo?: TaskCreateManyWithoutAssignedToInput;
-  role: Role;
+  role?: Role;
   password?: String;
   resetToken?: String;
   resetTokenExpiry?: Float;
   signupToken?: String;
   signupTokenExpiry?: Float;
+  status?: Status;
 }
 
 export interface TaskCreateManyWithoutCreatedByInput {
@@ -768,14 +794,16 @@ export interface UserCreateOneWithoutTasksAssignedToInput {
 export interface UserCreateWithoutTasksAssignedToInput {
   email: String;
   name?: String;
+  avatar?: String;
   slackHandle?: String;
   tasksCreated?: TaskCreateManyWithoutCreatedByInput;
-  role: Role;
+  role?: Role;
   password?: String;
   resetToken?: String;
   resetTokenExpiry?: Float;
   signupToken?: String;
   signupTokenExpiry?: Float;
+  status?: Status;
 }
 
 export interface AssetCreateManyInput {
@@ -830,14 +858,16 @@ export interface UserCreateOneWithoutTasksCreatedInput {
 export interface UserCreateWithoutTasksCreatedInput {
   email: String;
   name?: String;
+  avatar?: String;
   slackHandle?: String;
   tasksAssignedTo?: TaskCreateManyWithoutAssignedToInput;
-  role: Role;
+  role?: Role;
   password?: String;
   resetToken?: String;
   resetTokenExpiry?: Float;
   signupToken?: String;
   signupTokenExpiry?: Float;
+  status?: Status;
 }
 
 export interface AssetUpdateInput {
@@ -855,6 +885,7 @@ export interface UserUpdateOneRequiredInput {
 export interface UserUpdateDataInput {
   email?: String;
   name?: String;
+  avatar?: String;
   slackHandle?: String;
   tasksCreated?: TaskUpdateManyWithoutCreatedByInput;
   tasksAssignedTo?: TaskUpdateManyWithoutAssignedToInput;
@@ -864,6 +895,7 @@ export interface UserUpdateDataInput {
   resetTokenExpiry?: Float;
   signupToken?: String;
   signupTokenExpiry?: Float;
+  status?: Status;
 }
 
 export interface TaskUpdateManyWithoutCreatedByInput {
@@ -908,6 +940,7 @@ export interface UserUpdateOneWithoutTasksAssignedToInput {
 export interface UserUpdateWithoutTasksAssignedToDataInput {
   email?: String;
   name?: String;
+  avatar?: String;
   slackHandle?: String;
   tasksCreated?: TaskUpdateManyWithoutCreatedByInput;
   role?: Role;
@@ -916,6 +949,7 @@ export interface UserUpdateWithoutTasksAssignedToDataInput {
   resetTokenExpiry?: Float;
   signupToken?: String;
   signupTokenExpiry?: Float;
+  status?: Status;
 }
 
 export interface UserUpsertWithoutTasksAssignedToInput {
@@ -1060,6 +1094,7 @@ export interface UserUpdateOneRequiredWithoutTasksCreatedInput {
 export interface UserUpdateWithoutTasksCreatedDataInput {
   email?: String;
   name?: String;
+  avatar?: String;
   slackHandle?: String;
   tasksAssignedTo?: TaskUpdateManyWithoutAssignedToInput;
   role?: Role;
@@ -1068,6 +1103,7 @@ export interface UserUpdateWithoutTasksCreatedDataInput {
   resetTokenExpiry?: Float;
   signupToken?: String;
   signupTokenExpiry?: Float;
+  status?: Status;
 }
 
 export interface UserUpsertWithoutTasksCreatedInput {
@@ -1120,6 +1156,7 @@ export interface TaskUpdateInput {
 export interface UserUpdateInput {
   email?: String;
   name?: String;
+  avatar?: String;
   slackHandle?: String;
   tasksCreated?: TaskUpdateManyWithoutCreatedByInput;
   tasksAssignedTo?: TaskUpdateManyWithoutAssignedToInput;
@@ -1129,6 +1166,7 @@ export interface UserUpdateInput {
   resetTokenExpiry?: Float;
   signupToken?: String;
   signupTokenExpiry?: Float;
+  status?: Status;
 }
 
 export interface AssetSubscriptionWhereInput {
@@ -1216,6 +1254,7 @@ export interface UserNode {
   id: ID_Output;
   email: String;
   name?: String;
+  avatar?: String;
   slackHandle?: String;
   role: Role;
   password?: String;
@@ -1223,12 +1262,14 @@ export interface UserNode {
   resetTokenExpiry?: Float;
   signupToken?: String;
   signupTokenExpiry?: Float;
+  status: Status;
 }
 
 export interface User extends Promise<UserNode>, Fragmentable {
   id: () => Promise<ID_Output>;
   email: () => Promise<String>;
   name: () => Promise<String>;
+  avatar: () => Promise<String>;
   slackHandle: () => Promise<String>;
   tasksCreated: <T = FragmentableArray<TaskNode>>(
     args?: {
@@ -1258,6 +1299,7 @@ export interface User extends Promise<UserNode>, Fragmentable {
   resetTokenExpiry: () => Promise<Float>;
   signupToken: () => Promise<String>;
   signupTokenExpiry: () => Promise<Float>;
+  status: () => Promise<Status>;
 }
 
 export interface UserSubscription
@@ -1266,6 +1308,7 @@ export interface UserSubscription
   id: () => Promise<AsyncIterator<ID_Output>>;
   email: () => Promise<AsyncIterator<String>>;
   name: () => Promise<AsyncIterator<String>>;
+  avatar: () => Promise<AsyncIterator<String>>;
   slackHandle: () => Promise<AsyncIterator<String>>;
   tasksCreated: <T = Promise<AsyncIterator<TaskSubscription>>>(
     args?: {
@@ -1295,6 +1338,7 @@ export interface UserSubscription
   resetTokenExpiry: () => Promise<AsyncIterator<Float>>;
   signupToken: () => Promise<AsyncIterator<String>>;
   signupTokenExpiry: () => Promise<AsyncIterator<Float>>;
+  status: () => Promise<AsyncIterator<Status>>;
 }
 
 export interface TaskNode {
@@ -1955,6 +1999,7 @@ export interface UserPreviousValuesNode {
   id: ID_Output;
   email: String;
   name?: String;
+  avatar?: String;
   slackHandle?: String;
   role: Role;
   password?: String;
@@ -1962,6 +2007,7 @@ export interface UserPreviousValuesNode {
   resetTokenExpiry?: Float;
   signupToken?: String;
   signupTokenExpiry?: Float;
+  status: Status;
 }
 
 export interface UserPreviousValues
@@ -1970,6 +2016,7 @@ export interface UserPreviousValues
   id: () => Promise<ID_Output>;
   email: () => Promise<String>;
   name: () => Promise<String>;
+  avatar: () => Promise<String>;
   slackHandle: () => Promise<String>;
   role: () => Promise<Role>;
   password: () => Promise<String>;
@@ -1977,6 +2024,7 @@ export interface UserPreviousValues
   resetTokenExpiry: () => Promise<Float>;
   signupToken: () => Promise<String>;
   signupTokenExpiry: () => Promise<Float>;
+  status: () => Promise<Status>;
 }
 
 export interface UserPreviousValuesSubscription
@@ -1985,6 +2033,7 @@ export interface UserPreviousValuesSubscription
   id: () => Promise<AsyncIterator<ID_Output>>;
   email: () => Promise<AsyncIterator<String>>;
   name: () => Promise<AsyncIterator<String>>;
+  avatar: () => Promise<AsyncIterator<String>>;
   slackHandle: () => Promise<AsyncIterator<String>>;
   role: () => Promise<AsyncIterator<Role>>;
   password: () => Promise<AsyncIterator<String>>;
@@ -1992,6 +2041,7 @@ export interface UserPreviousValuesSubscription
   resetTokenExpiry: () => Promise<AsyncIterator<Float>>;
   signupToken: () => Promise<AsyncIterator<String>>;
   signupTokenExpiry: () => Promise<AsyncIterator<Float>>;
+  status: () => Promise<AsyncIterator<Status>>;
 }
 
 /*

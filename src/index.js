@@ -39,6 +39,7 @@ server.express.use((req, res, next) => {
 
 server.start({
   cors: {
+    origin: process.env.FRONTEND_URL,
     credentials: true
   }
 },(server) => console.log('Server is running on port ' + server.port))

@@ -4,19 +4,27 @@ enum Role {
   STAFF,
 }
 
+enum Status {
+  JOINED, 
+  INVITED,
+  DELETED
+}
+
 type User {
   id: ID! @unique
   email: String! @unique
   name: String
+  avatar: String
   slackHandle: String
   tasksCreated: [Task!]! @relation(name: "TaskCreatedByUser")
   tasksAssignedTo: [Task!]! @relation(name: "TaskAssignedToUser")
-  role: Role!
+  role: Role! @default(value: STAFF)
   password: String
   resetToken: String @unique
   resetTokenExpiry: Float
   signupToken: String @unique
   signupTokenExpiry: Float
+  status: Status! @default(value: INVITED)
 }
 
 type Task { 

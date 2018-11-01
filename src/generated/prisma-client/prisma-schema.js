@@ -516,6 +516,12 @@ enum Role {
   STAFF
 }
 
+enum Status {
+  JOINED
+  INVITED
+  DELETED
+}
+
 type Subscription {
   asset(where: AssetSubscriptionWhereInput): AssetSubscriptionPayload
   category(where: CategorySubscriptionWhereInput): CategorySubscriptionPayload
@@ -816,6 +822,7 @@ type User {
   id: ID!
   email: String!
   name: String
+  avatar: String
   slackHandle: String
   tasksCreated(where: TaskWhereInput, orderBy: TaskOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Task!]
   tasksAssignedTo(where: TaskWhereInput, orderBy: TaskOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Task!]
@@ -825,6 +832,7 @@ type User {
   resetTokenExpiry: Float
   signupToken: String
   signupTokenExpiry: Float
+  status: Status!
 }
 
 type UserConnection {
@@ -836,15 +844,17 @@ type UserConnection {
 input UserCreateInput {
   email: String!
   name: String
+  avatar: String
   slackHandle: String
   tasksCreated: TaskCreateManyWithoutCreatedByInput
   tasksAssignedTo: TaskCreateManyWithoutAssignedToInput
-  role: Role!
+  role: Role
   password: String
   resetToken: String
   resetTokenExpiry: Float
   signupToken: String
   signupTokenExpiry: Float
+  status: Status
 }
 
 input UserCreateOneInput {
@@ -865,27 +875,31 @@ input UserCreateOneWithoutTasksCreatedInput {
 input UserCreateWithoutTasksAssignedToInput {
   email: String!
   name: String
+  avatar: String
   slackHandle: String
   tasksCreated: TaskCreateManyWithoutCreatedByInput
-  role: Role!
+  role: Role
   password: String
   resetToken: String
   resetTokenExpiry: Float
   signupToken: String
   signupTokenExpiry: Float
+  status: Status
 }
 
 input UserCreateWithoutTasksCreatedInput {
   email: String!
   name: String
+  avatar: String
   slackHandle: String
   tasksAssignedTo: TaskCreateManyWithoutAssignedToInput
-  role: Role!
+  role: Role
   password: String
   resetToken: String
   resetTokenExpiry: Float
   signupToken: String
   signupTokenExpiry: Float
+  status: Status
 }
 
 type UserEdge {
@@ -900,6 +914,8 @@ enum UserOrderByInput {
   email_DESC
   name_ASC
   name_DESC
+  avatar_ASC
+  avatar_DESC
   slackHandle_ASC
   slackHandle_DESC
   role_ASC
@@ -914,6 +930,8 @@ enum UserOrderByInput {
   signupToken_DESC
   signupTokenExpiry_ASC
   signupTokenExpiry_DESC
+  status_ASC
+  status_DESC
   createdAt_ASC
   createdAt_DESC
   updatedAt_ASC
@@ -924,6 +942,7 @@ type UserPreviousValues {
   id: ID!
   email: String!
   name: String
+  avatar: String
   slackHandle: String
   role: Role!
   password: String
@@ -931,6 +950,7 @@ type UserPreviousValues {
   resetTokenExpiry: Float
   signupToken: String
   signupTokenExpiry: Float
+  status: Status!
 }
 
 type UserSubscriptionPayload {
@@ -954,6 +974,7 @@ input UserSubscriptionWhereInput {
 input UserUpdateDataInput {
   email: String
   name: String
+  avatar: String
   slackHandle: String
   tasksCreated: TaskUpdateManyWithoutCreatedByInput
   tasksAssignedTo: TaskUpdateManyWithoutAssignedToInput
@@ -963,11 +984,13 @@ input UserUpdateDataInput {
   resetTokenExpiry: Float
   signupToken: String
   signupTokenExpiry: Float
+  status: Status
 }
 
 input UserUpdateInput {
   email: String
   name: String
+  avatar: String
   slackHandle: String
   tasksCreated: TaskUpdateManyWithoutCreatedByInput
   tasksAssignedTo: TaskUpdateManyWithoutAssignedToInput
@@ -977,6 +1000,7 @@ input UserUpdateInput {
   resetTokenExpiry: Float
   signupToken: String
   signupTokenExpiry: Float
+  status: Status
 }
 
 input UserUpdateOneInput {
@@ -1014,6 +1038,7 @@ input UserUpdateOneWithoutTasksAssignedToInput {
 input UserUpdateWithoutTasksAssignedToDataInput {
   email: String
   name: String
+  avatar: String
   slackHandle: String
   tasksCreated: TaskUpdateManyWithoutCreatedByInput
   role: Role
@@ -1022,11 +1047,13 @@ input UserUpdateWithoutTasksAssignedToDataInput {
   resetTokenExpiry: Float
   signupToken: String
   signupTokenExpiry: Float
+  status: Status
 }
 
 input UserUpdateWithoutTasksCreatedDataInput {
   email: String
   name: String
+  avatar: String
   slackHandle: String
   tasksAssignedTo: TaskUpdateManyWithoutAssignedToInput
   role: Role
@@ -1035,6 +1062,7 @@ input UserUpdateWithoutTasksCreatedDataInput {
   resetTokenExpiry: Float
   signupToken: String
   signupTokenExpiry: Float
+  status: Status
 }
 
 input UserUpsertNestedInput {
@@ -1095,6 +1123,20 @@ input UserWhereInput {
   name_not_starts_with: String
   name_ends_with: String
   name_not_ends_with: String
+  avatar: String
+  avatar_not: String
+  avatar_in: [String!]
+  avatar_not_in: [String!]
+  avatar_lt: String
+  avatar_lte: String
+  avatar_gt: String
+  avatar_gte: String
+  avatar_contains: String
+  avatar_not_contains: String
+  avatar_starts_with: String
+  avatar_not_starts_with: String
+  avatar_ends_with: String
+  avatar_not_ends_with: String
   slackHandle: String
   slackHandle_not: String
   slackHandle_in: [String!]
@@ -1177,6 +1219,10 @@ input UserWhereInput {
   signupTokenExpiry_lte: Float
   signupTokenExpiry_gt: Float
   signupTokenExpiry_gte: Float
+  status: Status
+  status_not: Status
+  status_in: [Status!]
+  status_not_in: [Status!]
   AND: [UserWhereInput!]
   OR: [UserWhereInput!]
   NOT: [UserWhereInput!]

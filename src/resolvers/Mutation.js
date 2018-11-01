@@ -2,11 +2,16 @@ const { randomBytes } = require('crypto')
 const { promisify } = require('util')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
+const Joi = require('joi')
+
+const validationSchemas = require('../validationSchemas')
 
 const cookieSettings = {
   httpOnly: true, 
   maxAge: 1000 * 60 * 60 *24 * 365, // 1 year cookie
 }
+
+// TODO make sure we're using Joi for all mutations where accepting external values
 
 module.exports = {
   async createUser(parent, args, ctx, info) {
@@ -18,15 +23,20 @@ module.exports = {
     const signupToken = (await promisify(randomBytes)(20)).toString('hex')
     const signupTokenExpiry = Date.now() + (3600000 * 24 * 14) // 1 week
 
+    const { error } = Joi.validate({...args, email}, validationSchemas.createUserSchema)
+    if(error) throw new Error(error)
+
     const user = await ctx.prisma.createUser({
       ...args,
       email,
       signupToken,
-      signupTokenExpiry
+      signupTokenExpiry,
     })
 
     // Send email to user with link to signup incl token
     // TODO improve signup email
+
+    // TODO send slack message to user as well!
     
     ctx.sgMail.send({
       to: email,
@@ -46,6 +56,8 @@ module.exports = {
 
     // TODO what's the flow for if a token has expired, how do we send them a new one? 
 
+    // TODO flow for if user has already signed up / accepted invite
+
     // TODO improve error messages
     if(!user) throw new Error('Signup token is invalid')
     if(user.password) throw new Error(`You've already signed up`)
@@ -55,7 +67,10 @@ module.exports = {
 
     const signedUpUser = await ctx.prisma.updateUser({
       where: { signupToken: args.token },
-      data: { password }
+      data: { 
+        password,
+        status: "JOINED"
+      }
     })
 
     const token = jwt.sign({ userId: signedUpUser.id }, process.env.APP_SECRET)
@@ -67,7 +82,9 @@ module.exports = {
 
   async signIn(parent, {email, password}, ctx, info) {
     const user = await ctx.prisma.user({ email })    
-    if(!user) throw new Error('this is an error')
+    if(!user) throw new Error('Email not found')
+
+    if(!user.password) throw new Error('You still need to accept your invitation. Please check your email or slack for instructions')
 
     const matchingPass = await bcrypt.compare(password, user.password)
     if(!matchingPass) throw new Error('Incorrect password')
