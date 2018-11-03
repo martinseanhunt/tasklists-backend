@@ -1,21 +1,36 @@
+# import * from './generated/prisma.graphql'
+
 type Query {
   userByToken(token: String!): User
   me: User
   users: [User]
+  categories: [Category]
 }
 
 type Mutation {
   createUser(
     email: String! 
-    name: String
-    slackHandle: String
+    name: String!
+    slackHandle: String!
     role: Role
     avatar: String
   ): User
+
+  createCategory(
+    name: String!
+    description: String!
+    categoryFields: [CategoryFieldCreateWithoutCategoryInput]
+  ): Category
+
   signUp(token: String!, password: String!, avatar: String): User
+  
   signIn(email: String!, password: String!): User
+  
   signOut: StatusMessage
 }
+
+# TODO make sure that the API isn't esposing anything we don't want it to
+# check for all relationships etc etc - do we need to limit by role ?
 
 type User {
   id: ID!
@@ -24,18 +39,6 @@ type User {
   slackHandle: String
   role: Role
   status: Status
-}
-
-enum Role {
-  SUPERADMIN,
-  ADMIN,
-  STAFF,
-}
-
-enum Status {
-  JOINED, 
-  INVITED,
-  DELETED
 }
 
 type StatusMessage {

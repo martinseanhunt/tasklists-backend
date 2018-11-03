@@ -15,6 +15,14 @@ const cookieSettings = {
 
 module.exports = {
   async createUser(parent, args, ctx, info) {
+    const { userId } = ctx.request
+    if(!userId) throw new Error('You must be logged in to do this')
+
+    // TODO put role on JWT so we can check the users role without calling the DB
+    const currentUser = await ctx.prisma.user({ id: userId })
+    if(!user || !['ADMIN', 'SUPERADMIN'].includes(currentUser.role)) 
+      throw new Error('Not authorized')
+
     // TODO For better error handling check if user already exists 
     // and return custom error:
     // https://www.prisma.io/docs/prisma-client/features/check-existence-JAVASCRIPT-pyl1/
@@ -59,6 +67,9 @@ module.exports = {
     // TODO flow for if user has already signed up / accepted invite
 
     // TODO improve error messages
+
+    // TODO VALIDATION!
+
     if(!user) throw new Error('Signup token is invalid')
     if(user.password) throw new Error(`You've already signed up`)
     if(user.signupTokenExpiry < Date.now()) throw new Error('Signup token has expired')
@@ -98,5 +109,28 @@ module.exports = {
   async signOut(parent, args, ctx, info) {
     ctx.response.clearCookie('token')
     return { message: 'Success' }
+  },
+
+  async createCategory(parent, args, ctx, info) {
+    // TODO helper function for protected routes
+
+    // TODO Put role on JWT so we don't have to check the DB when not needed for permissions
+    const { userId } = ctx.request
+    if(!userId) throw new Error('You must be logged in to do this')
+
+    const currentUser = await ctx.prisma.user({ id: userId })
+    if(!currentUser || !['ADMIN', 'SUPERADMIN'].includes(currentUser.role)) 
+      throw new Error('Not authorized')
+
+    // TODO VALIDATION!
+
+    const category = await ctx.prisma.createCategory({
+      ...args,
+      categoryFields: {
+        create: args.categoryFields
+      }
+    })
+
+    return category
   }
 }

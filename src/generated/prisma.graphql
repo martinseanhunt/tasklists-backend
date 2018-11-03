@@ -1,5 +1,4 @@
-module.exports = {
-        typeDefs: /* GraphQL */ `type AggregateAsset {
+type AggregateAsset {
   count: Int!
 }
 
@@ -1667,6 +1666,3 @@ input UserWhereUniqueInput {
   resetToken: String
   signupToken: String
 }
-`
-      }
-    

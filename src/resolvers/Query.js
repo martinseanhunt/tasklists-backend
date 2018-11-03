@@ -22,4 +22,26 @@ module.exports = {
     if(!ctx.request.userId) return null
     return ctx.prisma.user({ id: ctx.request.userId })
   },
+  
+  async categories(parent, args, ctx, info) {
+    const { request: { userId } } = ctx
+    if(!userId) return []
+
+    // DECISION: do we need to limit getting all categories to admin / superadmin?
+    
+    // Use fragments to get related custom fields to the category
+    const fragment = `
+      fragment categoriesWithCategoryFields on Category {
+        id
+        name
+        categoryFields {
+          id
+          fieldName
+          fieldType
+        }
+      }
+    `
+
+    return ctx.prisma.categories().$fragment(fragment)
+  } 
 }

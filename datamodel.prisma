@@ -10,6 +10,13 @@ enum Status {
   DELETED
 }
 
+enum FieldType { 
+  STRING,
+  INT,
+  DATE,
+  ASSET
+}
+
 type User {
   id: ID! @unique
   email: String! @unique
@@ -41,11 +48,30 @@ type Task {
   dueWhenPossible: Boolean! @default(value: "false")
   createdAt: DateTime!
   updatedAt: DateTime!
+  customFields: [CustomField!]!
+}
+
+type CustomField {
+  id: ID! @unique
+  # duplicate fieldName / type here incase the categoryField is ever changed - we don't want to update existing Tasks
+  fieldName: String!, 
+  fieldType: FieldType!,
+  fieldValue: String!
+  categoryField: CategoryField!
 }
 
 type Category {
   id: ID! @unique
-  name: String!
+  name: String! @unique
+  description: String
+  categoryFields: [CategoryField!]!
+}
+
+type CategoryField {
+  id: ID! @unique
+  fieldName: String!
+  fieldType: FieldType!
+  category: Category
 }
 
 type Comment {
