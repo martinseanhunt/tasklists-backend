@@ -57,7 +57,6 @@ type Task {
   updatedAt: DateTime!
   customFields: [CustomField!]!
   status: TaskStatus! @default(value: CREATED)
-  slug: String! @unique
 }
 
 type CustomField {

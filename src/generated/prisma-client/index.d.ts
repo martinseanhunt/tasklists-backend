@@ -390,9 +390,7 @@ export type TaskOrderByInput =
   | "updatedAt_ASC"
   | "updatedAt_DESC"
   | "status_ASC"
-  | "status_DESC"
-  | "slug_ASC"
-  | "slug_DESC";
+  | "status_DESC";
 
 export type AssetOrderByInput =
   | "id_ASC"
@@ -575,20 +573,6 @@ export interface TaskWhereInput {
   status_not?: TaskStatus;
   status_in?: TaskStatus[] | TaskStatus;
   status_not_in?: TaskStatus[] | TaskStatus;
-  slug?: String;
-  slug_not?: String;
-  slug_in?: String[] | String;
-  slug_not_in?: String[] | String;
-  slug_lt?: String;
-  slug_lte?: String;
-  slug_gt?: String;
-  slug_gte?: String;
-  slug_contains?: String;
-  slug_not_contains?: String;
-  slug_starts_with?: String;
-  slug_not_starts_with?: String;
-  slug_ends_with?: String;
-  slug_not_ends_with?: String;
   AND?: TaskWhereInput[] | TaskWhereInput;
   OR?: TaskWhereInput[] | TaskWhereInput;
   NOT?: TaskWhereInput[] | TaskWhereInput;
@@ -1019,7 +1003,6 @@ export type CustomFieldWhereUniqueInput = AtLeastOne<{
 
 export type TaskWhereUniqueInput = AtLeastOne<{
   id: ID_Input;
-  slug?: String;
 }>;
 
 export type UserWhereUniqueInput = AtLeastOne<{
@@ -1071,7 +1054,6 @@ export interface TaskCreateWithoutCreatedByInput {
   dueWhenPossible?: Boolean;
   customFields?: CustomFieldCreateManyInput;
   status?: TaskStatus;
-  slug: String;
 }
 
 export interface UserCreateOneWithoutTasksAssignedToInput {
@@ -1185,7 +1167,6 @@ export interface TaskCreateWithoutCategoryInput {
   dueWhenPossible?: Boolean;
   customFields?: CustomFieldCreateManyInput;
   status?: TaskStatus;
-  slug: String;
 }
 
 export interface UserCreateOneWithoutTasksCreatedInput {
@@ -1226,7 +1207,6 @@ export interface TaskCreateWithoutAssignedToInput {
   dueWhenPossible?: Boolean;
   customFields?: CustomFieldCreateManyInput;
   status?: TaskStatus;
-  slug: String;
 }
 
 export interface AssetUpdateInput {
@@ -1286,7 +1266,6 @@ export interface TaskUpdateWithoutCreatedByDataInput {
   dueWhenPossible?: Boolean;
   customFields?: CustomFieldUpdateManyInput;
   status?: TaskStatus;
-  slug?: String;
 }
 
 export interface UserUpdateOneWithoutTasksAssignedToInput {
@@ -1524,7 +1503,6 @@ export interface TaskUpdateWithoutCategoryDataInput {
   dueWhenPossible?: Boolean;
   customFields?: CustomFieldUpdateManyInput;
   status?: TaskStatus;
-  slug?: String;
 }
 
 export interface UserUpdateOneRequiredWithoutTasksCreatedInput {
@@ -1580,7 +1558,6 @@ export interface TaskUpdateWithoutAssignedToDataInput {
   dueWhenPossible?: Boolean;
   customFields?: CustomFieldUpdateManyInput;
   status?: TaskStatus;
-  slug?: String;
 }
 
 export interface TaskUpsertWithWhereUniqueWithoutAssignedToInput {
@@ -1669,7 +1646,6 @@ export interface TaskCreateInput {
   dueWhenPossible?: Boolean;
   customFields?: CustomFieldCreateManyInput;
   status?: TaskStatus;
-  slug: String;
 }
 
 export interface TaskUpdateInput {
@@ -1684,7 +1660,6 @@ export interface TaskUpdateInput {
   dueWhenPossible?: Boolean;
   customFields?: CustomFieldUpdateManyInput;
   status?: TaskStatus;
-  slug?: String;
 }
 
 export interface UserUpdateInput {
@@ -1912,7 +1887,6 @@ export interface TaskNode {
   createdAt: DateTimeOutput;
   updatedAt: DateTimeOutput;
   status: TaskStatus;
-  slug: String;
 }
 
 export interface Task extends Promise<TaskNode>, Fragmentable {
@@ -1960,7 +1934,6 @@ export interface Task extends Promise<TaskNode>, Fragmentable {
     }
   ) => T;
   status: () => Promise<TaskStatus>;
-  slug: () => Promise<String>;
 }
 
 export interface TaskSubscription
@@ -2010,7 +1983,6 @@ export interface TaskSubscription
     }
   ) => T;
   status: () => Promise<AsyncIterator<TaskStatus>>;
-  slug: () => Promise<AsyncIterator<String>>;
 }
 
 export interface CategoryNode {
@@ -2833,7 +2805,6 @@ export interface TaskPreviousValuesNode {
   createdAt: DateTimeOutput;
   updatedAt: DateTimeOutput;
   status: TaskStatus;
-  slug: String;
 }
 
 export interface TaskPreviousValues
@@ -2847,7 +2818,6 @@ export interface TaskPreviousValues
   createdAt: () => Promise<DateTimeOutput>;
   updatedAt: () => Promise<DateTimeOutput>;
   status: () => Promise<TaskStatus>;
-  slug: () => Promise<String>;
 }
 
 export interface TaskPreviousValuesSubscription
@@ -2861,7 +2831,6 @@ export interface TaskPreviousValuesSubscription
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   status: () => Promise<AsyncIterator<TaskStatus>>;
-  slug: () => Promise<AsyncIterator<String>>;
 }
 
 export interface UserSubscriptionPayloadNode {
