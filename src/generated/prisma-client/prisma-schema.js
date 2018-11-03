@@ -550,6 +550,7 @@ input CategoryWhereInput {
 input CategoryWhereUniqueInput {
   id: ID
   name: String
+  slug: String
 }
 
 type Comment {
@@ -1368,6 +1369,7 @@ input TaskWhereInput {
 
 input TaskWhereUniqueInput {
   id: ID
+  slug: String
 }
 
 type User {

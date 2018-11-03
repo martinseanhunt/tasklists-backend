@@ -1002,6 +1002,7 @@ export interface CustomFieldWhereInput {
 export type CategoryWhereUniqueInput = AtLeastOne<{
   id: ID_Input;
   name?: String;
+  slug?: String;
 }>;
 
 export type CategoryFieldWhereUniqueInput = AtLeastOne<{
@@ -1018,6 +1019,7 @@ export type CustomFieldWhereUniqueInput = AtLeastOne<{
 
 export type TaskWhereUniqueInput = AtLeastOne<{
   id: ID_Input;
+  slug?: String;
 }>;
 
 export type UserWhereUniqueInput = AtLeastOne<{
