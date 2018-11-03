@@ -177,6 +177,7 @@ type Category {
   description: String
   categoryFields(where: CategoryFieldWhereInput, orderBy: CategoryFieldOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [CategoryField!]
   tasks(where: TaskWhereInput, orderBy: TaskOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Task!]
+  slug: String!
 }
 
 type CategoryConnection {
@@ -190,6 +191,7 @@ input CategoryCreateInput {
   description: String
   categoryFields: CategoryFieldCreateManyWithoutCategoryInput
   tasks: TaskCreateManyWithoutCategoryInput
+  slug: String!
 }
 
 input CategoryCreateOneWithoutCategoryFieldsInput {
@@ -206,12 +208,14 @@ input CategoryCreateWithoutCategoryFieldsInput {
   name: String!
   description: String
   tasks: TaskCreateManyWithoutCategoryInput
+  slug: String!
 }
 
 input CategoryCreateWithoutTasksInput {
   name: String!
   description: String
   categoryFields: CategoryFieldCreateManyWithoutCategoryInput
+  slug: String!
 }
 
 type CategoryEdge {
@@ -394,6 +398,8 @@ enum CategoryOrderByInput {
   name_DESC
   description_ASC
   description_DESC
+  slug_ASC
+  slug_DESC
   createdAt_ASC
   createdAt_DESC
   updatedAt_ASC
@@ -404,6 +410,7 @@ type CategoryPreviousValues {
   id: ID!
   name: String!
   description: String
+  slug: String!
 }
 
 type CategorySubscriptionPayload {
@@ -429,6 +436,7 @@ input CategoryUpdateInput {
   description: String
   categoryFields: CategoryFieldUpdateManyWithoutCategoryInput
   tasks: TaskUpdateManyWithoutCategoryInput
+  slug: String
 }
 
 input CategoryUpdateOneRequiredWithoutTasksInput {
@@ -451,12 +459,14 @@ input CategoryUpdateWithoutCategoryFieldsDataInput {
   name: String
   description: String
   tasks: TaskUpdateManyWithoutCategoryInput
+  slug: String
 }
 
 input CategoryUpdateWithoutTasksDataInput {
   name: String
   description: String
   categoryFields: CategoryFieldUpdateManyWithoutCategoryInput
+  slug: String
 }
 
 input CategoryUpsertWithoutCategoryFieldsInput {
@@ -518,6 +528,20 @@ input CategoryWhereInput {
   tasks_every: TaskWhereInput
   tasks_some: TaskWhereInput
   tasks_none: TaskWhereInput
+  slug: String
+  slug_not: String
+  slug_in: [String!]
+  slug_not_in: [String!]
+  slug_lt: String
+  slug_lte: String
+  slug_gt: String
+  slug_gte: String
+  slug_contains: String
+  slug_not_contains: String
+  slug_starts_with: String
+  slug_not_starts_with: String
+  slug_ends_with: String
+  slug_not_ends_with: String
   AND: [CategoryWhereInput!]
   OR: [CategoryWhereInput!]
   NOT: [CategoryWhereInput!]
@@ -976,6 +1000,7 @@ type Task {
   updatedAt: DateTime!
   customFields(where: CustomFieldWhereInput, orderBy: CustomFieldOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [CustomField!]
   status: TaskStatus!
+  slug: String!
 }
 
 type TaskConnection {
@@ -996,6 +1021,7 @@ input TaskCreateInput {
   dueWhenPossible: Boolean
   customFields: CustomFieldCreateManyInput
   status: TaskStatus
+  slug: String!
 }
 
 input TaskCreateManyWithoutAssignedToInput {
@@ -1024,6 +1050,7 @@ input TaskCreateWithoutAssignedToInput {
   dueWhenPossible: Boolean
   customFields: CustomFieldCreateManyInput
   status: TaskStatus
+  slug: String!
 }
 
 input TaskCreateWithoutCategoryInput {
@@ -1037,6 +1064,7 @@ input TaskCreateWithoutCategoryInput {
   dueWhenPossible: Boolean
   customFields: CustomFieldCreateManyInput
   status: TaskStatus
+  slug: String!
 }
 
 input TaskCreateWithoutCreatedByInput {
@@ -1050,6 +1078,7 @@ input TaskCreateWithoutCreatedByInput {
   dueWhenPossible: Boolean
   customFields: CustomFieldCreateManyInput
   status: TaskStatus
+  slug: String!
 }
 
 type TaskEdge {
@@ -1074,6 +1103,8 @@ enum TaskOrderByInput {
   updatedAt_DESC
   status_ASC
   status_DESC
+  slug_ASC
+  slug_DESC
 }
 
 type TaskPreviousValues {
@@ -1085,6 +1116,7 @@ type TaskPreviousValues {
   createdAt: DateTime!
   updatedAt: DateTime!
   status: TaskStatus!
+  slug: String!
 }
 
 enum TaskStatus {
@@ -1125,6 +1157,7 @@ input TaskUpdateInput {
   dueWhenPossible: Boolean
   customFields: CustomFieldUpdateManyInput
   status: TaskStatus
+  slug: String
 }
 
 input TaskUpdateManyWithoutAssignedToInput {
@@ -1165,6 +1198,7 @@ input TaskUpdateWithoutAssignedToDataInput {
   dueWhenPossible: Boolean
   customFields: CustomFieldUpdateManyInput
   status: TaskStatus
+  slug: String
 }
 
 input TaskUpdateWithoutCategoryDataInput {
@@ -1178,6 +1212,7 @@ input TaskUpdateWithoutCategoryDataInput {
   dueWhenPossible: Boolean
   customFields: CustomFieldUpdateManyInput
   status: TaskStatus
+  slug: String
 }
 
 input TaskUpdateWithoutCreatedByDataInput {
@@ -1191,6 +1226,7 @@ input TaskUpdateWithoutCreatedByDataInput {
   dueWhenPossible: Boolean
   customFields: CustomFieldUpdateManyInput
   status: TaskStatus
+  slug: String
 }
 
 input TaskUpdateWithWhereUniqueWithoutAssignedToInput {
@@ -1311,6 +1347,20 @@ input TaskWhereInput {
   status_not: TaskStatus
   status_in: [TaskStatus!]
   status_not_in: [TaskStatus!]
+  slug: String
+  slug_not: String
+  slug_in: [String!]
+  slug_not_in: [String!]
+  slug_lt: String
+  slug_lte: String
+  slug_gt: String
+  slug_gte: String
+  slug_contains: String
+  slug_not_contains: String
+  slug_starts_with: String
+  slug_not_starts_with: String
+  slug_ends_with: String
+  slug_not_ends_with: String
   AND: [TaskWhereInput!]
   OR: [TaskWhereInput!]
   NOT: [TaskWhereInput!]

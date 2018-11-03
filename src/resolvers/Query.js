@@ -35,6 +35,7 @@ module.exports = {
         id
         name
         description
+        slug
         categoryFields {
           id
           fieldName

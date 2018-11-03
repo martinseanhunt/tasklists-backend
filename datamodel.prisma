@@ -57,6 +57,7 @@ type Task {
   updatedAt: DateTime!
   customFields: [CustomField!]!
   status: TaskStatus! @default(value: CREATED)
+  slug: String!
 }
 
 type CustomField {
@@ -75,6 +76,7 @@ type Category {
   description: String
   categoryFields: [CategoryField!]!
   tasks: [Task!]!
+  slug: String!
 }
 
 type CategoryField {

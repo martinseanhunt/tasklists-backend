@@ -3,6 +3,7 @@ const { promisify } = require('util')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const Joi = require('joi')
+var slug = require('slug')
 
 const validationSchemas = require('../validationSchemas')
 
@@ -130,6 +131,7 @@ module.exports = {
 
     const category = await ctx.prisma.createCategory({
       ...args,
+      slug: slug(args.name.toLowerCase()),
       categoryFields: {
         create: args.categoryFields
       }
