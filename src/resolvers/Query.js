@@ -34,6 +34,7 @@ module.exports = {
       fragment categoriesWithCategoryFields on Category {
         id
         name
+        description
         categoryFields {
           id
           fieldName

@@ -14,13 +14,16 @@ const cookieSettings = {
 // TODO make sure we're using Joi for all mutations where accepting external values
 
 module.exports = {
+
+  // TODO change the name of this function to invite user 
+  // and update on front end
   async createUser(parent, args, ctx, info) {
     const { userId } = ctx.request
     if(!userId) throw new Error('You must be logged in to do this')
 
     // TODO put role on JWT so we can check the users role without calling the DB
     const currentUser = await ctx.prisma.user({ id: userId })
-    if(!user || !['ADMIN', 'SUPERADMIN'].includes(currentUser.role)) 
+    if(!currentUser || !['ADMIN', 'SUPERADMIN'].includes(currentUser.role)) 
       throw new Error('Not authorized')
 
     // TODO For better error handling check if user already exists 
@@ -31,7 +34,7 @@ module.exports = {
     const signupToken = (await promisify(randomBytes)(20)).toString('hex')
     const signupTokenExpiry = Date.now() + (3600000 * 24 * 14) // 1 week
 
-    const { error } = Joi.validate({...args, email}, validationSchemas.createUserSchema)
+    const { error } = Joi.validate({...args, email}, validationSchemas.createUser)
     if(error) throw new Error(error)
 
     const user = await ctx.prisma.createUser({
@@ -68,7 +71,7 @@ module.exports = {
 
     // TODO improve error messages
 
-    // TODO VALIDATION!
+    const { error } = Joi.validate({...args}, validationSchemas.signUp)
 
     if(!user) throw new Error('Signup token is invalid')
     if(user.password) throw new Error(`You've already signed up`)
@@ -122,7 +125,8 @@ module.exports = {
     if(!currentUser || !['ADMIN', 'SUPERADMIN'].includes(currentUser.role)) 
       throw new Error('Not authorized')
 
-    // TODO VALIDATION!
+    const { error } = Joi.validate({...args}, validationSchemas.createCategory)
+    if(error) throw new Error(error)
 
     const category = await ctx.prisma.createCategory({
       ...args,
