@@ -363,15 +363,20 @@ export interface ClientConstructor<T> {
 
 export type Role = "SUPERADMIN" | "ADMIN" | "STAFF";
 
-export type Status = "JOINED" | "INVITED" | "DELETED";
+export type UserStatus = "JOINED" | "INVITED" | "DELETED";
 
 export type FieldType = "STRING" | "INT" | "DATE" | "ASSET";
+
+export type TaskStatus =
+  | "CREATED"
+  | "ASSIGNED"
+  | "AWAITINGINPUT"
+  | "COMPLETED"
+  | "CLOSED";
 
 export type TaskOrderByInput =
   | "id_ASC"
   | "id_DESC"
-  | "approved_ASC"
-  | "approved_DESC"
   | "title_ASC"
   | "title_DESC"
   | "description_ASC"
@@ -383,7 +388,9 @@ export type TaskOrderByInput =
   | "createdAt_ASC"
   | "createdAt_DESC"
   | "updatedAt_ASC"
-  | "updatedAt_DESC";
+  | "updatedAt_DESC"
+  | "status_ASC"
+  | "status_DESC";
 
 export type AssetOrderByInput =
   | "id_ASC"
@@ -496,8 +503,6 @@ export interface TaskWhereInput {
   id_not_ends_with?: ID_Input;
   createdBy?: UserWhereInput;
   assignedTo?: UserWhereInput;
-  approved?: Boolean;
-  approved_not?: Boolean;
   title?: String;
   title_not?: String;
   title_in?: String[] | String;
@@ -562,6 +567,10 @@ export interface TaskWhereInput {
   customFields_every?: CustomFieldWhereInput;
   customFields_some?: CustomFieldWhereInput;
   customFields_none?: CustomFieldWhereInput;
+  status?: TaskStatus;
+  status_not?: TaskStatus;
+  status_in?: TaskStatus[] | TaskStatus;
+  status_not_in?: TaskStatus[] | TaskStatus;
   AND?: TaskWhereInput[] | TaskWhereInput;
   OR?: TaskWhereInput[] | TaskWhereInput;
   NOT?: TaskWhereInput[] | TaskWhereInput;
@@ -706,10 +715,10 @@ export interface UserWhereInput {
   signupTokenExpiry_lte?: Float;
   signupTokenExpiry_gt?: Float;
   signupTokenExpiry_gte?: Float;
-  status?: Status;
-  status_not?: Status;
-  status_in?: Status[] | Status;
-  status_not_in?: Status[] | Status;
+  status?: UserStatus;
+  status_not?: UserStatus;
+  status_in?: UserStatus[] | UserStatus;
+  status_not_in?: UserStatus[] | UserStatus;
   AND?: UserWhereInput[] | UserWhereInput;
   OR?: UserWhereInput[] | UserWhereInput;
   NOT?: UserWhereInput[] | UserWhereInput;
@@ -804,6 +813,9 @@ export interface CategoryWhereInput {
   categoryFields_every?: CategoryFieldWhereInput;
   categoryFields_some?: CategoryFieldWhereInput;
   categoryFields_none?: CategoryFieldWhereInput;
+  tasks_every?: TaskWhereInput;
+  tasks_some?: TaskWhereInput;
+  tasks_none?: TaskWhereInput;
   AND?: CategoryWhereInput[] | CategoryWhereInput;
   OR?: CategoryWhereInput[] | CategoryWhereInput;
   NOT?: CategoryWhereInput[] | CategoryWhereInput;
@@ -1006,7 +1018,7 @@ export interface UserCreateInput {
   resetTokenExpiry?: Float;
   signupToken?: String;
   signupTokenExpiry?: Float;
-  status?: Status;
+  status?: UserStatus;
 }
 
 export interface TaskCreateManyWithoutCreatedByInput {
@@ -1016,15 +1028,15 @@ export interface TaskCreateManyWithoutCreatedByInput {
 
 export interface TaskCreateWithoutCreatedByInput {
   assignedTo?: UserCreateOneWithoutTasksAssignedToInput;
-  approved?: Boolean;
   title: String;
   description: String;
   assets?: AssetCreateManyInput;
-  category: CategoryCreateOneInput;
+  category: CategoryCreateOneWithoutTasksInput;
   comments?: CommentCreateManyInput;
   dueDate?: DateTimeInput;
   dueWhenPossible?: Boolean;
   customFields?: CustomFieldCreateManyInput;
+  status?: TaskStatus;
 }
 
 export interface UserCreateOneWithoutTasksAssignedToInput {
@@ -1044,7 +1056,7 @@ export interface UserCreateWithoutTasksAssignedToInput {
   resetTokenExpiry?: Float;
   signupToken?: String;
   signupTokenExpiry?: Float;
-  status?: Status;
+  status?: UserStatus;
 }
 
 export interface AssetCreateManyInput {
@@ -1052,12 +1064,12 @@ export interface AssetCreateManyInput {
   connect?: AssetWhereUniqueInput[] | AssetWhereUniqueInput;
 }
 
-export interface CategoryCreateOneInput {
-  create?: CategoryCreateInput;
+export interface CategoryCreateOneWithoutTasksInput {
+  create?: CategoryCreateWithoutTasksInput;
   connect?: CategoryWhereUniqueInput;
 }
 
-export interface CategoryCreateInput {
+export interface CategoryCreateWithoutTasksInput {
   name: String;
   description?: String;
   categoryFields?: CategoryFieldCreateManyWithoutCategoryInput;
@@ -1117,26 +1129,25 @@ export interface CategoryCreateOneWithoutCategoryFieldsInput {
 export interface CategoryCreateWithoutCategoryFieldsInput {
   name: String;
   description?: String;
+  tasks?: TaskCreateManyWithoutCategoryInput;
 }
 
-export interface TaskCreateManyWithoutAssignedToInput {
-  create?:
-    | TaskCreateWithoutAssignedToInput[]
-    | TaskCreateWithoutAssignedToInput;
+export interface TaskCreateManyWithoutCategoryInput {
+  create?: TaskCreateWithoutCategoryInput[] | TaskCreateWithoutCategoryInput;
   connect?: TaskWhereUniqueInput[] | TaskWhereUniqueInput;
 }
 
-export interface TaskCreateWithoutAssignedToInput {
+export interface TaskCreateWithoutCategoryInput {
   createdBy: UserCreateOneWithoutTasksCreatedInput;
-  approved?: Boolean;
+  assignedTo?: UserCreateOneWithoutTasksAssignedToInput;
   title: String;
   description: String;
   assets?: AssetCreateManyInput;
-  category: CategoryCreateOneInput;
   comments?: CommentCreateManyInput;
   dueDate?: DateTimeInput;
   dueWhenPossible?: Boolean;
   customFields?: CustomFieldCreateManyInput;
+  status?: TaskStatus;
 }
 
 export interface UserCreateOneWithoutTasksCreatedInput {
@@ -1156,7 +1167,27 @@ export interface UserCreateWithoutTasksCreatedInput {
   resetTokenExpiry?: Float;
   signupToken?: String;
   signupTokenExpiry?: Float;
-  status?: Status;
+  status?: UserStatus;
+}
+
+export interface TaskCreateManyWithoutAssignedToInput {
+  create?:
+    | TaskCreateWithoutAssignedToInput[]
+    | TaskCreateWithoutAssignedToInput;
+  connect?: TaskWhereUniqueInput[] | TaskWhereUniqueInput;
+}
+
+export interface TaskCreateWithoutAssignedToInput {
+  createdBy: UserCreateOneWithoutTasksCreatedInput;
+  title: String;
+  description: String;
+  assets?: AssetCreateManyInput;
+  category: CategoryCreateOneWithoutTasksInput;
+  comments?: CommentCreateManyInput;
+  dueDate?: DateTimeInput;
+  dueWhenPossible?: Boolean;
+  customFields?: CustomFieldCreateManyInput;
+  status?: TaskStatus;
 }
 
 export interface AssetUpdateInput {
@@ -1184,7 +1215,7 @@ export interface UserUpdateDataInput {
   resetTokenExpiry?: Float;
   signupToken?: String;
   signupTokenExpiry?: Float;
-  status?: Status;
+  status?: UserStatus;
 }
 
 export interface TaskUpdateManyWithoutCreatedByInput {
@@ -1207,15 +1238,15 @@ export interface TaskUpdateWithWhereUniqueWithoutCreatedByInput {
 
 export interface TaskUpdateWithoutCreatedByDataInput {
   assignedTo?: UserUpdateOneWithoutTasksAssignedToInput;
-  approved?: Boolean;
   title?: String;
   description?: String;
   assets?: AssetUpdateManyInput;
-  category?: CategoryUpdateOneRequiredInput;
+  category?: CategoryUpdateOneRequiredWithoutTasksInput;
   comments?: CommentUpdateManyInput;
   dueDate?: DateTimeInput;
   dueWhenPossible?: Boolean;
   customFields?: CustomFieldUpdateManyInput;
+  status?: TaskStatus;
 }
 
 export interface UserUpdateOneWithoutTasksAssignedToInput {
@@ -1239,7 +1270,7 @@ export interface UserUpdateWithoutTasksAssignedToDataInput {
   resetTokenExpiry?: Float;
   signupToken?: String;
   signupTokenExpiry?: Float;
-  status?: Status;
+  status?: UserStatus;
 }
 
 export interface UserUpsertWithoutTasksAssignedToInput {
@@ -1276,14 +1307,14 @@ export interface AssetUpsertWithWhereUniqueNestedInput {
   create: AssetCreateInput;
 }
 
-export interface CategoryUpdateOneRequiredInput {
-  create?: CategoryCreateInput;
-  update?: CategoryUpdateDataInput;
-  upsert?: CategoryUpsertNestedInput;
+export interface CategoryUpdateOneRequiredWithoutTasksInput {
+  create?: CategoryCreateWithoutTasksInput;
+  update?: CategoryUpdateWithoutTasksDataInput;
+  upsert?: CategoryUpsertWithoutTasksInput;
   connect?: CategoryWhereUniqueInput;
 }
 
-export interface CategoryUpdateDataInput {
+export interface CategoryUpdateWithoutTasksDataInput {
   name?: String;
   description?: String;
   categoryFields?: CategoryFieldUpdateManyWithoutCategoryInput;
@@ -1320,9 +1351,9 @@ export interface CategoryFieldUpsertWithWhereUniqueWithoutCategoryInput {
   create: CategoryFieldCreateWithoutCategoryInput;
 }
 
-export interface CategoryUpsertNestedInput {
-  update: CategoryUpdateDataInput;
-  create: CategoryCreateInput;
+export interface CategoryUpsertWithoutTasksInput {
+  update: CategoryUpdateWithoutTasksDataInput;
+  create: CategoryCreateWithoutTasksInput;
 }
 
 export interface CommentUpdateManyInput {
@@ -1419,28 +1450,60 @@ export interface CategoryUpdateOneWithoutCategoryFieldsInput {
 export interface CategoryUpdateWithoutCategoryFieldsDataInput {
   name?: String;
   description?: String;
+  tasks?: TaskUpdateManyWithoutCategoryInput;
 }
 
-export interface CategoryUpsertWithoutCategoryFieldsInput {
-  update: CategoryUpdateWithoutCategoryFieldsDataInput;
-  create: CategoryCreateWithoutCategoryFieldsInput;
+export interface TaskUpdateManyWithoutCategoryInput {
+  create?: TaskCreateWithoutCategoryInput[] | TaskCreateWithoutCategoryInput;
+  delete?: TaskWhereUniqueInput[] | TaskWhereUniqueInput;
+  connect?: TaskWhereUniqueInput[] | TaskWhereUniqueInput;
+  disconnect?: TaskWhereUniqueInput[] | TaskWhereUniqueInput;
+  update?:
+    | TaskUpdateWithWhereUniqueWithoutCategoryInput[]
+    | TaskUpdateWithWhereUniqueWithoutCategoryInput;
+  upsert?:
+    | TaskUpsertWithWhereUniqueWithoutCategoryInput[]
+    | TaskUpsertWithWhereUniqueWithoutCategoryInput;
 }
 
-export interface CategoryFieldUpsertNestedInput {
-  update: CategoryFieldUpdateDataInput;
-  create: CategoryFieldCreateInput;
-}
-
-export interface CustomFieldUpsertWithWhereUniqueNestedInput {
-  where: CustomFieldWhereUniqueInput;
-  update: CustomFieldUpdateDataInput;
-  create: CustomFieldCreateInput;
-}
-
-export interface TaskUpsertWithWhereUniqueWithoutCreatedByInput {
+export interface TaskUpdateWithWhereUniqueWithoutCategoryInput {
   where: TaskWhereUniqueInput;
-  update: TaskUpdateWithoutCreatedByDataInput;
-  create: TaskCreateWithoutCreatedByInput;
+  data: TaskUpdateWithoutCategoryDataInput;
+}
+
+export interface TaskUpdateWithoutCategoryDataInput {
+  createdBy?: UserUpdateOneRequiredWithoutTasksCreatedInput;
+  assignedTo?: UserUpdateOneWithoutTasksAssignedToInput;
+  title?: String;
+  description?: String;
+  assets?: AssetUpdateManyInput;
+  comments?: CommentUpdateManyInput;
+  dueDate?: DateTimeInput;
+  dueWhenPossible?: Boolean;
+  customFields?: CustomFieldUpdateManyInput;
+  status?: TaskStatus;
+}
+
+export interface UserUpdateOneRequiredWithoutTasksCreatedInput {
+  create?: UserCreateWithoutTasksCreatedInput;
+  update?: UserUpdateWithoutTasksCreatedDataInput;
+  upsert?: UserUpsertWithoutTasksCreatedInput;
+  connect?: UserWhereUniqueInput;
+}
+
+export interface UserUpdateWithoutTasksCreatedDataInput {
+  email?: String;
+  name?: String;
+  avatar?: String;
+  slackHandle?: String;
+  tasksAssignedTo?: TaskUpdateManyWithoutAssignedToInput;
+  role?: Role;
+  password?: String;
+  resetToken?: String;
+  resetTokenExpiry?: Float;
+  signupToken?: String;
+  signupTokenExpiry?: Float;
+  status?: UserStatus;
 }
 
 export interface TaskUpdateManyWithoutAssignedToInput {
@@ -1465,42 +1528,15 @@ export interface TaskUpdateWithWhereUniqueWithoutAssignedToInput {
 
 export interface TaskUpdateWithoutAssignedToDataInput {
   createdBy?: UserUpdateOneRequiredWithoutTasksCreatedInput;
-  approved?: Boolean;
   title?: String;
   description?: String;
   assets?: AssetUpdateManyInput;
-  category?: CategoryUpdateOneRequiredInput;
+  category?: CategoryUpdateOneRequiredWithoutTasksInput;
   comments?: CommentUpdateManyInput;
   dueDate?: DateTimeInput;
   dueWhenPossible?: Boolean;
   customFields?: CustomFieldUpdateManyInput;
-}
-
-export interface UserUpdateOneRequiredWithoutTasksCreatedInput {
-  create?: UserCreateWithoutTasksCreatedInput;
-  update?: UserUpdateWithoutTasksCreatedDataInput;
-  upsert?: UserUpsertWithoutTasksCreatedInput;
-  connect?: UserWhereUniqueInput;
-}
-
-export interface UserUpdateWithoutTasksCreatedDataInput {
-  email?: String;
-  name?: String;
-  avatar?: String;
-  slackHandle?: String;
-  tasksAssignedTo?: TaskUpdateManyWithoutAssignedToInput;
-  role?: Role;
-  password?: String;
-  resetToken?: String;
-  resetTokenExpiry?: Float;
-  signupToken?: String;
-  signupTokenExpiry?: Float;
-  status?: Status;
-}
-
-export interface UserUpsertWithoutTasksCreatedInput {
-  update: UserUpdateWithoutTasksCreatedDataInput;
-  create: UserCreateWithoutTasksCreatedInput;
+  status?: TaskStatus;
 }
 
 export interface TaskUpsertWithWhereUniqueWithoutAssignedToInput {
@@ -1509,10 +1545,51 @@ export interface TaskUpsertWithWhereUniqueWithoutAssignedToInput {
   create: TaskCreateWithoutAssignedToInput;
 }
 
+export interface UserUpsertWithoutTasksCreatedInput {
+  update: UserUpdateWithoutTasksCreatedDataInput;
+  create: UserCreateWithoutTasksCreatedInput;
+}
+
+export interface TaskUpsertWithWhereUniqueWithoutCategoryInput {
+  where: TaskWhereUniqueInput;
+  update: TaskUpdateWithoutCategoryDataInput;
+  create: TaskCreateWithoutCategoryInput;
+}
+
+export interface CategoryUpsertWithoutCategoryFieldsInput {
+  update: CategoryUpdateWithoutCategoryFieldsDataInput;
+  create: CategoryCreateWithoutCategoryFieldsInput;
+}
+
+export interface CategoryFieldUpsertNestedInput {
+  update: CategoryFieldUpdateDataInput;
+  create: CategoryFieldCreateInput;
+}
+
+export interface CustomFieldUpsertWithWhereUniqueNestedInput {
+  where: CustomFieldWhereUniqueInput;
+  update: CustomFieldUpdateDataInput;
+  create: CustomFieldCreateInput;
+}
+
+export interface TaskUpsertWithWhereUniqueWithoutCreatedByInput {
+  where: TaskWhereUniqueInput;
+  update: TaskUpdateWithoutCreatedByDataInput;
+  create: TaskCreateWithoutCreatedByInput;
+}
+
+export interface CategoryCreateInput {
+  name: String;
+  description?: String;
+  categoryFields?: CategoryFieldCreateManyWithoutCategoryInput;
+  tasks?: TaskCreateManyWithoutCategoryInput;
+}
+
 export interface CategoryUpdateInput {
   name?: String;
   description?: String;
   categoryFields?: CategoryFieldUpdateManyWithoutCategoryInput;
+  tasks?: TaskUpdateManyWithoutCategoryInput;
 }
 
 export interface CategoryFieldUpdateInput {
@@ -1537,29 +1614,29 @@ export interface CustomFieldUpdateInput {
 export interface TaskCreateInput {
   createdBy: UserCreateOneWithoutTasksCreatedInput;
   assignedTo?: UserCreateOneWithoutTasksAssignedToInput;
-  approved?: Boolean;
   title: String;
   description: String;
   assets?: AssetCreateManyInput;
-  category: CategoryCreateOneInput;
+  category: CategoryCreateOneWithoutTasksInput;
   comments?: CommentCreateManyInput;
   dueDate?: DateTimeInput;
   dueWhenPossible?: Boolean;
   customFields?: CustomFieldCreateManyInput;
+  status?: TaskStatus;
 }
 
 export interface TaskUpdateInput {
   createdBy?: UserUpdateOneRequiredWithoutTasksCreatedInput;
   assignedTo?: UserUpdateOneWithoutTasksAssignedToInput;
-  approved?: Boolean;
   title?: String;
   description?: String;
   assets?: AssetUpdateManyInput;
-  category?: CategoryUpdateOneRequiredInput;
+  category?: CategoryUpdateOneRequiredWithoutTasksInput;
   comments?: CommentUpdateManyInput;
   dueDate?: DateTimeInput;
   dueWhenPossible?: Boolean;
   customFields?: CustomFieldUpdateManyInput;
+  status?: TaskStatus;
 }
 
 export interface UserUpdateInput {
@@ -1575,7 +1652,7 @@ export interface UserUpdateInput {
   resetTokenExpiry?: Float;
   signupToken?: String;
   signupTokenExpiry?: Float;
-  status?: Status;
+  status?: UserStatus;
 }
 
 export interface AssetSubscriptionWhereInput {
@@ -1699,7 +1776,7 @@ export interface UserNode {
   resetTokenExpiry?: Float;
   signupToken?: String;
   signupTokenExpiry?: Float;
-  status: Status;
+  status: UserStatus;
 }
 
 export interface User extends Promise<UserNode>, Fragmentable {
@@ -1736,7 +1813,7 @@ export interface User extends Promise<UserNode>, Fragmentable {
   resetTokenExpiry: () => Promise<Float>;
   signupToken: () => Promise<String>;
   signupTokenExpiry: () => Promise<Float>;
-  status: () => Promise<Status>;
+  status: () => Promise<UserStatus>;
 }
 
 export interface UserSubscription
@@ -1775,25 +1852,24 @@ export interface UserSubscription
   resetTokenExpiry: () => Promise<AsyncIterator<Float>>;
   signupToken: () => Promise<AsyncIterator<String>>;
   signupTokenExpiry: () => Promise<AsyncIterator<Float>>;
-  status: () => Promise<AsyncIterator<Status>>;
+  status: () => Promise<AsyncIterator<UserStatus>>;
 }
 
 export interface TaskNode {
   id: ID_Output;
-  approved: Boolean;
   title: String;
   description: String;
   dueDate?: DateTimeOutput;
   dueWhenPossible: Boolean;
   createdAt: DateTimeOutput;
   updatedAt: DateTimeOutput;
+  status: TaskStatus;
 }
 
 export interface Task extends Promise<TaskNode>, Fragmentable {
   id: () => Promise<ID_Output>;
   createdBy: <T = User>() => T;
   assignedTo: <T = User>() => T;
-  approved: () => Promise<Boolean>;
   title: () => Promise<String>;
   description: () => Promise<String>;
   assets: <T = FragmentableArray<AssetNode>>(
@@ -1834,6 +1910,7 @@ export interface Task extends Promise<TaskNode>, Fragmentable {
       last?: Int;
     }
   ) => T;
+  status: () => Promise<TaskStatus>;
 }
 
 export interface TaskSubscription
@@ -1842,7 +1919,6 @@ export interface TaskSubscription
   id: () => Promise<AsyncIterator<ID_Output>>;
   createdBy: <T = UserSubscription>() => T;
   assignedTo: <T = UserSubscription>() => T;
-  approved: () => Promise<AsyncIterator<Boolean>>;
   title: () => Promise<AsyncIterator<String>>;
   description: () => Promise<AsyncIterator<String>>;
   assets: <T = Promise<AsyncIterator<AssetSubscription>>>(
@@ -1883,6 +1959,7 @@ export interface TaskSubscription
       last?: Int;
     }
   ) => T;
+  status: () => Promise<AsyncIterator<TaskStatus>>;
 }
 
 export interface CategoryNode {
@@ -1906,6 +1983,17 @@ export interface Category extends Promise<CategoryNode>, Fragmentable {
       last?: Int;
     }
   ) => T;
+  tasks: <T = FragmentableArray<TaskNode>>(
+    args?: {
+      where?: TaskWhereInput;
+      orderBy?: TaskOrderByInput;
+      skip?: Int;
+      after?: String;
+      before?: String;
+      first?: Int;
+      last?: Int;
+    }
+  ) => T;
 }
 
 export interface CategorySubscription
@@ -1918,6 +2006,17 @@ export interface CategorySubscription
     args?: {
       where?: CategoryFieldWhereInput;
       orderBy?: CategoryFieldOrderByInput;
+      skip?: Int;
+      after?: String;
+      before?: String;
+      first?: Int;
+      last?: Int;
+    }
+  ) => T;
+  tasks: <T = Promise<AsyncIterator<TaskSubscription>>>(
+    args?: {
+      where?: TaskWhereInput;
+      orderBy?: TaskOrderByInput;
       skip?: Int;
       after?: String;
       before?: String;
@@ -2670,39 +2769,39 @@ export interface TaskSubscriptionPayloadSubscription
 
 export interface TaskPreviousValuesNode {
   id: ID_Output;
-  approved: Boolean;
   title: String;
   description: String;
   dueDate?: DateTimeOutput;
   dueWhenPossible: Boolean;
   createdAt: DateTimeOutput;
   updatedAt: DateTimeOutput;
+  status: TaskStatus;
 }
 
 export interface TaskPreviousValues
   extends Promise<TaskPreviousValuesNode>,
     Fragmentable {
   id: () => Promise<ID_Output>;
-  approved: () => Promise<Boolean>;
   title: () => Promise<String>;
   description: () => Promise<String>;
   dueDate: () => Promise<DateTimeOutput>;
   dueWhenPossible: () => Promise<Boolean>;
   createdAt: () => Promise<DateTimeOutput>;
   updatedAt: () => Promise<DateTimeOutput>;
+  status: () => Promise<TaskStatus>;
 }
 
 export interface TaskPreviousValuesSubscription
   extends Promise<AsyncIterator<TaskPreviousValuesNode>>,
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
-  approved: () => Promise<AsyncIterator<Boolean>>;
   title: () => Promise<AsyncIterator<String>>;
   description: () => Promise<AsyncIterator<String>>;
   dueDate: () => Promise<AsyncIterator<DateTimeOutput>>;
   dueWhenPossible: () => Promise<AsyncIterator<Boolean>>;
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  status: () => Promise<AsyncIterator<TaskStatus>>;
 }
 
 export interface UserSubscriptionPayloadNode {
@@ -2740,7 +2839,7 @@ export interface UserPreviousValuesNode {
   resetTokenExpiry?: Float;
   signupToken?: String;
   signupTokenExpiry?: Float;
-  status: Status;
+  status: UserStatus;
 }
 
 export interface UserPreviousValues
@@ -2757,7 +2856,7 @@ export interface UserPreviousValues
   resetTokenExpiry: () => Promise<Float>;
   signupToken: () => Promise<String>;
   signupTokenExpiry: () => Promise<Float>;
-  status: () => Promise<Status>;
+  status: () => Promise<UserStatus>;
 }
 
 export interface UserPreviousValuesSubscription
@@ -2774,7 +2873,7 @@ export interface UserPreviousValuesSubscription
   resetTokenExpiry: () => Promise<AsyncIterator<Float>>;
   signupToken: () => Promise<AsyncIterator<String>>;
   signupTokenExpiry: () => Promise<AsyncIterator<Float>>;
-  status: () => Promise<AsyncIterator<Status>>;
+  status: () => Promise<AsyncIterator<UserStatus>>;
 }
 
 /*
@@ -2794,11 +2893,6 @@ The `Float` scalar type represents signed double-precision fractional values as 
 export type Float = number;
 
 /*
-The `Boolean` scalar type represents `true` or `false`.
-*/
-export type Boolean = boolean;
-
-/*
 DateTime scalar input type, allowing Date
 */
 export type DateTimeInput = Date | string;
@@ -2807,6 +2901,11 @@ export type DateTimeInput = Date | string;
 DateTime scalar output type, which is always a string
 */
 export type DateTimeOutput = string;
+
+/*
+The `Boolean` scalar type represents `true` or `false`.
+*/
+export type Boolean = boolean;
 
 /*
 The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1. 

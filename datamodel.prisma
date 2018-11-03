@@ -4,10 +4,18 @@ enum Role {
   STAFF,
 }
 
-enum Status {
+enum UserStatus {
   JOINED, 
   INVITED,
   DELETED
+}
+
+enum TaskStatus {
+  CREATED,
+  ASSIGNED,
+  AWAITINGINPUT,
+  COMPLETED, 
+  CLOSED
 }
 
 enum FieldType { 
@@ -31,14 +39,13 @@ type User {
   resetTokenExpiry: Float
   signupToken: String @unique
   signupTokenExpiry: Float
-  status: Status! @default(value: INVITED)
+  status: UserStatus! @default(value: INVITED)
 }
 
 type Task { 
   id: ID! @unique
   createdBy: User! @relation(name: "TaskCreatedByUser")
   assignedTo: User @relation(name: "TaskAssignedToUser")
-  approved: Boolean! @default(value: "false")
   title: String!
   description: String!
   assets: [Asset!]!
@@ -49,6 +56,7 @@ type Task {
   createdAt: DateTime!
   updatedAt: DateTime!
   customFields: [CustomField!]!
+  status: TaskStatus! @default(value: CREATED)
 }
 
 type CustomField {
@@ -60,11 +68,13 @@ type CustomField {
   categoryField: CategoryField!
 }
 
+# TODO Change the naming of category... Lists maybe
 type Category {
   id: ID! @unique
   name: String! @unique
   description: String
   categoryFields: [CategoryField!]!
+  tasks: [Task!]!
 }
 
 type CategoryField {

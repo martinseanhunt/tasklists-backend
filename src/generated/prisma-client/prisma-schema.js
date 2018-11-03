@@ -176,6 +176,7 @@ type Category {
   name: String!
   description: String
   categoryFields(where: CategoryFieldWhereInput, orderBy: CategoryFieldOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [CategoryField!]
+  tasks(where: TaskWhereInput, orderBy: TaskOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Task!]
 }
 
 type CategoryConnection {
@@ -188,11 +189,7 @@ input CategoryCreateInput {
   name: String!
   description: String
   categoryFields: CategoryFieldCreateManyWithoutCategoryInput
-}
-
-input CategoryCreateOneInput {
-  create: CategoryCreateInput
-  connect: CategoryWhereUniqueInput
+  tasks: TaskCreateManyWithoutCategoryInput
 }
 
 input CategoryCreateOneWithoutCategoryFieldsInput {
@@ -200,9 +197,21 @@ input CategoryCreateOneWithoutCategoryFieldsInput {
   connect: CategoryWhereUniqueInput
 }
 
+input CategoryCreateOneWithoutTasksInput {
+  create: CategoryCreateWithoutTasksInput
+  connect: CategoryWhereUniqueInput
+}
+
 input CategoryCreateWithoutCategoryFieldsInput {
   name: String!
   description: String
+  tasks: TaskCreateManyWithoutCategoryInput
+}
+
+input CategoryCreateWithoutTasksInput {
+  name: String!
+  description: String
+  categoryFields: CategoryFieldCreateManyWithoutCategoryInput
 }
 
 type CategoryEdge {
@@ -415,22 +424,17 @@ input CategorySubscriptionWhereInput {
   NOT: [CategorySubscriptionWhereInput!]
 }
 
-input CategoryUpdateDataInput {
-  name: String
-  description: String
-  categoryFields: CategoryFieldUpdateManyWithoutCategoryInput
-}
-
 input CategoryUpdateInput {
   name: String
   description: String
   categoryFields: CategoryFieldUpdateManyWithoutCategoryInput
+  tasks: TaskUpdateManyWithoutCategoryInput
 }
 
-input CategoryUpdateOneRequiredInput {
-  create: CategoryCreateInput
-  update: CategoryUpdateDataInput
-  upsert: CategoryUpsertNestedInput
+input CategoryUpdateOneRequiredWithoutTasksInput {
+  create: CategoryCreateWithoutTasksInput
+  update: CategoryUpdateWithoutTasksDataInput
+  upsert: CategoryUpsertWithoutTasksInput
   connect: CategoryWhereUniqueInput
 }
 
@@ -446,16 +450,23 @@ input CategoryUpdateOneWithoutCategoryFieldsInput {
 input CategoryUpdateWithoutCategoryFieldsDataInput {
   name: String
   description: String
+  tasks: TaskUpdateManyWithoutCategoryInput
 }
 
-input CategoryUpsertNestedInput {
-  update: CategoryUpdateDataInput!
-  create: CategoryCreateInput!
+input CategoryUpdateWithoutTasksDataInput {
+  name: String
+  description: String
+  categoryFields: CategoryFieldUpdateManyWithoutCategoryInput
 }
 
 input CategoryUpsertWithoutCategoryFieldsInput {
   update: CategoryUpdateWithoutCategoryFieldsDataInput!
   create: CategoryCreateWithoutCategoryFieldsInput!
+}
+
+input CategoryUpsertWithoutTasksInput {
+  update: CategoryUpdateWithoutTasksDataInput!
+  create: CategoryCreateWithoutTasksInput!
 }
 
 input CategoryWhereInput {
@@ -504,6 +515,9 @@ input CategoryWhereInput {
   categoryFields_every: CategoryFieldWhereInput
   categoryFields_some: CategoryFieldWhereInput
   categoryFields_none: CategoryFieldWhereInput
+  tasks_every: TaskWhereInput
+  tasks_some: TaskWhereInput
+  tasks_none: TaskWhereInput
   AND: [CategoryWhereInput!]
   OR: [CategoryWhereInput!]
   NOT: [CategoryWhereInput!]
@@ -937,12 +951,6 @@ enum Role {
   STAFF
 }
 
-enum Status {
-  JOINED
-  INVITED
-  DELETED
-}
-
 type Subscription {
   asset(where: AssetSubscriptionWhereInput): AssetSubscriptionPayload
   category(where: CategorySubscriptionWhereInput): CategorySubscriptionPayload
@@ -957,7 +965,6 @@ type Task {
   id: ID!
   createdBy: User!
   assignedTo: User
-  approved: Boolean!
   title: String!
   description: String!
   assets(where: AssetWhereInput, orderBy: AssetOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Asset!]
@@ -968,6 +975,7 @@ type Task {
   createdAt: DateTime!
   updatedAt: DateTime!
   customFields(where: CustomFieldWhereInput, orderBy: CustomFieldOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [CustomField!]
+  status: TaskStatus!
 }
 
 type TaskConnection {
@@ -979,19 +987,24 @@ type TaskConnection {
 input TaskCreateInput {
   createdBy: UserCreateOneWithoutTasksCreatedInput!
   assignedTo: UserCreateOneWithoutTasksAssignedToInput
-  approved: Boolean
   title: String!
   description: String!
   assets: AssetCreateManyInput
-  category: CategoryCreateOneInput!
+  category: CategoryCreateOneWithoutTasksInput!
   comments: CommentCreateManyInput
   dueDate: DateTime
   dueWhenPossible: Boolean
   customFields: CustomFieldCreateManyInput
+  status: TaskStatus
 }
 
 input TaskCreateManyWithoutAssignedToInput {
   create: [TaskCreateWithoutAssignedToInput!]
+  connect: [TaskWhereUniqueInput!]
+}
+
+input TaskCreateManyWithoutCategoryInput {
+  create: [TaskCreateWithoutCategoryInput!]
   connect: [TaskWhereUniqueInput!]
 }
 
@@ -1002,28 +1015,41 @@ input TaskCreateManyWithoutCreatedByInput {
 
 input TaskCreateWithoutAssignedToInput {
   createdBy: UserCreateOneWithoutTasksCreatedInput!
-  approved: Boolean
   title: String!
   description: String!
   assets: AssetCreateManyInput
-  category: CategoryCreateOneInput!
+  category: CategoryCreateOneWithoutTasksInput!
   comments: CommentCreateManyInput
   dueDate: DateTime
   dueWhenPossible: Boolean
   customFields: CustomFieldCreateManyInput
+  status: TaskStatus
+}
+
+input TaskCreateWithoutCategoryInput {
+  createdBy: UserCreateOneWithoutTasksCreatedInput!
+  assignedTo: UserCreateOneWithoutTasksAssignedToInput
+  title: String!
+  description: String!
+  assets: AssetCreateManyInput
+  comments: CommentCreateManyInput
+  dueDate: DateTime
+  dueWhenPossible: Boolean
+  customFields: CustomFieldCreateManyInput
+  status: TaskStatus
 }
 
 input TaskCreateWithoutCreatedByInput {
   assignedTo: UserCreateOneWithoutTasksAssignedToInput
-  approved: Boolean
   title: String!
   description: String!
   assets: AssetCreateManyInput
-  category: CategoryCreateOneInput!
+  category: CategoryCreateOneWithoutTasksInput!
   comments: CommentCreateManyInput
   dueDate: DateTime
   dueWhenPossible: Boolean
   customFields: CustomFieldCreateManyInput
+  status: TaskStatus
 }
 
 type TaskEdge {
@@ -1034,8 +1060,6 @@ type TaskEdge {
 enum TaskOrderByInput {
   id_ASC
   id_DESC
-  approved_ASC
-  approved_DESC
   title_ASC
   title_DESC
   description_ASC
@@ -1048,17 +1072,27 @@ enum TaskOrderByInput {
   createdAt_DESC
   updatedAt_ASC
   updatedAt_DESC
+  status_ASC
+  status_DESC
 }
 
 type TaskPreviousValues {
   id: ID!
-  approved: Boolean!
   title: String!
   description: String!
   dueDate: DateTime
   dueWhenPossible: Boolean!
   createdAt: DateTime!
   updatedAt: DateTime!
+  status: TaskStatus!
+}
+
+enum TaskStatus {
+  CREATED
+  ASSIGNED
+  AWAITINGINPUT
+  COMPLETED
+  CLOSED
 }
 
 type TaskSubscriptionPayload {
@@ -1082,15 +1116,15 @@ input TaskSubscriptionWhereInput {
 input TaskUpdateInput {
   createdBy: UserUpdateOneRequiredWithoutTasksCreatedInput
   assignedTo: UserUpdateOneWithoutTasksAssignedToInput
-  approved: Boolean
   title: String
   description: String
   assets: AssetUpdateManyInput
-  category: CategoryUpdateOneRequiredInput
+  category: CategoryUpdateOneRequiredWithoutTasksInput
   comments: CommentUpdateManyInput
   dueDate: DateTime
   dueWhenPossible: Boolean
   customFields: CustomFieldUpdateManyInput
+  status: TaskStatus
 }
 
 input TaskUpdateManyWithoutAssignedToInput {
@@ -1100,6 +1134,15 @@ input TaskUpdateManyWithoutAssignedToInput {
   disconnect: [TaskWhereUniqueInput!]
   update: [TaskUpdateWithWhereUniqueWithoutAssignedToInput!]
   upsert: [TaskUpsertWithWhereUniqueWithoutAssignedToInput!]
+}
+
+input TaskUpdateManyWithoutCategoryInput {
+  create: [TaskCreateWithoutCategoryInput!]
+  delete: [TaskWhereUniqueInput!]
+  connect: [TaskWhereUniqueInput!]
+  disconnect: [TaskWhereUniqueInput!]
+  update: [TaskUpdateWithWhereUniqueWithoutCategoryInput!]
+  upsert: [TaskUpsertWithWhereUniqueWithoutCategoryInput!]
 }
 
 input TaskUpdateManyWithoutCreatedByInput {
@@ -1113,33 +1156,51 @@ input TaskUpdateManyWithoutCreatedByInput {
 
 input TaskUpdateWithoutAssignedToDataInput {
   createdBy: UserUpdateOneRequiredWithoutTasksCreatedInput
-  approved: Boolean
   title: String
   description: String
   assets: AssetUpdateManyInput
-  category: CategoryUpdateOneRequiredInput
+  category: CategoryUpdateOneRequiredWithoutTasksInput
   comments: CommentUpdateManyInput
   dueDate: DateTime
   dueWhenPossible: Boolean
   customFields: CustomFieldUpdateManyInput
+  status: TaskStatus
+}
+
+input TaskUpdateWithoutCategoryDataInput {
+  createdBy: UserUpdateOneRequiredWithoutTasksCreatedInput
+  assignedTo: UserUpdateOneWithoutTasksAssignedToInput
+  title: String
+  description: String
+  assets: AssetUpdateManyInput
+  comments: CommentUpdateManyInput
+  dueDate: DateTime
+  dueWhenPossible: Boolean
+  customFields: CustomFieldUpdateManyInput
+  status: TaskStatus
 }
 
 input TaskUpdateWithoutCreatedByDataInput {
   assignedTo: UserUpdateOneWithoutTasksAssignedToInput
-  approved: Boolean
   title: String
   description: String
   assets: AssetUpdateManyInput
-  category: CategoryUpdateOneRequiredInput
+  category: CategoryUpdateOneRequiredWithoutTasksInput
   comments: CommentUpdateManyInput
   dueDate: DateTime
   dueWhenPossible: Boolean
   customFields: CustomFieldUpdateManyInput
+  status: TaskStatus
 }
 
 input TaskUpdateWithWhereUniqueWithoutAssignedToInput {
   where: TaskWhereUniqueInput!
   data: TaskUpdateWithoutAssignedToDataInput!
+}
+
+input TaskUpdateWithWhereUniqueWithoutCategoryInput {
+  where: TaskWhereUniqueInput!
+  data: TaskUpdateWithoutCategoryDataInput!
 }
 
 input TaskUpdateWithWhereUniqueWithoutCreatedByInput {
@@ -1151,6 +1212,12 @@ input TaskUpsertWithWhereUniqueWithoutAssignedToInput {
   where: TaskWhereUniqueInput!
   update: TaskUpdateWithoutAssignedToDataInput!
   create: TaskCreateWithoutAssignedToInput!
+}
+
+input TaskUpsertWithWhereUniqueWithoutCategoryInput {
+  where: TaskWhereUniqueInput!
+  update: TaskUpdateWithoutCategoryDataInput!
+  create: TaskCreateWithoutCategoryInput!
 }
 
 input TaskUpsertWithWhereUniqueWithoutCreatedByInput {
@@ -1176,8 +1243,6 @@ input TaskWhereInput {
   id_not_ends_with: ID
   createdBy: UserWhereInput
   assignedTo: UserWhereInput
-  approved: Boolean
-  approved_not: Boolean
   title: String
   title_not: String
   title_in: [String!]
@@ -1242,6 +1307,10 @@ input TaskWhereInput {
   customFields_every: CustomFieldWhereInput
   customFields_some: CustomFieldWhereInput
   customFields_none: CustomFieldWhereInput
+  status: TaskStatus
+  status_not: TaskStatus
+  status_in: [TaskStatus!]
+  status_not_in: [TaskStatus!]
   AND: [TaskWhereInput!]
   OR: [TaskWhereInput!]
   NOT: [TaskWhereInput!]
@@ -1265,7 +1334,7 @@ type User {
   resetTokenExpiry: Float
   signupToken: String
   signupTokenExpiry: Float
-  status: Status!
+  status: UserStatus!
 }
 
 type UserConnection {
@@ -1287,7 +1356,7 @@ input UserCreateInput {
   resetTokenExpiry: Float
   signupToken: String
   signupTokenExpiry: Float
-  status: Status
+  status: UserStatus
 }
 
 input UserCreateOneInput {
@@ -1317,7 +1386,7 @@ input UserCreateWithoutTasksAssignedToInput {
   resetTokenExpiry: Float
   signupToken: String
   signupTokenExpiry: Float
-  status: Status
+  status: UserStatus
 }
 
 input UserCreateWithoutTasksCreatedInput {
@@ -1332,7 +1401,7 @@ input UserCreateWithoutTasksCreatedInput {
   resetTokenExpiry: Float
   signupToken: String
   signupTokenExpiry: Float
-  status: Status
+  status: UserStatus
 }
 
 type UserEdge {
@@ -1383,7 +1452,13 @@ type UserPreviousValues {
   resetTokenExpiry: Float
   signupToken: String
   signupTokenExpiry: Float
-  status: Status!
+  status: UserStatus!
+}
+
+enum UserStatus {
+  JOINED
+  INVITED
+  DELETED
 }
 
 type UserSubscriptionPayload {
@@ -1417,7 +1492,7 @@ input UserUpdateDataInput {
   resetTokenExpiry: Float
   signupToken: String
   signupTokenExpiry: Float
-  status: Status
+  status: UserStatus
 }
 
 input UserUpdateInput {
@@ -1433,7 +1508,7 @@ input UserUpdateInput {
   resetTokenExpiry: Float
   signupToken: String
   signupTokenExpiry: Float
-  status: Status
+  status: UserStatus
 }
 
 input UserUpdateOneInput {
@@ -1480,7 +1555,7 @@ input UserUpdateWithoutTasksAssignedToDataInput {
   resetTokenExpiry: Float
   signupToken: String
   signupTokenExpiry: Float
-  status: Status
+  status: UserStatus
 }
 
 input UserUpdateWithoutTasksCreatedDataInput {
@@ -1495,7 +1570,7 @@ input UserUpdateWithoutTasksCreatedDataInput {
   resetTokenExpiry: Float
   signupToken: String
   signupTokenExpiry: Float
-  status: Status
+  status: UserStatus
 }
 
 input UserUpsertNestedInput {
@@ -1652,10 +1727,10 @@ input UserWhereInput {
   signupTokenExpiry_lte: Float
   signupTokenExpiry_gt: Float
   signupTokenExpiry_gte: Float
-  status: Status
-  status_not: Status
-  status_in: [Status!]
-  status_not_in: [Status!]
+  status: UserStatus
+  status_not: UserStatus
+  status_in: [UserStatus!]
+  status_not_in: [UserStatus!]
   AND: [UserWhereInput!]
   OR: [UserWhereInput!]
   NOT: [UserWhereInput!]

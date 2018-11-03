@@ -40,6 +40,10 @@ module.exports = {
           fieldName
           fieldType
         }
+        tasks {
+          id
+          status
+        }
       }
     `
 

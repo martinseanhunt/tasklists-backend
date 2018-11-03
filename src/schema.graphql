@@ -38,7 +38,13 @@ type User {
   name: String
   slackHandle: String
   role: Role
-  status: Status
+  status: UserStatus
+}
+
+enum UserStatus {
+  JOINED, 
+  INVITED,
+  DELETED
 }
 
 type StatusMessage {
