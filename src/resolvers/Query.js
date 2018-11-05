@@ -49,5 +49,48 @@ module.exports = {
     `
 
     return ctx.prisma.categories().$fragment(fragment)
-  } 
+  },
+
+  async category(parent, args, ctx) {
+    const { request: { userId } } = ctx
+    if(!userId) return []
+    
+    // Use fragments to get related tasks to the category
+    const fragment = `
+      fragment categoriesWithFilteredTasks on Category {
+        name
+        id
+        slug
+        description
+      }
+    `
+
+    // BIGQUESTION: Do we really need fragments to do this? 
+
+    // Can i run prisma bindings in parralel with prisma client so I don't have
+    // to explicity state what fields to return here all the time! it removes so much flexibility
+    // on the front end
+
+    return ctx.prisma
+      .category({ slug: args.slug })
+      .$fragment(fragment)
+
+  },
+
+  async tasks(parent, args, ctx) {
+    const { request: { userId } } = ctx
+    if(!userId) return []
+
+    console.log(args.slug)
+
+    return ctx.prisma
+      .tasks({
+        where: {
+          category: {
+            slug: args.taskListSlug
+          },
+          status_not_in: args.excludeStatus
+        }
+      })
+  }
 }

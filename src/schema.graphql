@@ -5,6 +5,8 @@ type Query {
   me: User
   users: [User]
   categories: [Category]
+  category(slug: String!): Category
+  tasks(taskListSlug: String!, excludeStatus: [TaskStatus]): [Task]
 }
 
 type Mutation {
