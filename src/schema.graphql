@@ -4,8 +4,8 @@ type Query {
   userByToken(token: String!): User
   me: User
   users: [User]
-  categories: [Category]
-  category(slug: String!): Category
+  taskLists: [TaskList]
+  taskList(slug: String!): TaskList
   tasks(taskListSlug: String!, excludeStatus: [TaskStatus]): [Task]
 }
 
@@ -18,11 +18,11 @@ type Mutation {
     avatar: String
   ): User
 
-  createCategory(
+  createTaskList(
     name: String!
     description: String!
-    categoryFields: [CategoryFieldCreateWithoutCategoryInput]
-  ): Category
+    taskListFields: [TaskListFieldCreateWithoutTaskListInput]
+  ): TaskList
 
   signUp(token: String!, password: String!, avatar: String): User
   
@@ -41,12 +41,6 @@ type User {
   slackHandle: String
   role: Role
   status: UserStatus
-}
-
-enum UserStatus {
-  JOINED, 
-  INVITED,
-  DELETED
 }
 
 type StatusMessage {

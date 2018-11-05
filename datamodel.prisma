@@ -49,7 +49,7 @@ type Task {
   title: String!
   description: String!
   assets: [Asset!]!
-  category: Category!
+  taskList: TaskList!
   comments: [Comment!]!
   dueDate: DateTime
   dueWhenPossible: Boolean! @default(value: "false")
@@ -65,24 +65,23 @@ type CustomField {
   fieldName: String!, 
   fieldType: FieldType!,
   fieldValue: String!
-  categoryField: CategoryField!
+  taskListField: TaskListField!
 }
 
-# TODO Change the naming of category... Lists maybe
-type Category {
+type TaskList {
   id: ID! @unique
   name: String! @unique
   description: String
-  categoryFields: [CategoryField!]!
+  taskListFields: [TaskListField!]!
   tasks: [Task!]!
   slug: String! @unique
 }
 
-type CategoryField {
+type TaskListField {
   id: ID! @unique
   fieldName: String!
   fieldType: FieldType!
-  category: Category
+  taskList: TaskList
 }
 
 type Comment {

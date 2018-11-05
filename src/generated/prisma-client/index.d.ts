@@ -12,11 +12,11 @@ type AtLeastOne<T, U = { [K in keyof T]: Pick<T, K> }> = Partial<T> &
 
 export interface Exists {
   asset: (where?: AssetWhereInput) => Promise<boolean>;
-  category: (where?: CategoryWhereInput) => Promise<boolean>;
-  categoryField: (where?: CategoryFieldWhereInput) => Promise<boolean>;
   comment: (where?: CommentWhereInput) => Promise<boolean>;
   customField: (where?: CustomFieldWhereInput) => Promise<boolean>;
   task: (where?: TaskWhereInput) => Promise<boolean>;
+  taskList: (where?: TaskListWhereInput) => Promise<boolean>;
+  taskListField: (where?: TaskListFieldWhereInput) => Promise<boolean>;
   user: (where?: UserWhereInput) => Promise<boolean>;
 }
 
@@ -62,52 +62,6 @@ export interface Prisma {
       last?: Int;
     }
   ) => AssetConnection;
-  category: (where: CategoryWhereUniqueInput) => Category;
-  categories: (
-    args?: {
-      where?: CategoryWhereInput;
-      orderBy?: CategoryOrderByInput;
-      skip?: Int;
-      after?: String;
-      before?: String;
-      first?: Int;
-      last?: Int;
-    }
-  ) => FragmentableArray<CategoryNode>;
-  categoriesConnection: (
-    args?: {
-      where?: CategoryWhereInput;
-      orderBy?: CategoryOrderByInput;
-      skip?: Int;
-      after?: String;
-      before?: String;
-      first?: Int;
-      last?: Int;
-    }
-  ) => CategoryConnection;
-  categoryField: (where: CategoryFieldWhereUniqueInput) => CategoryField;
-  categoryFields: (
-    args?: {
-      where?: CategoryFieldWhereInput;
-      orderBy?: CategoryFieldOrderByInput;
-      skip?: Int;
-      after?: String;
-      before?: String;
-      first?: Int;
-      last?: Int;
-    }
-  ) => FragmentableArray<CategoryFieldNode>;
-  categoryFieldsConnection: (
-    args?: {
-      where?: CategoryFieldWhereInput;
-      orderBy?: CategoryFieldOrderByInput;
-      skip?: Int;
-      after?: String;
-      before?: String;
-      first?: Int;
-      last?: Int;
-    }
-  ) => CategoryFieldConnection;
   comment: (where: CommentWhereUniqueInput) => Comment;
   comments: (
     args?: {
@@ -177,6 +131,52 @@ export interface Prisma {
       last?: Int;
     }
   ) => TaskConnection;
+  taskList: (where: TaskListWhereUniqueInput) => TaskList;
+  taskLists: (
+    args?: {
+      where?: TaskListWhereInput;
+      orderBy?: TaskListOrderByInput;
+      skip?: Int;
+      after?: String;
+      before?: String;
+      first?: Int;
+      last?: Int;
+    }
+  ) => FragmentableArray<TaskListNode>;
+  taskListsConnection: (
+    args?: {
+      where?: TaskListWhereInput;
+      orderBy?: TaskListOrderByInput;
+      skip?: Int;
+      after?: String;
+      before?: String;
+      first?: Int;
+      last?: Int;
+    }
+  ) => TaskListConnection;
+  taskListField: (where: TaskListFieldWhereUniqueInput) => TaskListField;
+  taskListFields: (
+    args?: {
+      where?: TaskListFieldWhereInput;
+      orderBy?: TaskListFieldOrderByInput;
+      skip?: Int;
+      after?: String;
+      before?: String;
+      first?: Int;
+      last?: Int;
+    }
+  ) => FragmentableArray<TaskListFieldNode>;
+  taskListFieldsConnection: (
+    args?: {
+      where?: TaskListFieldWhereInput;
+      orderBy?: TaskListFieldOrderByInput;
+      skip?: Int;
+      after?: String;
+      before?: String;
+      first?: Int;
+      last?: Int;
+    }
+  ) => TaskListFieldConnection;
   user: (where: UserWhereUniqueInput) => User;
   users: (
     args?: {
@@ -222,41 +222,6 @@ export interface Prisma {
   ) => Asset;
   deleteAsset: (where: AssetWhereUniqueInput) => Asset;
   deleteManyAssets: (where?: AssetWhereInput) => BatchPayload;
-  createCategory: (data: CategoryCreateInput) => Category;
-  updateCategory: (
-    args: { data: CategoryUpdateInput; where: CategoryWhereUniqueInput }
-  ) => Category;
-  updateManyCategories: (
-    args: { data: CategoryUpdateInput; where?: CategoryWhereInput }
-  ) => BatchPayload;
-  upsertCategory: (
-    args: {
-      where: CategoryWhereUniqueInput;
-      create: CategoryCreateInput;
-      update: CategoryUpdateInput;
-    }
-  ) => Category;
-  deleteCategory: (where: CategoryWhereUniqueInput) => Category;
-  deleteManyCategories: (where?: CategoryWhereInput) => BatchPayload;
-  createCategoryField: (data: CategoryFieldCreateInput) => CategoryField;
-  updateCategoryField: (
-    args: {
-      data: CategoryFieldUpdateInput;
-      where: CategoryFieldWhereUniqueInput;
-    }
-  ) => CategoryField;
-  updateManyCategoryFields: (
-    args: { data: CategoryFieldUpdateInput; where?: CategoryFieldWhereInput }
-  ) => BatchPayload;
-  upsertCategoryField: (
-    args: {
-      where: CategoryFieldWhereUniqueInput;
-      create: CategoryFieldCreateInput;
-      update: CategoryFieldUpdateInput;
-    }
-  ) => CategoryField;
-  deleteCategoryField: (where: CategoryFieldWhereUniqueInput) => CategoryField;
-  deleteManyCategoryFields: (where?: CategoryFieldWhereInput) => BatchPayload;
   createComment: (data: CommentCreateInput) => Comment;
   updateComment: (
     args: { data: CommentUpdateInput; where: CommentWhereUniqueInput }
@@ -305,6 +270,41 @@ export interface Prisma {
   ) => Task;
   deleteTask: (where: TaskWhereUniqueInput) => Task;
   deleteManyTasks: (where?: TaskWhereInput) => BatchPayload;
+  createTaskList: (data: TaskListCreateInput) => TaskList;
+  updateTaskList: (
+    args: { data: TaskListUpdateInput; where: TaskListWhereUniqueInput }
+  ) => TaskList;
+  updateManyTaskLists: (
+    args: { data: TaskListUpdateInput; where?: TaskListWhereInput }
+  ) => BatchPayload;
+  upsertTaskList: (
+    args: {
+      where: TaskListWhereUniqueInput;
+      create: TaskListCreateInput;
+      update: TaskListUpdateInput;
+    }
+  ) => TaskList;
+  deleteTaskList: (where: TaskListWhereUniqueInput) => TaskList;
+  deleteManyTaskLists: (where?: TaskListWhereInput) => BatchPayload;
+  createTaskListField: (data: TaskListFieldCreateInput) => TaskListField;
+  updateTaskListField: (
+    args: {
+      data: TaskListFieldUpdateInput;
+      where: TaskListFieldWhereUniqueInput;
+    }
+  ) => TaskListField;
+  updateManyTaskListFields: (
+    args: { data: TaskListFieldUpdateInput; where?: TaskListFieldWhereInput }
+  ) => BatchPayload;
+  upsertTaskListField: (
+    args: {
+      where: TaskListFieldWhereUniqueInput;
+      create: TaskListFieldCreateInput;
+      update: TaskListFieldUpdateInput;
+    }
+  ) => TaskListField;
+  deleteTaskListField: (where: TaskListFieldWhereUniqueInput) => TaskListField;
+  deleteManyTaskListFields: (where?: TaskListFieldWhereInput) => BatchPayload;
   createUser: (data: UserCreateInput) => User;
   updateUser: (
     args: { data: UserUpdateInput; where: UserWhereUniqueInput }
@@ -333,12 +333,6 @@ export interface Subscription {
   asset: (
     where?: AssetSubscriptionWhereInput
   ) => AssetSubscriptionPayloadSubscription;
-  category: (
-    where?: CategorySubscriptionWhereInput
-  ) => CategorySubscriptionPayloadSubscription;
-  categoryField: (
-    where?: CategoryFieldSubscriptionWhereInput
-  ) => CategoryFieldSubscriptionPayloadSubscription;
   comment: (
     where?: CommentSubscriptionWhereInput
   ) => CommentSubscriptionPayloadSubscription;
@@ -348,6 +342,12 @@ export interface Subscription {
   task: (
     where?: TaskSubscriptionWhereInput
   ) => TaskSubscriptionPayloadSubscription;
+  taskList: (
+    where?: TaskListSubscriptionWhereInput
+  ) => TaskListSubscriptionPayloadSubscription;
+  taskListField: (
+    where?: TaskListFieldSubscriptionWhereInput
+  ) => TaskListFieldSubscriptionPayloadSubscription;
   user: (
     where?: UserSubscriptionWhereInput
   ) => UserSubscriptionPayloadSubscription;
@@ -402,7 +402,7 @@ export type AssetOrderByInput =
   | "updatedAt_ASC"
   | "updatedAt_DESC";
 
-export type CategoryFieldOrderByInput =
+export type TaskListFieldOrderByInput =
   | "id_ASC"
   | "id_DESC"
   | "fieldName_ASC"
@@ -438,7 +438,7 @@ export type CustomFieldOrderByInput =
   | "updatedAt_ASC"
   | "updatedAt_DESC";
 
-export type CategoryOrderByInput =
+export type TaskListOrderByInput =
   | "id_ASC"
   | "id_DESC"
   | "name_ASC"
@@ -536,7 +536,7 @@ export interface TaskWhereInput {
   assets_every?: AssetWhereInput;
   assets_some?: AssetWhereInput;
   assets_none?: AssetWhereInput;
-  category?: CategoryWhereInput;
+  taskList?: TaskListWhereInput;
   comments_every?: CommentWhereInput;
   comments_some?: CommentWhereInput;
   comments_none?: CommentWhereInput;
@@ -769,7 +769,7 @@ export interface AssetWhereInput {
   NOT?: AssetWhereInput[] | AssetWhereInput;
 }
 
-export interface CategoryWhereInput {
+export interface TaskListWhereInput {
   id?: ID_Input;
   id_not?: ID_Input;
   id_in?: ID_Input[] | ID_Input;
@@ -812,9 +812,9 @@ export interface CategoryWhereInput {
   description_not_starts_with?: String;
   description_ends_with?: String;
   description_not_ends_with?: String;
-  categoryFields_every?: CategoryFieldWhereInput;
-  categoryFields_some?: CategoryFieldWhereInput;
-  categoryFields_none?: CategoryFieldWhereInput;
+  taskListFields_every?: TaskListFieldWhereInput;
+  taskListFields_some?: TaskListFieldWhereInput;
+  taskListFields_none?: TaskListFieldWhereInput;
   tasks_every?: TaskWhereInput;
   tasks_some?: TaskWhereInput;
   tasks_none?: TaskWhereInput;
@@ -832,12 +832,12 @@ export interface CategoryWhereInput {
   slug_not_starts_with?: String;
   slug_ends_with?: String;
   slug_not_ends_with?: String;
-  AND?: CategoryWhereInput[] | CategoryWhereInput;
-  OR?: CategoryWhereInput[] | CategoryWhereInput;
-  NOT?: CategoryWhereInput[] | CategoryWhereInput;
+  AND?: TaskListWhereInput[] | TaskListWhereInput;
+  OR?: TaskListWhereInput[] | TaskListWhereInput;
+  NOT?: TaskListWhereInput[] | TaskListWhereInput;
 }
 
-export interface CategoryFieldWhereInput {
+export interface TaskListFieldWhereInput {
   id?: ID_Input;
   id_not?: ID_Input;
   id_in?: ID_Input[] | ID_Input;
@@ -870,10 +870,10 @@ export interface CategoryFieldWhereInput {
   fieldType_not?: FieldType;
   fieldType_in?: FieldType[] | FieldType;
   fieldType_not_in?: FieldType[] | FieldType;
-  category?: CategoryWhereInput;
-  AND?: CategoryFieldWhereInput[] | CategoryFieldWhereInput;
-  OR?: CategoryFieldWhereInput[] | CategoryFieldWhereInput;
-  NOT?: CategoryFieldWhereInput[] | CategoryFieldWhereInput;
+  taskList?: TaskListWhereInput;
+  AND?: TaskListFieldWhereInput[] | TaskListFieldWhereInput;
+  OR?: TaskListFieldWhereInput[] | TaskListFieldWhereInput;
+  NOT?: TaskListFieldWhereInput[] | TaskListFieldWhereInput;
 }
 
 export interface CommentWhereInput {
@@ -977,21 +977,11 @@ export interface CustomFieldWhereInput {
   fieldValue_not_starts_with?: String;
   fieldValue_ends_with?: String;
   fieldValue_not_ends_with?: String;
-  categoryField?: CategoryFieldWhereInput;
+  taskListField?: TaskListFieldWhereInput;
   AND?: CustomFieldWhereInput[] | CustomFieldWhereInput;
   OR?: CustomFieldWhereInput[] | CustomFieldWhereInput;
   NOT?: CustomFieldWhereInput[] | CustomFieldWhereInput;
 }
-
-export type CategoryWhereUniqueInput = AtLeastOne<{
-  id: ID_Input;
-  name?: String;
-  slug?: String;
-}>;
-
-export type CategoryFieldWhereUniqueInput = AtLeastOne<{
-  id: ID_Input;
-}>;
 
 export type CommentWhereUniqueInput = AtLeastOne<{
   id: ID_Input;
@@ -1002,6 +992,16 @@ export type CustomFieldWhereUniqueInput = AtLeastOne<{
 }>;
 
 export type TaskWhereUniqueInput = AtLeastOne<{
+  id: ID_Input;
+}>;
+
+export type TaskListWhereUniqueInput = AtLeastOne<{
+  id: ID_Input;
+  name?: String;
+  slug?: String;
+}>;
+
+export type TaskListFieldWhereUniqueInput = AtLeastOne<{
   id: ID_Input;
 }>;
 
@@ -1048,7 +1048,7 @@ export interface TaskCreateWithoutCreatedByInput {
   title: String;
   description: String;
   assets?: AssetCreateManyInput;
-  category: CategoryCreateOneWithoutTasksInput;
+  taskList: TaskListCreateOneWithoutTasksInput;
   comments?: CommentCreateManyInput;
   dueDate?: DateTimeInput;
   dueWhenPossible?: Boolean;
@@ -1081,26 +1081,26 @@ export interface AssetCreateManyInput {
   connect?: AssetWhereUniqueInput[] | AssetWhereUniqueInput;
 }
 
-export interface CategoryCreateOneWithoutTasksInput {
-  create?: CategoryCreateWithoutTasksInput;
-  connect?: CategoryWhereUniqueInput;
+export interface TaskListCreateOneWithoutTasksInput {
+  create?: TaskListCreateWithoutTasksInput;
+  connect?: TaskListWhereUniqueInput;
 }
 
-export interface CategoryCreateWithoutTasksInput {
+export interface TaskListCreateWithoutTasksInput {
   name: String;
   description?: String;
-  categoryFields?: CategoryFieldCreateManyWithoutCategoryInput;
+  taskListFields?: TaskListFieldCreateManyWithoutTaskListInput;
   slug: String;
 }
 
-export interface CategoryFieldCreateManyWithoutCategoryInput {
+export interface TaskListFieldCreateManyWithoutTaskListInput {
   create?:
-    | CategoryFieldCreateWithoutCategoryInput[]
-    | CategoryFieldCreateWithoutCategoryInput;
-  connect?: CategoryFieldWhereUniqueInput[] | CategoryFieldWhereUniqueInput;
+    | TaskListFieldCreateWithoutTaskListInput[]
+    | TaskListFieldCreateWithoutTaskListInput;
+  connect?: TaskListFieldWhereUniqueInput[] | TaskListFieldWhereUniqueInput;
 }
 
-export interface CategoryFieldCreateWithoutCategoryInput {
+export interface TaskListFieldCreateWithoutTaskListInput {
   fieldName: String;
   fieldType: FieldType;
 }
@@ -1125,38 +1125,38 @@ export interface CustomFieldCreateInput {
   fieldName: String;
   fieldType: FieldType;
   fieldValue: String;
-  categoryField: CategoryFieldCreateOneInput;
+  taskListField: TaskListFieldCreateOneInput;
 }
 
-export interface CategoryFieldCreateOneInput {
-  create?: CategoryFieldCreateInput;
-  connect?: CategoryFieldWhereUniqueInput;
+export interface TaskListFieldCreateOneInput {
+  create?: TaskListFieldCreateInput;
+  connect?: TaskListFieldWhereUniqueInput;
 }
 
-export interface CategoryFieldCreateInput {
+export interface TaskListFieldCreateInput {
   fieldName: String;
   fieldType: FieldType;
-  category?: CategoryCreateOneWithoutCategoryFieldsInput;
+  taskList?: TaskListCreateOneWithoutTaskListFieldsInput;
 }
 
-export interface CategoryCreateOneWithoutCategoryFieldsInput {
-  create?: CategoryCreateWithoutCategoryFieldsInput;
-  connect?: CategoryWhereUniqueInput;
+export interface TaskListCreateOneWithoutTaskListFieldsInput {
+  create?: TaskListCreateWithoutTaskListFieldsInput;
+  connect?: TaskListWhereUniqueInput;
 }
 
-export interface CategoryCreateWithoutCategoryFieldsInput {
+export interface TaskListCreateWithoutTaskListFieldsInput {
   name: String;
   description?: String;
-  tasks?: TaskCreateManyWithoutCategoryInput;
+  tasks?: TaskCreateManyWithoutTaskListInput;
   slug: String;
 }
 
-export interface TaskCreateManyWithoutCategoryInput {
-  create?: TaskCreateWithoutCategoryInput[] | TaskCreateWithoutCategoryInput;
+export interface TaskCreateManyWithoutTaskListInput {
+  create?: TaskCreateWithoutTaskListInput[] | TaskCreateWithoutTaskListInput;
   connect?: TaskWhereUniqueInput[] | TaskWhereUniqueInput;
 }
 
-export interface TaskCreateWithoutCategoryInput {
+export interface TaskCreateWithoutTaskListInput {
   createdBy: UserCreateOneWithoutTasksCreatedInput;
   assignedTo?: UserCreateOneWithoutTasksAssignedToInput;
   title: String;
@@ -1201,7 +1201,7 @@ export interface TaskCreateWithoutAssignedToInput {
   title: String;
   description: String;
   assets?: AssetCreateManyInput;
-  category: CategoryCreateOneWithoutTasksInput;
+  taskList: TaskListCreateOneWithoutTasksInput;
   comments?: CommentCreateManyInput;
   dueDate?: DateTimeInput;
   dueWhenPossible?: Boolean;
@@ -1260,7 +1260,7 @@ export interface TaskUpdateWithoutCreatedByDataInput {
   title?: String;
   description?: String;
   assets?: AssetUpdateManyInput;
-  category?: CategoryUpdateOneRequiredWithoutTasksInput;
+  taskList?: TaskListUpdateOneRequiredWithoutTasksInput;
   comments?: CommentUpdateManyInput;
   dueDate?: DateTimeInput;
   dueWhenPossible?: Boolean;
@@ -1326,54 +1326,54 @@ export interface AssetUpsertWithWhereUniqueNestedInput {
   create: AssetCreateInput;
 }
 
-export interface CategoryUpdateOneRequiredWithoutTasksInput {
-  create?: CategoryCreateWithoutTasksInput;
-  update?: CategoryUpdateWithoutTasksDataInput;
-  upsert?: CategoryUpsertWithoutTasksInput;
-  connect?: CategoryWhereUniqueInput;
+export interface TaskListUpdateOneRequiredWithoutTasksInput {
+  create?: TaskListCreateWithoutTasksInput;
+  update?: TaskListUpdateWithoutTasksDataInput;
+  upsert?: TaskListUpsertWithoutTasksInput;
+  connect?: TaskListWhereUniqueInput;
 }
 
-export interface CategoryUpdateWithoutTasksDataInput {
+export interface TaskListUpdateWithoutTasksDataInput {
   name?: String;
   description?: String;
-  categoryFields?: CategoryFieldUpdateManyWithoutCategoryInput;
+  taskListFields?: TaskListFieldUpdateManyWithoutTaskListInput;
   slug?: String;
 }
 
-export interface CategoryFieldUpdateManyWithoutCategoryInput {
+export interface TaskListFieldUpdateManyWithoutTaskListInput {
   create?:
-    | CategoryFieldCreateWithoutCategoryInput[]
-    | CategoryFieldCreateWithoutCategoryInput;
-  delete?: CategoryFieldWhereUniqueInput[] | CategoryFieldWhereUniqueInput;
-  connect?: CategoryFieldWhereUniqueInput[] | CategoryFieldWhereUniqueInput;
-  disconnect?: CategoryFieldWhereUniqueInput[] | CategoryFieldWhereUniqueInput;
+    | TaskListFieldCreateWithoutTaskListInput[]
+    | TaskListFieldCreateWithoutTaskListInput;
+  delete?: TaskListFieldWhereUniqueInput[] | TaskListFieldWhereUniqueInput;
+  connect?: TaskListFieldWhereUniqueInput[] | TaskListFieldWhereUniqueInput;
+  disconnect?: TaskListFieldWhereUniqueInput[] | TaskListFieldWhereUniqueInput;
   update?:
-    | CategoryFieldUpdateWithWhereUniqueWithoutCategoryInput[]
-    | CategoryFieldUpdateWithWhereUniqueWithoutCategoryInput;
+    | TaskListFieldUpdateWithWhereUniqueWithoutTaskListInput[]
+    | TaskListFieldUpdateWithWhereUniqueWithoutTaskListInput;
   upsert?:
-    | CategoryFieldUpsertWithWhereUniqueWithoutCategoryInput[]
-    | CategoryFieldUpsertWithWhereUniqueWithoutCategoryInput;
+    | TaskListFieldUpsertWithWhereUniqueWithoutTaskListInput[]
+    | TaskListFieldUpsertWithWhereUniqueWithoutTaskListInput;
 }
 
-export interface CategoryFieldUpdateWithWhereUniqueWithoutCategoryInput {
-  where: CategoryFieldWhereUniqueInput;
-  data: CategoryFieldUpdateWithoutCategoryDataInput;
+export interface TaskListFieldUpdateWithWhereUniqueWithoutTaskListInput {
+  where: TaskListFieldWhereUniqueInput;
+  data: TaskListFieldUpdateWithoutTaskListDataInput;
 }
 
-export interface CategoryFieldUpdateWithoutCategoryDataInput {
+export interface TaskListFieldUpdateWithoutTaskListDataInput {
   fieldName?: String;
   fieldType?: FieldType;
 }
 
-export interface CategoryFieldUpsertWithWhereUniqueWithoutCategoryInput {
-  where: CategoryFieldWhereUniqueInput;
-  update: CategoryFieldUpdateWithoutCategoryDataInput;
-  create: CategoryFieldCreateWithoutCategoryInput;
+export interface TaskListFieldUpsertWithWhereUniqueWithoutTaskListInput {
+  where: TaskListFieldWhereUniqueInput;
+  update: TaskListFieldUpdateWithoutTaskListDataInput;
+  create: TaskListFieldCreateWithoutTaskListInput;
 }
 
-export interface CategoryUpsertWithoutTasksInput {
-  update: CategoryUpdateWithoutTasksDataInput;
-  create: CategoryCreateWithoutTasksInput;
+export interface TaskListUpsertWithoutTasksInput {
+  update: TaskListUpdateWithoutTasksDataInput;
+  create: TaskListCreateWithoutTasksInput;
 }
 
 export interface CommentUpdateManyInput {
@@ -1442,57 +1442,57 @@ export interface CustomFieldUpdateDataInput {
   fieldName?: String;
   fieldType?: FieldType;
   fieldValue?: String;
-  categoryField?: CategoryFieldUpdateOneRequiredInput;
+  taskListField?: TaskListFieldUpdateOneRequiredInput;
 }
 
-export interface CategoryFieldUpdateOneRequiredInput {
-  create?: CategoryFieldCreateInput;
-  update?: CategoryFieldUpdateDataInput;
-  upsert?: CategoryFieldUpsertNestedInput;
-  connect?: CategoryFieldWhereUniqueInput;
+export interface TaskListFieldUpdateOneRequiredInput {
+  create?: TaskListFieldCreateInput;
+  update?: TaskListFieldUpdateDataInput;
+  upsert?: TaskListFieldUpsertNestedInput;
+  connect?: TaskListFieldWhereUniqueInput;
 }
 
-export interface CategoryFieldUpdateDataInput {
+export interface TaskListFieldUpdateDataInput {
   fieldName?: String;
   fieldType?: FieldType;
-  category?: CategoryUpdateOneWithoutCategoryFieldsInput;
+  taskList?: TaskListUpdateOneWithoutTaskListFieldsInput;
 }
 
-export interface CategoryUpdateOneWithoutCategoryFieldsInput {
-  create?: CategoryCreateWithoutCategoryFieldsInput;
-  update?: CategoryUpdateWithoutCategoryFieldsDataInput;
-  upsert?: CategoryUpsertWithoutCategoryFieldsInput;
+export interface TaskListUpdateOneWithoutTaskListFieldsInput {
+  create?: TaskListCreateWithoutTaskListFieldsInput;
+  update?: TaskListUpdateWithoutTaskListFieldsDataInput;
+  upsert?: TaskListUpsertWithoutTaskListFieldsInput;
   delete?: Boolean;
   disconnect?: Boolean;
-  connect?: CategoryWhereUniqueInput;
+  connect?: TaskListWhereUniqueInput;
 }
 
-export interface CategoryUpdateWithoutCategoryFieldsDataInput {
+export interface TaskListUpdateWithoutTaskListFieldsDataInput {
   name?: String;
   description?: String;
-  tasks?: TaskUpdateManyWithoutCategoryInput;
+  tasks?: TaskUpdateManyWithoutTaskListInput;
   slug?: String;
 }
 
-export interface TaskUpdateManyWithoutCategoryInput {
-  create?: TaskCreateWithoutCategoryInput[] | TaskCreateWithoutCategoryInput;
+export interface TaskUpdateManyWithoutTaskListInput {
+  create?: TaskCreateWithoutTaskListInput[] | TaskCreateWithoutTaskListInput;
   delete?: TaskWhereUniqueInput[] | TaskWhereUniqueInput;
   connect?: TaskWhereUniqueInput[] | TaskWhereUniqueInput;
   disconnect?: TaskWhereUniqueInput[] | TaskWhereUniqueInput;
   update?:
-    | TaskUpdateWithWhereUniqueWithoutCategoryInput[]
-    | TaskUpdateWithWhereUniqueWithoutCategoryInput;
+    | TaskUpdateWithWhereUniqueWithoutTaskListInput[]
+    | TaskUpdateWithWhereUniqueWithoutTaskListInput;
   upsert?:
-    | TaskUpsertWithWhereUniqueWithoutCategoryInput[]
-    | TaskUpsertWithWhereUniqueWithoutCategoryInput;
+    | TaskUpsertWithWhereUniqueWithoutTaskListInput[]
+    | TaskUpsertWithWhereUniqueWithoutTaskListInput;
 }
 
-export interface TaskUpdateWithWhereUniqueWithoutCategoryInput {
+export interface TaskUpdateWithWhereUniqueWithoutTaskListInput {
   where: TaskWhereUniqueInput;
-  data: TaskUpdateWithoutCategoryDataInput;
+  data: TaskUpdateWithoutTaskListDataInput;
 }
 
-export interface TaskUpdateWithoutCategoryDataInput {
+export interface TaskUpdateWithoutTaskListDataInput {
   createdBy?: UserUpdateOneRequiredWithoutTasksCreatedInput;
   assignedTo?: UserUpdateOneWithoutTasksAssignedToInput;
   title?: String;
@@ -1552,7 +1552,7 @@ export interface TaskUpdateWithoutAssignedToDataInput {
   title?: String;
   description?: String;
   assets?: AssetUpdateManyInput;
-  category?: CategoryUpdateOneRequiredWithoutTasksInput;
+  taskList?: TaskListUpdateOneRequiredWithoutTasksInput;
   comments?: CommentUpdateManyInput;
   dueDate?: DateTimeInput;
   dueWhenPossible?: Boolean;
@@ -1571,20 +1571,20 @@ export interface UserUpsertWithoutTasksCreatedInput {
   create: UserCreateWithoutTasksCreatedInput;
 }
 
-export interface TaskUpsertWithWhereUniqueWithoutCategoryInput {
+export interface TaskUpsertWithWhereUniqueWithoutTaskListInput {
   where: TaskWhereUniqueInput;
-  update: TaskUpdateWithoutCategoryDataInput;
-  create: TaskCreateWithoutCategoryInput;
+  update: TaskUpdateWithoutTaskListDataInput;
+  create: TaskCreateWithoutTaskListInput;
 }
 
-export interface CategoryUpsertWithoutCategoryFieldsInput {
-  update: CategoryUpdateWithoutCategoryFieldsDataInput;
-  create: CategoryCreateWithoutCategoryFieldsInput;
+export interface TaskListUpsertWithoutTaskListFieldsInput {
+  update: TaskListUpdateWithoutTaskListFieldsDataInput;
+  create: TaskListCreateWithoutTaskListFieldsInput;
 }
 
-export interface CategoryFieldUpsertNestedInput {
-  update: CategoryFieldUpdateDataInput;
-  create: CategoryFieldCreateInput;
+export interface TaskListFieldUpsertNestedInput {
+  update: TaskListFieldUpdateDataInput;
+  create: TaskListFieldCreateInput;
 }
 
 export interface CustomFieldUpsertWithWhereUniqueNestedInput {
@@ -1599,28 +1599,6 @@ export interface TaskUpsertWithWhereUniqueWithoutCreatedByInput {
   create: TaskCreateWithoutCreatedByInput;
 }
 
-export interface CategoryCreateInput {
-  name: String;
-  description?: String;
-  categoryFields?: CategoryFieldCreateManyWithoutCategoryInput;
-  tasks?: TaskCreateManyWithoutCategoryInput;
-  slug: String;
-}
-
-export interface CategoryUpdateInput {
-  name?: String;
-  description?: String;
-  categoryFields?: CategoryFieldUpdateManyWithoutCategoryInput;
-  tasks?: TaskUpdateManyWithoutCategoryInput;
-  slug?: String;
-}
-
-export interface CategoryFieldUpdateInput {
-  fieldName?: String;
-  fieldType?: FieldType;
-  category?: CategoryUpdateOneWithoutCategoryFieldsInput;
-}
-
 export interface CommentUpdateInput {
   comment?: String;
   user?: UserUpdateOneInput;
@@ -1631,7 +1609,7 @@ export interface CustomFieldUpdateInput {
   fieldName?: String;
   fieldType?: FieldType;
   fieldValue?: String;
-  categoryField?: CategoryFieldUpdateOneRequiredInput;
+  taskListField?: TaskListFieldUpdateOneRequiredInput;
 }
 
 export interface TaskCreateInput {
@@ -1640,7 +1618,7 @@ export interface TaskCreateInput {
   title: String;
   description: String;
   assets?: AssetCreateManyInput;
-  category: CategoryCreateOneWithoutTasksInput;
+  taskList: TaskListCreateOneWithoutTasksInput;
   comments?: CommentCreateManyInput;
   dueDate?: DateTimeInput;
   dueWhenPossible?: Boolean;
@@ -1654,12 +1632,34 @@ export interface TaskUpdateInput {
   title?: String;
   description?: String;
   assets?: AssetUpdateManyInput;
-  category?: CategoryUpdateOneRequiredWithoutTasksInput;
+  taskList?: TaskListUpdateOneRequiredWithoutTasksInput;
   comments?: CommentUpdateManyInput;
   dueDate?: DateTimeInput;
   dueWhenPossible?: Boolean;
   customFields?: CustomFieldUpdateManyInput;
   status?: TaskStatus;
+}
+
+export interface TaskListCreateInput {
+  name: String;
+  description?: String;
+  taskListFields?: TaskListFieldCreateManyWithoutTaskListInput;
+  tasks?: TaskCreateManyWithoutTaskListInput;
+  slug: String;
+}
+
+export interface TaskListUpdateInput {
+  name?: String;
+  description?: String;
+  taskListFields?: TaskListFieldUpdateManyWithoutTaskListInput;
+  tasks?: TaskUpdateManyWithoutTaskListInput;
+  slug?: String;
+}
+
+export interface TaskListFieldUpdateInput {
+  fieldName?: String;
+  fieldType?: FieldType;
+  taskList?: TaskListUpdateOneWithoutTaskListFieldsInput;
 }
 
 export interface UserUpdateInput {
@@ -1687,34 +1687,6 @@ export interface AssetSubscriptionWhereInput {
   AND?: AssetSubscriptionWhereInput[] | AssetSubscriptionWhereInput;
   OR?: AssetSubscriptionWhereInput[] | AssetSubscriptionWhereInput;
   NOT?: AssetSubscriptionWhereInput[] | AssetSubscriptionWhereInput;
-}
-
-export interface CategorySubscriptionWhereInput {
-  mutation_in?: MutationType[] | MutationType;
-  updatedFields_contains?: String;
-  updatedFields_contains_every?: String[] | String;
-  updatedFields_contains_some?: String[] | String;
-  node?: CategoryWhereInput;
-  AND?: CategorySubscriptionWhereInput[] | CategorySubscriptionWhereInput;
-  OR?: CategorySubscriptionWhereInput[] | CategorySubscriptionWhereInput;
-  NOT?: CategorySubscriptionWhereInput[] | CategorySubscriptionWhereInput;
-}
-
-export interface CategoryFieldSubscriptionWhereInput {
-  mutation_in?: MutationType[] | MutationType;
-  updatedFields_contains?: String;
-  updatedFields_contains_every?: String[] | String;
-  updatedFields_contains_some?: String[] | String;
-  node?: CategoryFieldWhereInput;
-  AND?:
-    | CategoryFieldSubscriptionWhereInput[]
-    | CategoryFieldSubscriptionWhereInput;
-  OR?:
-    | CategoryFieldSubscriptionWhereInput[]
-    | CategoryFieldSubscriptionWhereInput;
-  NOT?:
-    | CategoryFieldSubscriptionWhereInput[]
-    | CategoryFieldSubscriptionWhereInput;
 }
 
 export interface CommentSubscriptionWhereInput {
@@ -1748,6 +1720,34 @@ export interface TaskSubscriptionWhereInput {
   AND?: TaskSubscriptionWhereInput[] | TaskSubscriptionWhereInput;
   OR?: TaskSubscriptionWhereInput[] | TaskSubscriptionWhereInput;
   NOT?: TaskSubscriptionWhereInput[] | TaskSubscriptionWhereInput;
+}
+
+export interface TaskListSubscriptionWhereInput {
+  mutation_in?: MutationType[] | MutationType;
+  updatedFields_contains?: String;
+  updatedFields_contains_every?: String[] | String;
+  updatedFields_contains_some?: String[] | String;
+  node?: TaskListWhereInput;
+  AND?: TaskListSubscriptionWhereInput[] | TaskListSubscriptionWhereInput;
+  OR?: TaskListSubscriptionWhereInput[] | TaskListSubscriptionWhereInput;
+  NOT?: TaskListSubscriptionWhereInput[] | TaskListSubscriptionWhereInput;
+}
+
+export interface TaskListFieldSubscriptionWhereInput {
+  mutation_in?: MutationType[] | MutationType;
+  updatedFields_contains?: String;
+  updatedFields_contains_every?: String[] | String;
+  updatedFields_contains_some?: String[] | String;
+  node?: TaskListFieldWhereInput;
+  AND?:
+    | TaskListFieldSubscriptionWhereInput[]
+    | TaskListFieldSubscriptionWhereInput;
+  OR?:
+    | TaskListFieldSubscriptionWhereInput[]
+    | TaskListFieldSubscriptionWhereInput;
+  NOT?:
+    | TaskListFieldSubscriptionWhereInput[]
+    | TaskListFieldSubscriptionWhereInput;
 }
 
 export interface UserSubscriptionWhereInput {
@@ -1906,7 +1906,7 @@ export interface Task extends Promise<TaskNode>, Fragmentable {
       last?: Int;
     }
   ) => T;
-  category: <T = Category>() => T;
+  taskList: <T = TaskList>() => T;
   comments: <T = FragmentableArray<CommentNode>>(
     args?: {
       where?: CommentWhereInput;
@@ -1955,7 +1955,7 @@ export interface TaskSubscription
       last?: Int;
     }
   ) => T;
-  category: <T = CategorySubscription>() => T;
+  taskList: <T = TaskListSubscription>() => T;
   comments: <T = Promise<AsyncIterator<CommentSubscription>>>(
     args?: {
       where?: CommentWhereInput;
@@ -1985,21 +1985,21 @@ export interface TaskSubscription
   status: () => Promise<AsyncIterator<TaskStatus>>;
 }
 
-export interface CategoryNode {
+export interface TaskListNode {
   id: ID_Output;
   name: String;
   description?: String;
   slug: String;
 }
 
-export interface Category extends Promise<CategoryNode>, Fragmentable {
+export interface TaskList extends Promise<TaskListNode>, Fragmentable {
   id: () => Promise<ID_Output>;
   name: () => Promise<String>;
   description: () => Promise<String>;
-  categoryFields: <T = FragmentableArray<CategoryFieldNode>>(
+  taskListFields: <T = FragmentableArray<TaskListFieldNode>>(
     args?: {
-      where?: CategoryFieldWhereInput;
-      orderBy?: CategoryFieldOrderByInput;
+      where?: TaskListFieldWhereInput;
+      orderBy?: TaskListFieldOrderByInput;
       skip?: Int;
       after?: String;
       before?: String;
@@ -2021,16 +2021,16 @@ export interface Category extends Promise<CategoryNode>, Fragmentable {
   slug: () => Promise<String>;
 }
 
-export interface CategorySubscription
-  extends Promise<AsyncIterator<CategoryNode>>,
+export interface TaskListSubscription
+  extends Promise<AsyncIterator<TaskListNode>>,
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
   name: () => Promise<AsyncIterator<String>>;
   description: () => Promise<AsyncIterator<String>>;
-  categoryFields: <T = Promise<AsyncIterator<CategoryFieldSubscription>>>(
+  taskListFields: <T = Promise<AsyncIterator<TaskListFieldSubscription>>>(
     args?: {
-      where?: CategoryFieldWhereInput;
-      orderBy?: CategoryFieldOrderByInput;
+      where?: TaskListFieldWhereInput;
+      orderBy?: TaskListFieldOrderByInput;
       skip?: Int;
       after?: String;
       before?: String;
@@ -2052,28 +2052,28 @@ export interface CategorySubscription
   slug: () => Promise<AsyncIterator<String>>;
 }
 
-export interface CategoryFieldNode {
+export interface TaskListFieldNode {
   id: ID_Output;
   fieldName: String;
   fieldType: FieldType;
 }
 
-export interface CategoryField
-  extends Promise<CategoryFieldNode>,
+export interface TaskListField
+  extends Promise<TaskListFieldNode>,
     Fragmentable {
   id: () => Promise<ID_Output>;
   fieldName: () => Promise<String>;
   fieldType: () => Promise<FieldType>;
-  category: <T = Category>() => T;
+  taskList: <T = TaskList>() => T;
 }
 
-export interface CategoryFieldSubscription
-  extends Promise<AsyncIterator<CategoryFieldNode>>,
+export interface TaskListFieldSubscription
+  extends Promise<AsyncIterator<TaskListFieldNode>>,
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
   fieldName: () => Promise<AsyncIterator<String>>;
   fieldType: () => Promise<AsyncIterator<FieldType>>;
-  category: <T = CategorySubscription>() => T;
+  taskList: <T = TaskListSubscription>() => T;
 }
 
 export interface CommentNode {
@@ -2135,7 +2135,7 @@ export interface CustomField extends Promise<CustomFieldNode>, Fragmentable {
   fieldName: () => Promise<String>;
   fieldType: () => Promise<FieldType>;
   fieldValue: () => Promise<String>;
-  categoryField: <T = CategoryField>() => T;
+  taskListField: <T = TaskListField>() => T;
 }
 
 export interface CustomFieldSubscription
@@ -2145,7 +2145,7 @@ export interface CustomFieldSubscription
   fieldName: () => Promise<AsyncIterator<String>>;
   fieldType: () => Promise<AsyncIterator<FieldType>>;
   fieldValue: () => Promise<AsyncIterator<String>>;
-  categoryField: <T = CategoryFieldSubscription>() => T;
+  taskListField: <T = TaskListFieldSubscription>() => T;
 }
 
 export interface AssetConnectionNode {}
@@ -2217,108 +2217,6 @@ export interface AggregateAsset
 
 export interface AggregateAssetSubscription
   extends Promise<AsyncIterator<AggregateAssetNode>>,
-    Fragmentable {
-  count: () => Promise<AsyncIterator<Int>>;
-}
-
-export interface CategoryConnectionNode {}
-
-export interface CategoryConnection
-  extends Promise<CategoryConnectionNode>,
-    Fragmentable {
-  pageInfo: <T = PageInfo>() => T;
-  edges: <T = FragmentableArray<CategoryEdgeNode>>() => T;
-  aggregate: <T = AggregateCategory>() => T;
-}
-
-export interface CategoryConnectionSubscription
-  extends Promise<AsyncIterator<CategoryConnectionNode>>,
-    Fragmentable {
-  pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<CategoryEdgeSubscription>>>() => T;
-  aggregate: <T = AggregateCategorySubscription>() => T;
-}
-
-export interface CategoryEdgeNode {
-  cursor: String;
-}
-
-export interface CategoryEdge extends Promise<CategoryEdgeNode>, Fragmentable {
-  node: <T = Category>() => T;
-  cursor: () => Promise<String>;
-}
-
-export interface CategoryEdgeSubscription
-  extends Promise<AsyncIterator<CategoryEdgeNode>>,
-    Fragmentable {
-  node: <T = CategorySubscription>() => T;
-  cursor: () => Promise<AsyncIterator<String>>;
-}
-
-export interface AggregateCategoryNode {
-  count: Int;
-}
-
-export interface AggregateCategory
-  extends Promise<AggregateCategoryNode>,
-    Fragmentable {
-  count: () => Promise<Int>;
-}
-
-export interface AggregateCategorySubscription
-  extends Promise<AsyncIterator<AggregateCategoryNode>>,
-    Fragmentable {
-  count: () => Promise<AsyncIterator<Int>>;
-}
-
-export interface CategoryFieldConnectionNode {}
-
-export interface CategoryFieldConnection
-  extends Promise<CategoryFieldConnectionNode>,
-    Fragmentable {
-  pageInfo: <T = PageInfo>() => T;
-  edges: <T = FragmentableArray<CategoryFieldEdgeNode>>() => T;
-  aggregate: <T = AggregateCategoryField>() => T;
-}
-
-export interface CategoryFieldConnectionSubscription
-  extends Promise<AsyncIterator<CategoryFieldConnectionNode>>,
-    Fragmentable {
-  pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<CategoryFieldEdgeSubscription>>>() => T;
-  aggregate: <T = AggregateCategoryFieldSubscription>() => T;
-}
-
-export interface CategoryFieldEdgeNode {
-  cursor: String;
-}
-
-export interface CategoryFieldEdge
-  extends Promise<CategoryFieldEdgeNode>,
-    Fragmentable {
-  node: <T = CategoryField>() => T;
-  cursor: () => Promise<String>;
-}
-
-export interface CategoryFieldEdgeSubscription
-  extends Promise<AsyncIterator<CategoryFieldEdgeNode>>,
-    Fragmentable {
-  node: <T = CategoryFieldSubscription>() => T;
-  cursor: () => Promise<AsyncIterator<String>>;
-}
-
-export interface AggregateCategoryFieldNode {
-  count: Int;
-}
-
-export interface AggregateCategoryField
-  extends Promise<AggregateCategoryFieldNode>,
-    Fragmentable {
-  count: () => Promise<Int>;
-}
-
-export interface AggregateCategoryFieldSubscription
-  extends Promise<AsyncIterator<AggregateCategoryFieldNode>>,
     Fragmentable {
   count: () => Promise<AsyncIterator<Int>>;
 }
@@ -2475,6 +2373,108 @@ export interface AggregateTaskSubscription
   count: () => Promise<AsyncIterator<Int>>;
 }
 
+export interface TaskListConnectionNode {}
+
+export interface TaskListConnection
+  extends Promise<TaskListConnectionNode>,
+    Fragmentable {
+  pageInfo: <T = PageInfo>() => T;
+  edges: <T = FragmentableArray<TaskListEdgeNode>>() => T;
+  aggregate: <T = AggregateTaskList>() => T;
+}
+
+export interface TaskListConnectionSubscription
+  extends Promise<AsyncIterator<TaskListConnectionNode>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<TaskListEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateTaskListSubscription>() => T;
+}
+
+export interface TaskListEdgeNode {
+  cursor: String;
+}
+
+export interface TaskListEdge extends Promise<TaskListEdgeNode>, Fragmentable {
+  node: <T = TaskList>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface TaskListEdgeSubscription
+  extends Promise<AsyncIterator<TaskListEdgeNode>>,
+    Fragmentable {
+  node: <T = TaskListSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface AggregateTaskListNode {
+  count: Int;
+}
+
+export interface AggregateTaskList
+  extends Promise<AggregateTaskListNode>,
+    Fragmentable {
+  count: () => Promise<Int>;
+}
+
+export interface AggregateTaskListSubscription
+  extends Promise<AsyncIterator<AggregateTaskListNode>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
+}
+
+export interface TaskListFieldConnectionNode {}
+
+export interface TaskListFieldConnection
+  extends Promise<TaskListFieldConnectionNode>,
+    Fragmentable {
+  pageInfo: <T = PageInfo>() => T;
+  edges: <T = FragmentableArray<TaskListFieldEdgeNode>>() => T;
+  aggregate: <T = AggregateTaskListField>() => T;
+}
+
+export interface TaskListFieldConnectionSubscription
+  extends Promise<AsyncIterator<TaskListFieldConnectionNode>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<TaskListFieldEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateTaskListFieldSubscription>() => T;
+}
+
+export interface TaskListFieldEdgeNode {
+  cursor: String;
+}
+
+export interface TaskListFieldEdge
+  extends Promise<TaskListFieldEdgeNode>,
+    Fragmentable {
+  node: <T = TaskListField>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface TaskListFieldEdgeSubscription
+  extends Promise<AsyncIterator<TaskListFieldEdgeNode>>,
+    Fragmentable {
+  node: <T = TaskListFieldSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface AggregateTaskListFieldNode {
+  count: Int;
+}
+
+export interface AggregateTaskListField
+  extends Promise<AggregateTaskListFieldNode>,
+    Fragmentable {
+  count: () => Promise<Int>;
+}
+
+export interface AggregateTaskListFieldSubscription
+  extends Promise<AsyncIterator<AggregateTaskListFieldNode>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
+}
+
 export interface UserConnectionNode {}
 
 export interface UserConnection
@@ -2582,99 +2582,6 @@ export interface AssetPreviousValuesSubscription
   id: () => Promise<AsyncIterator<ID_Output>>;
   assetUrl: () => Promise<AsyncIterator<String>>;
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-}
-
-export interface CategorySubscriptionPayloadNode {
-  mutation: MutationType;
-  updatedFields?: String[];
-}
-
-export interface CategorySubscriptionPayload
-  extends Promise<CategorySubscriptionPayloadNode>,
-    Fragmentable {
-  mutation: () => Promise<MutationType>;
-  node: <T = Category>() => T;
-  updatedFields: () => Promise<String[]>;
-  previousValues: <T = CategoryPreviousValues>() => T;
-}
-
-export interface CategorySubscriptionPayloadSubscription
-  extends Promise<AsyncIterator<CategorySubscriptionPayloadNode>>,
-    Fragmentable {
-  mutation: () => Promise<AsyncIterator<MutationType>>;
-  node: <T = CategorySubscription>() => T;
-  updatedFields: () => Promise<AsyncIterator<String[]>>;
-  previousValues: <T = CategoryPreviousValuesSubscription>() => T;
-}
-
-export interface CategoryPreviousValuesNode {
-  id: ID_Output;
-  name: String;
-  description?: String;
-  slug: String;
-}
-
-export interface CategoryPreviousValues
-  extends Promise<CategoryPreviousValuesNode>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  name: () => Promise<String>;
-  description: () => Promise<String>;
-  slug: () => Promise<String>;
-}
-
-export interface CategoryPreviousValuesSubscription
-  extends Promise<AsyncIterator<CategoryPreviousValuesNode>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  name: () => Promise<AsyncIterator<String>>;
-  description: () => Promise<AsyncIterator<String>>;
-  slug: () => Promise<AsyncIterator<String>>;
-}
-
-export interface CategoryFieldSubscriptionPayloadNode {
-  mutation: MutationType;
-  updatedFields?: String[];
-}
-
-export interface CategoryFieldSubscriptionPayload
-  extends Promise<CategoryFieldSubscriptionPayloadNode>,
-    Fragmentable {
-  mutation: () => Promise<MutationType>;
-  node: <T = CategoryField>() => T;
-  updatedFields: () => Promise<String[]>;
-  previousValues: <T = CategoryFieldPreviousValues>() => T;
-}
-
-export interface CategoryFieldSubscriptionPayloadSubscription
-  extends Promise<AsyncIterator<CategoryFieldSubscriptionPayloadNode>>,
-    Fragmentable {
-  mutation: () => Promise<AsyncIterator<MutationType>>;
-  node: <T = CategoryFieldSubscription>() => T;
-  updatedFields: () => Promise<AsyncIterator<String[]>>;
-  previousValues: <T = CategoryFieldPreviousValuesSubscription>() => T;
-}
-
-export interface CategoryFieldPreviousValuesNode {
-  id: ID_Output;
-  fieldName: String;
-  fieldType: FieldType;
-}
-
-export interface CategoryFieldPreviousValues
-  extends Promise<CategoryFieldPreviousValuesNode>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  fieldName: () => Promise<String>;
-  fieldType: () => Promise<FieldType>;
-}
-
-export interface CategoryFieldPreviousValuesSubscription
-  extends Promise<AsyncIterator<CategoryFieldPreviousValuesNode>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  fieldName: () => Promise<AsyncIterator<String>>;
-  fieldType: () => Promise<AsyncIterator<FieldType>>;
 }
 
 export interface CommentSubscriptionPayloadNode {
@@ -2831,6 +2738,99 @@ export interface TaskPreviousValuesSubscription
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   status: () => Promise<AsyncIterator<TaskStatus>>;
+}
+
+export interface TaskListSubscriptionPayloadNode {
+  mutation: MutationType;
+  updatedFields?: String[];
+}
+
+export interface TaskListSubscriptionPayload
+  extends Promise<TaskListSubscriptionPayloadNode>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = TaskList>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = TaskListPreviousValues>() => T;
+}
+
+export interface TaskListSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<TaskListSubscriptionPayloadNode>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = TaskListSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = TaskListPreviousValuesSubscription>() => T;
+}
+
+export interface TaskListPreviousValuesNode {
+  id: ID_Output;
+  name: String;
+  description?: String;
+  slug: String;
+}
+
+export interface TaskListPreviousValues
+  extends Promise<TaskListPreviousValuesNode>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  name: () => Promise<String>;
+  description: () => Promise<String>;
+  slug: () => Promise<String>;
+}
+
+export interface TaskListPreviousValuesSubscription
+  extends Promise<AsyncIterator<TaskListPreviousValuesNode>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  name: () => Promise<AsyncIterator<String>>;
+  description: () => Promise<AsyncIterator<String>>;
+  slug: () => Promise<AsyncIterator<String>>;
+}
+
+export interface TaskListFieldSubscriptionPayloadNode {
+  mutation: MutationType;
+  updatedFields?: String[];
+}
+
+export interface TaskListFieldSubscriptionPayload
+  extends Promise<TaskListFieldSubscriptionPayloadNode>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = TaskListField>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = TaskListFieldPreviousValues>() => T;
+}
+
+export interface TaskListFieldSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<TaskListFieldSubscriptionPayloadNode>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = TaskListFieldSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = TaskListFieldPreviousValuesSubscription>() => T;
+}
+
+export interface TaskListFieldPreviousValuesNode {
+  id: ID_Output;
+  fieldName: String;
+  fieldType: FieldType;
+}
+
+export interface TaskListFieldPreviousValues
+  extends Promise<TaskListFieldPreviousValuesNode>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  fieldName: () => Promise<String>;
+  fieldType: () => Promise<FieldType>;
+}
+
+export interface TaskListFieldPreviousValuesSubscription
+  extends Promise<AsyncIterator<TaskListFieldPreviousValuesNode>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  fieldName: () => Promise<AsyncIterator<String>>;
+  fieldType: () => Promise<AsyncIterator<FieldType>>;
 }
 
 export interface UserSubscriptionPayloadNode {

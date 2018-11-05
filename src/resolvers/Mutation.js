@@ -115,7 +115,7 @@ module.exports = {
     return { message: 'Success' }
   },
 
-  async createCategory(parent, args, ctx, info) {
+  async createTaskList(parent, args, ctx, info) {
     // TODO helper function for protected routes
 
     // TODO Put role on JWT so we don't have to check the DB when not needed for permissions
@@ -126,17 +126,17 @@ module.exports = {
     if(!currentUser || !['ADMIN', 'SUPERADMIN'].includes(currentUser.role)) 
       throw new Error('Not authorized')
 
-    const { error } = Joi.validate({...args}, validationSchemas.createCategory)
+    const { error } = Joi.validate({...args}, validationSchemas.createTaskList)
     if(error) throw new Error(error)
 
-    const category = await ctx.prisma.createCategory({
+    const taskList = await ctx.prisma.createTaskList({
       ...args,
       slug: slug(args.name.toLowerCase()),
-      categoryFields: {
-        create: args.categoryFields
+      taskListFields: {
+        create: args.taskListFields
       }
     })
 
-    return category
+    return taskList
   }
 }

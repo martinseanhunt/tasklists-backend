@@ -2,14 +2,6 @@ type AggregateAsset {
   count: Int!
 }
 
-type AggregateCategory {
-  count: Int!
-}
-
-type AggregateCategoryField {
-  count: Int!
-}
-
 type AggregateComment {
   count: Int!
 }
@@ -19,6 +11,14 @@ type AggregateCustomField {
 }
 
 type AggregateTask {
+  count: Int!
+}
+
+type AggregateTaskList {
+  count: Int!
+}
+
+type AggregateTaskListField {
   count: Int!
 }
 
@@ -168,388 +168,6 @@ input AssetWhereUniqueInput {
 
 type BatchPayload {
   count: Long!
-}
-
-type Category {
-  id: ID!
-  name: String!
-  description: String
-  categoryFields(where: CategoryFieldWhereInput, orderBy: CategoryFieldOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [CategoryField!]
-  tasks(where: TaskWhereInput, orderBy: TaskOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Task!]
-  slug: String!
-}
-
-type CategoryConnection {
-  pageInfo: PageInfo!
-  edges: [CategoryEdge]!
-  aggregate: AggregateCategory!
-}
-
-input CategoryCreateInput {
-  name: String!
-  description: String
-  categoryFields: CategoryFieldCreateManyWithoutCategoryInput
-  tasks: TaskCreateManyWithoutCategoryInput
-  slug: String!
-}
-
-input CategoryCreateOneWithoutCategoryFieldsInput {
-  create: CategoryCreateWithoutCategoryFieldsInput
-  connect: CategoryWhereUniqueInput
-}
-
-input CategoryCreateOneWithoutTasksInput {
-  create: CategoryCreateWithoutTasksInput
-  connect: CategoryWhereUniqueInput
-}
-
-input CategoryCreateWithoutCategoryFieldsInput {
-  name: String!
-  description: String
-  tasks: TaskCreateManyWithoutCategoryInput
-  slug: String!
-}
-
-input CategoryCreateWithoutTasksInput {
-  name: String!
-  description: String
-  categoryFields: CategoryFieldCreateManyWithoutCategoryInput
-  slug: String!
-}
-
-type CategoryEdge {
-  node: Category!
-  cursor: String!
-}
-
-type CategoryField {
-  id: ID!
-  fieldName: String!
-  fieldType: FieldType!
-  category: Category
-}
-
-type CategoryFieldConnection {
-  pageInfo: PageInfo!
-  edges: [CategoryFieldEdge]!
-  aggregate: AggregateCategoryField!
-}
-
-input CategoryFieldCreateInput {
-  fieldName: String!
-  fieldType: FieldType!
-  category: CategoryCreateOneWithoutCategoryFieldsInput
-}
-
-input CategoryFieldCreateManyWithoutCategoryInput {
-  create: [CategoryFieldCreateWithoutCategoryInput!]
-  connect: [CategoryFieldWhereUniqueInput!]
-}
-
-input CategoryFieldCreateOneInput {
-  create: CategoryFieldCreateInput
-  connect: CategoryFieldWhereUniqueInput
-}
-
-input CategoryFieldCreateWithoutCategoryInput {
-  fieldName: String!
-  fieldType: FieldType!
-}
-
-type CategoryFieldEdge {
-  node: CategoryField!
-  cursor: String!
-}
-
-enum CategoryFieldOrderByInput {
-  id_ASC
-  id_DESC
-  fieldName_ASC
-  fieldName_DESC
-  fieldType_ASC
-  fieldType_DESC
-  createdAt_ASC
-  createdAt_DESC
-  updatedAt_ASC
-  updatedAt_DESC
-}
-
-type CategoryFieldPreviousValues {
-  id: ID!
-  fieldName: String!
-  fieldType: FieldType!
-}
-
-type CategoryFieldSubscriptionPayload {
-  mutation: MutationType!
-  node: CategoryField
-  updatedFields: [String!]
-  previousValues: CategoryFieldPreviousValues
-}
-
-input CategoryFieldSubscriptionWhereInput {
-  mutation_in: [MutationType!]
-  updatedFields_contains: String
-  updatedFields_contains_every: [String!]
-  updatedFields_contains_some: [String!]
-  node: CategoryFieldWhereInput
-  AND: [CategoryFieldSubscriptionWhereInput!]
-  OR: [CategoryFieldSubscriptionWhereInput!]
-  NOT: [CategoryFieldSubscriptionWhereInput!]
-}
-
-input CategoryFieldUpdateDataInput {
-  fieldName: String
-  fieldType: FieldType
-  category: CategoryUpdateOneWithoutCategoryFieldsInput
-}
-
-input CategoryFieldUpdateInput {
-  fieldName: String
-  fieldType: FieldType
-  category: CategoryUpdateOneWithoutCategoryFieldsInput
-}
-
-input CategoryFieldUpdateManyWithoutCategoryInput {
-  create: [CategoryFieldCreateWithoutCategoryInput!]
-  delete: [CategoryFieldWhereUniqueInput!]
-  connect: [CategoryFieldWhereUniqueInput!]
-  disconnect: [CategoryFieldWhereUniqueInput!]
-  update: [CategoryFieldUpdateWithWhereUniqueWithoutCategoryInput!]
-  upsert: [CategoryFieldUpsertWithWhereUniqueWithoutCategoryInput!]
-}
-
-input CategoryFieldUpdateOneRequiredInput {
-  create: CategoryFieldCreateInput
-  update: CategoryFieldUpdateDataInput
-  upsert: CategoryFieldUpsertNestedInput
-  connect: CategoryFieldWhereUniqueInput
-}
-
-input CategoryFieldUpdateWithoutCategoryDataInput {
-  fieldName: String
-  fieldType: FieldType
-}
-
-input CategoryFieldUpdateWithWhereUniqueWithoutCategoryInput {
-  where: CategoryFieldWhereUniqueInput!
-  data: CategoryFieldUpdateWithoutCategoryDataInput!
-}
-
-input CategoryFieldUpsertNestedInput {
-  update: CategoryFieldUpdateDataInput!
-  create: CategoryFieldCreateInput!
-}
-
-input CategoryFieldUpsertWithWhereUniqueWithoutCategoryInput {
-  where: CategoryFieldWhereUniqueInput!
-  update: CategoryFieldUpdateWithoutCategoryDataInput!
-  create: CategoryFieldCreateWithoutCategoryInput!
-}
-
-input CategoryFieldWhereInput {
-  id: ID
-  id_not: ID
-  id_in: [ID!]
-  id_not_in: [ID!]
-  id_lt: ID
-  id_lte: ID
-  id_gt: ID
-  id_gte: ID
-  id_contains: ID
-  id_not_contains: ID
-  id_starts_with: ID
-  id_not_starts_with: ID
-  id_ends_with: ID
-  id_not_ends_with: ID
-  fieldName: String
-  fieldName_not: String
-  fieldName_in: [String!]
-  fieldName_not_in: [String!]
-  fieldName_lt: String
-  fieldName_lte: String
-  fieldName_gt: String
-  fieldName_gte: String
-  fieldName_contains: String
-  fieldName_not_contains: String
-  fieldName_starts_with: String
-  fieldName_not_starts_with: String
-  fieldName_ends_with: String
-  fieldName_not_ends_with: String
-  fieldType: FieldType
-  fieldType_not: FieldType
-  fieldType_in: [FieldType!]
-  fieldType_not_in: [FieldType!]
-  category: CategoryWhereInput
-  AND: [CategoryFieldWhereInput!]
-  OR: [CategoryFieldWhereInput!]
-  NOT: [CategoryFieldWhereInput!]
-}
-
-input CategoryFieldWhereUniqueInput {
-  id: ID
-}
-
-enum CategoryOrderByInput {
-  id_ASC
-  id_DESC
-  name_ASC
-  name_DESC
-  description_ASC
-  description_DESC
-  slug_ASC
-  slug_DESC
-  createdAt_ASC
-  createdAt_DESC
-  updatedAt_ASC
-  updatedAt_DESC
-}
-
-type CategoryPreviousValues {
-  id: ID!
-  name: String!
-  description: String
-  slug: String!
-}
-
-type CategorySubscriptionPayload {
-  mutation: MutationType!
-  node: Category
-  updatedFields: [String!]
-  previousValues: CategoryPreviousValues
-}
-
-input CategorySubscriptionWhereInput {
-  mutation_in: [MutationType!]
-  updatedFields_contains: String
-  updatedFields_contains_every: [String!]
-  updatedFields_contains_some: [String!]
-  node: CategoryWhereInput
-  AND: [CategorySubscriptionWhereInput!]
-  OR: [CategorySubscriptionWhereInput!]
-  NOT: [CategorySubscriptionWhereInput!]
-}
-
-input CategoryUpdateInput {
-  name: String
-  description: String
-  categoryFields: CategoryFieldUpdateManyWithoutCategoryInput
-  tasks: TaskUpdateManyWithoutCategoryInput
-  slug: String
-}
-
-input CategoryUpdateOneRequiredWithoutTasksInput {
-  create: CategoryCreateWithoutTasksInput
-  update: CategoryUpdateWithoutTasksDataInput
-  upsert: CategoryUpsertWithoutTasksInput
-  connect: CategoryWhereUniqueInput
-}
-
-input CategoryUpdateOneWithoutCategoryFieldsInput {
-  create: CategoryCreateWithoutCategoryFieldsInput
-  update: CategoryUpdateWithoutCategoryFieldsDataInput
-  upsert: CategoryUpsertWithoutCategoryFieldsInput
-  delete: Boolean
-  disconnect: Boolean
-  connect: CategoryWhereUniqueInput
-}
-
-input CategoryUpdateWithoutCategoryFieldsDataInput {
-  name: String
-  description: String
-  tasks: TaskUpdateManyWithoutCategoryInput
-  slug: String
-}
-
-input CategoryUpdateWithoutTasksDataInput {
-  name: String
-  description: String
-  categoryFields: CategoryFieldUpdateManyWithoutCategoryInput
-  slug: String
-}
-
-input CategoryUpsertWithoutCategoryFieldsInput {
-  update: CategoryUpdateWithoutCategoryFieldsDataInput!
-  create: CategoryCreateWithoutCategoryFieldsInput!
-}
-
-input CategoryUpsertWithoutTasksInput {
-  update: CategoryUpdateWithoutTasksDataInput!
-  create: CategoryCreateWithoutTasksInput!
-}
-
-input CategoryWhereInput {
-  id: ID
-  id_not: ID
-  id_in: [ID!]
-  id_not_in: [ID!]
-  id_lt: ID
-  id_lte: ID
-  id_gt: ID
-  id_gte: ID
-  id_contains: ID
-  id_not_contains: ID
-  id_starts_with: ID
-  id_not_starts_with: ID
-  id_ends_with: ID
-  id_not_ends_with: ID
-  name: String
-  name_not: String
-  name_in: [String!]
-  name_not_in: [String!]
-  name_lt: String
-  name_lte: String
-  name_gt: String
-  name_gte: String
-  name_contains: String
-  name_not_contains: String
-  name_starts_with: String
-  name_not_starts_with: String
-  name_ends_with: String
-  name_not_ends_with: String
-  description: String
-  description_not: String
-  description_in: [String!]
-  description_not_in: [String!]
-  description_lt: String
-  description_lte: String
-  description_gt: String
-  description_gte: String
-  description_contains: String
-  description_not_contains: String
-  description_starts_with: String
-  description_not_starts_with: String
-  description_ends_with: String
-  description_not_ends_with: String
-  categoryFields_every: CategoryFieldWhereInput
-  categoryFields_some: CategoryFieldWhereInput
-  categoryFields_none: CategoryFieldWhereInput
-  tasks_every: TaskWhereInput
-  tasks_some: TaskWhereInput
-  tasks_none: TaskWhereInput
-  slug: String
-  slug_not: String
-  slug_in: [String!]
-  slug_not_in: [String!]
-  slug_lt: String
-  slug_lte: String
-  slug_gt: String
-  slug_gte: String
-  slug_contains: String
-  slug_not_contains: String
-  slug_starts_with: String
-  slug_not_starts_with: String
-  slug_ends_with: String
-  slug_not_ends_with: String
-  AND: [CategoryWhereInput!]
-  OR: [CategoryWhereInput!]
-  NOT: [CategoryWhereInput!]
-}
-
-input CategoryWhereUniqueInput {
-  id: ID
-  name: String
-  slug: String
 }
 
 type Comment {
@@ -714,7 +332,7 @@ type CustomField {
   fieldName: String!
   fieldType: FieldType!
   fieldValue: String!
-  categoryField: CategoryField!
+  taskListField: TaskListField!
 }
 
 type CustomFieldConnection {
@@ -727,7 +345,7 @@ input CustomFieldCreateInput {
   fieldName: String!
   fieldType: FieldType!
   fieldValue: String!
-  categoryField: CategoryFieldCreateOneInput!
+  taskListField: TaskListFieldCreateOneInput!
 }
 
 input CustomFieldCreateManyInput {
@@ -784,14 +402,14 @@ input CustomFieldUpdateDataInput {
   fieldName: String
   fieldType: FieldType
   fieldValue: String
-  categoryField: CategoryFieldUpdateOneRequiredInput
+  taskListField: TaskListFieldUpdateOneRequiredInput
 }
 
 input CustomFieldUpdateInput {
   fieldName: String
   fieldType: FieldType
   fieldValue: String
-  categoryField: CategoryFieldUpdateOneRequiredInput
+  taskListField: TaskListFieldUpdateOneRequiredInput
 }
 
 input CustomFieldUpdateManyInput {
@@ -861,7 +479,7 @@ input CustomFieldWhereInput {
   fieldValue_not_starts_with: String
   fieldValue_ends_with: String
   fieldValue_not_ends_with: String
-  categoryField: CategoryFieldWhereInput
+  taskListField: TaskListFieldWhereInput
   AND: [CustomFieldWhereInput!]
   OR: [CustomFieldWhereInput!]
   NOT: [CustomFieldWhereInput!]
@@ -889,18 +507,6 @@ type Mutation {
   upsertAsset(where: AssetWhereUniqueInput!, create: AssetCreateInput!, update: AssetUpdateInput!): Asset!
   deleteAsset(where: AssetWhereUniqueInput!): Asset
   deleteManyAssets(where: AssetWhereInput): BatchPayload!
-  createCategory(data: CategoryCreateInput!): Category!
-  updateCategory(data: CategoryUpdateInput!, where: CategoryWhereUniqueInput!): Category
-  updateManyCategories(data: CategoryUpdateInput!, where: CategoryWhereInput): BatchPayload!
-  upsertCategory(where: CategoryWhereUniqueInput!, create: CategoryCreateInput!, update: CategoryUpdateInput!): Category!
-  deleteCategory(where: CategoryWhereUniqueInput!): Category
-  deleteManyCategories(where: CategoryWhereInput): BatchPayload!
-  createCategoryField(data: CategoryFieldCreateInput!): CategoryField!
-  updateCategoryField(data: CategoryFieldUpdateInput!, where: CategoryFieldWhereUniqueInput!): CategoryField
-  updateManyCategoryFields(data: CategoryFieldUpdateInput!, where: CategoryFieldWhereInput): BatchPayload!
-  upsertCategoryField(where: CategoryFieldWhereUniqueInput!, create: CategoryFieldCreateInput!, update: CategoryFieldUpdateInput!): CategoryField!
-  deleteCategoryField(where: CategoryFieldWhereUniqueInput!): CategoryField
-  deleteManyCategoryFields(where: CategoryFieldWhereInput): BatchPayload!
   createComment(data: CommentCreateInput!): Comment!
   updateComment(data: CommentUpdateInput!, where: CommentWhereUniqueInput!): Comment
   updateManyComments(data: CommentUpdateInput!, where: CommentWhereInput): BatchPayload!
@@ -919,6 +525,18 @@ type Mutation {
   upsertTask(where: TaskWhereUniqueInput!, create: TaskCreateInput!, update: TaskUpdateInput!): Task!
   deleteTask(where: TaskWhereUniqueInput!): Task
   deleteManyTasks(where: TaskWhereInput): BatchPayload!
+  createTaskList(data: TaskListCreateInput!): TaskList!
+  updateTaskList(data: TaskListUpdateInput!, where: TaskListWhereUniqueInput!): TaskList
+  updateManyTaskLists(data: TaskListUpdateInput!, where: TaskListWhereInput): BatchPayload!
+  upsertTaskList(where: TaskListWhereUniqueInput!, create: TaskListCreateInput!, update: TaskListUpdateInput!): TaskList!
+  deleteTaskList(where: TaskListWhereUniqueInput!): TaskList
+  deleteManyTaskLists(where: TaskListWhereInput): BatchPayload!
+  createTaskListField(data: TaskListFieldCreateInput!): TaskListField!
+  updateTaskListField(data: TaskListFieldUpdateInput!, where: TaskListFieldWhereUniqueInput!): TaskListField
+  updateManyTaskListFields(data: TaskListFieldUpdateInput!, where: TaskListFieldWhereInput): BatchPayload!
+  upsertTaskListField(where: TaskListFieldWhereUniqueInput!, create: TaskListFieldCreateInput!, update: TaskListFieldUpdateInput!): TaskListField!
+  deleteTaskListField(where: TaskListFieldWhereUniqueInput!): TaskListField
+  deleteManyTaskListFields(where: TaskListFieldWhereInput): BatchPayload!
   createUser(data: UserCreateInput!): User!
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
   updateManyUsers(data: UserUpdateInput!, where: UserWhereInput): BatchPayload!
@@ -948,12 +566,6 @@ type Query {
   asset(where: AssetWhereUniqueInput!): Asset
   assets(where: AssetWhereInput, orderBy: AssetOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Asset]!
   assetsConnection(where: AssetWhereInput, orderBy: AssetOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): AssetConnection!
-  category(where: CategoryWhereUniqueInput!): Category
-  categories(where: CategoryWhereInput, orderBy: CategoryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Category]!
-  categoriesConnection(where: CategoryWhereInput, orderBy: CategoryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): CategoryConnection!
-  categoryField(where: CategoryFieldWhereUniqueInput!): CategoryField
-  categoryFields(where: CategoryFieldWhereInput, orderBy: CategoryFieldOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [CategoryField]!
-  categoryFieldsConnection(where: CategoryFieldWhereInput, orderBy: CategoryFieldOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): CategoryFieldConnection!
   comment(where: CommentWhereUniqueInput!): Comment
   comments(where: CommentWhereInput, orderBy: CommentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Comment]!
   commentsConnection(where: CommentWhereInput, orderBy: CommentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): CommentConnection!
@@ -963,6 +575,12 @@ type Query {
   task(where: TaskWhereUniqueInput!): Task
   tasks(where: TaskWhereInput, orderBy: TaskOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Task]!
   tasksConnection(where: TaskWhereInput, orderBy: TaskOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): TaskConnection!
+  taskList(where: TaskListWhereUniqueInput!): TaskList
+  taskLists(where: TaskListWhereInput, orderBy: TaskListOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [TaskList]!
+  taskListsConnection(where: TaskListWhereInput, orderBy: TaskListOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): TaskListConnection!
+  taskListField(where: TaskListFieldWhereUniqueInput!): TaskListField
+  taskListFields(where: TaskListFieldWhereInput, orderBy: TaskListFieldOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [TaskListField]!
+  taskListFieldsConnection(where: TaskListFieldWhereInput, orderBy: TaskListFieldOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): TaskListFieldConnection!
   user(where: UserWhereUniqueInput!): User
   users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
   usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
@@ -977,11 +595,11 @@ enum Role {
 
 type Subscription {
   asset(where: AssetSubscriptionWhereInput): AssetSubscriptionPayload
-  category(where: CategorySubscriptionWhereInput): CategorySubscriptionPayload
-  categoryField(where: CategoryFieldSubscriptionWhereInput): CategoryFieldSubscriptionPayload
   comment(where: CommentSubscriptionWhereInput): CommentSubscriptionPayload
   customField(where: CustomFieldSubscriptionWhereInput): CustomFieldSubscriptionPayload
   task(where: TaskSubscriptionWhereInput): TaskSubscriptionPayload
+  taskList(where: TaskListSubscriptionWhereInput): TaskListSubscriptionPayload
+  taskListField(where: TaskListFieldSubscriptionWhereInput): TaskListFieldSubscriptionPayload
   user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
 }
 
@@ -992,7 +610,7 @@ type Task {
   title: String!
   description: String!
   assets(where: AssetWhereInput, orderBy: AssetOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Asset!]
-  category: Category!
+  taskList: TaskList!
   comments(where: CommentWhereInput, orderBy: CommentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Comment!]
   dueDate: DateTime
   dueWhenPossible: Boolean!
@@ -1014,7 +632,7 @@ input TaskCreateInput {
   title: String!
   description: String!
   assets: AssetCreateManyInput
-  category: CategoryCreateOneWithoutTasksInput!
+  taskList: TaskListCreateOneWithoutTasksInput!
   comments: CommentCreateManyInput
   dueDate: DateTime
   dueWhenPossible: Boolean
@@ -1027,13 +645,13 @@ input TaskCreateManyWithoutAssignedToInput {
   connect: [TaskWhereUniqueInput!]
 }
 
-input TaskCreateManyWithoutCategoryInput {
-  create: [TaskCreateWithoutCategoryInput!]
+input TaskCreateManyWithoutCreatedByInput {
+  create: [TaskCreateWithoutCreatedByInput!]
   connect: [TaskWhereUniqueInput!]
 }
 
-input TaskCreateManyWithoutCreatedByInput {
-  create: [TaskCreateWithoutCreatedByInput!]
+input TaskCreateManyWithoutTaskListInput {
+  create: [TaskCreateWithoutTaskListInput!]
   connect: [TaskWhereUniqueInput!]
 }
 
@@ -1042,20 +660,7 @@ input TaskCreateWithoutAssignedToInput {
   title: String!
   description: String!
   assets: AssetCreateManyInput
-  category: CategoryCreateOneWithoutTasksInput!
-  comments: CommentCreateManyInput
-  dueDate: DateTime
-  dueWhenPossible: Boolean
-  customFields: CustomFieldCreateManyInput
-  status: TaskStatus
-}
-
-input TaskCreateWithoutCategoryInput {
-  createdBy: UserCreateOneWithoutTasksCreatedInput!
-  assignedTo: UserCreateOneWithoutTasksAssignedToInput
-  title: String!
-  description: String!
-  assets: AssetCreateManyInput
+  taskList: TaskListCreateOneWithoutTasksInput!
   comments: CommentCreateManyInput
   dueDate: DateTime
   dueWhenPossible: Boolean
@@ -1068,7 +673,20 @@ input TaskCreateWithoutCreatedByInput {
   title: String!
   description: String!
   assets: AssetCreateManyInput
-  category: CategoryCreateOneWithoutTasksInput!
+  taskList: TaskListCreateOneWithoutTasksInput!
+  comments: CommentCreateManyInput
+  dueDate: DateTime
+  dueWhenPossible: Boolean
+  customFields: CustomFieldCreateManyInput
+  status: TaskStatus
+}
+
+input TaskCreateWithoutTaskListInput {
+  createdBy: UserCreateOneWithoutTasksCreatedInput!
+  assignedTo: UserCreateOneWithoutTasksAssignedToInput
+  title: String!
+  description: String!
+  assets: AssetCreateManyInput
   comments: CommentCreateManyInput
   dueDate: DateTime
   dueWhenPossible: Boolean
@@ -1079,6 +697,388 @@ input TaskCreateWithoutCreatedByInput {
 type TaskEdge {
   node: Task!
   cursor: String!
+}
+
+type TaskList {
+  id: ID!
+  name: String!
+  description: String
+  taskListFields(where: TaskListFieldWhereInput, orderBy: TaskListFieldOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [TaskListField!]
+  tasks(where: TaskWhereInput, orderBy: TaskOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Task!]
+  slug: String!
+}
+
+type TaskListConnection {
+  pageInfo: PageInfo!
+  edges: [TaskListEdge]!
+  aggregate: AggregateTaskList!
+}
+
+input TaskListCreateInput {
+  name: String!
+  description: String
+  taskListFields: TaskListFieldCreateManyWithoutTaskListInput
+  tasks: TaskCreateManyWithoutTaskListInput
+  slug: String!
+}
+
+input TaskListCreateOneWithoutTaskListFieldsInput {
+  create: TaskListCreateWithoutTaskListFieldsInput
+  connect: TaskListWhereUniqueInput
+}
+
+input TaskListCreateOneWithoutTasksInput {
+  create: TaskListCreateWithoutTasksInput
+  connect: TaskListWhereUniqueInput
+}
+
+input TaskListCreateWithoutTaskListFieldsInput {
+  name: String!
+  description: String
+  tasks: TaskCreateManyWithoutTaskListInput
+  slug: String!
+}
+
+input TaskListCreateWithoutTasksInput {
+  name: String!
+  description: String
+  taskListFields: TaskListFieldCreateManyWithoutTaskListInput
+  slug: String!
+}
+
+type TaskListEdge {
+  node: TaskList!
+  cursor: String!
+}
+
+type TaskListField {
+  id: ID!
+  fieldName: String!
+  fieldType: FieldType!
+  taskList: TaskList
+}
+
+type TaskListFieldConnection {
+  pageInfo: PageInfo!
+  edges: [TaskListFieldEdge]!
+  aggregate: AggregateTaskListField!
+}
+
+input TaskListFieldCreateInput {
+  fieldName: String!
+  fieldType: FieldType!
+  taskList: TaskListCreateOneWithoutTaskListFieldsInput
+}
+
+input TaskListFieldCreateManyWithoutTaskListInput {
+  create: [TaskListFieldCreateWithoutTaskListInput!]
+  connect: [TaskListFieldWhereUniqueInput!]
+}
+
+input TaskListFieldCreateOneInput {
+  create: TaskListFieldCreateInput
+  connect: TaskListFieldWhereUniqueInput
+}
+
+input TaskListFieldCreateWithoutTaskListInput {
+  fieldName: String!
+  fieldType: FieldType!
+}
+
+type TaskListFieldEdge {
+  node: TaskListField!
+  cursor: String!
+}
+
+enum TaskListFieldOrderByInput {
+  id_ASC
+  id_DESC
+  fieldName_ASC
+  fieldName_DESC
+  fieldType_ASC
+  fieldType_DESC
+  createdAt_ASC
+  createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+}
+
+type TaskListFieldPreviousValues {
+  id: ID!
+  fieldName: String!
+  fieldType: FieldType!
+}
+
+type TaskListFieldSubscriptionPayload {
+  mutation: MutationType!
+  node: TaskListField
+  updatedFields: [String!]
+  previousValues: TaskListFieldPreviousValues
+}
+
+input TaskListFieldSubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: TaskListFieldWhereInput
+  AND: [TaskListFieldSubscriptionWhereInput!]
+  OR: [TaskListFieldSubscriptionWhereInput!]
+  NOT: [TaskListFieldSubscriptionWhereInput!]
+}
+
+input TaskListFieldUpdateDataInput {
+  fieldName: String
+  fieldType: FieldType
+  taskList: TaskListUpdateOneWithoutTaskListFieldsInput
+}
+
+input TaskListFieldUpdateInput {
+  fieldName: String
+  fieldType: FieldType
+  taskList: TaskListUpdateOneWithoutTaskListFieldsInput
+}
+
+input TaskListFieldUpdateManyWithoutTaskListInput {
+  create: [TaskListFieldCreateWithoutTaskListInput!]
+  delete: [TaskListFieldWhereUniqueInput!]
+  connect: [TaskListFieldWhereUniqueInput!]
+  disconnect: [TaskListFieldWhereUniqueInput!]
+  update: [TaskListFieldUpdateWithWhereUniqueWithoutTaskListInput!]
+  upsert: [TaskListFieldUpsertWithWhereUniqueWithoutTaskListInput!]
+}
+
+input TaskListFieldUpdateOneRequiredInput {
+  create: TaskListFieldCreateInput
+  update: TaskListFieldUpdateDataInput
+  upsert: TaskListFieldUpsertNestedInput
+  connect: TaskListFieldWhereUniqueInput
+}
+
+input TaskListFieldUpdateWithoutTaskListDataInput {
+  fieldName: String
+  fieldType: FieldType
+}
+
+input TaskListFieldUpdateWithWhereUniqueWithoutTaskListInput {
+  where: TaskListFieldWhereUniqueInput!
+  data: TaskListFieldUpdateWithoutTaskListDataInput!
+}
+
+input TaskListFieldUpsertNestedInput {
+  update: TaskListFieldUpdateDataInput!
+  create: TaskListFieldCreateInput!
+}
+
+input TaskListFieldUpsertWithWhereUniqueWithoutTaskListInput {
+  where: TaskListFieldWhereUniqueInput!
+  update: TaskListFieldUpdateWithoutTaskListDataInput!
+  create: TaskListFieldCreateWithoutTaskListInput!
+}
+
+input TaskListFieldWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  fieldName: String
+  fieldName_not: String
+  fieldName_in: [String!]
+  fieldName_not_in: [String!]
+  fieldName_lt: String
+  fieldName_lte: String
+  fieldName_gt: String
+  fieldName_gte: String
+  fieldName_contains: String
+  fieldName_not_contains: String
+  fieldName_starts_with: String
+  fieldName_not_starts_with: String
+  fieldName_ends_with: String
+  fieldName_not_ends_with: String
+  fieldType: FieldType
+  fieldType_not: FieldType
+  fieldType_in: [FieldType!]
+  fieldType_not_in: [FieldType!]
+  taskList: TaskListWhereInput
+  AND: [TaskListFieldWhereInput!]
+  OR: [TaskListFieldWhereInput!]
+  NOT: [TaskListFieldWhereInput!]
+}
+
+input TaskListFieldWhereUniqueInput {
+  id: ID
+}
+
+enum TaskListOrderByInput {
+  id_ASC
+  id_DESC
+  name_ASC
+  name_DESC
+  description_ASC
+  description_DESC
+  slug_ASC
+  slug_DESC
+  createdAt_ASC
+  createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+}
+
+type TaskListPreviousValues {
+  id: ID!
+  name: String!
+  description: String
+  slug: String!
+}
+
+type TaskListSubscriptionPayload {
+  mutation: MutationType!
+  node: TaskList
+  updatedFields: [String!]
+  previousValues: TaskListPreviousValues
+}
+
+input TaskListSubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: TaskListWhereInput
+  AND: [TaskListSubscriptionWhereInput!]
+  OR: [TaskListSubscriptionWhereInput!]
+  NOT: [TaskListSubscriptionWhereInput!]
+}
+
+input TaskListUpdateInput {
+  name: String
+  description: String
+  taskListFields: TaskListFieldUpdateManyWithoutTaskListInput
+  tasks: TaskUpdateManyWithoutTaskListInput
+  slug: String
+}
+
+input TaskListUpdateOneRequiredWithoutTasksInput {
+  create: TaskListCreateWithoutTasksInput
+  update: TaskListUpdateWithoutTasksDataInput
+  upsert: TaskListUpsertWithoutTasksInput
+  connect: TaskListWhereUniqueInput
+}
+
+input TaskListUpdateOneWithoutTaskListFieldsInput {
+  create: TaskListCreateWithoutTaskListFieldsInput
+  update: TaskListUpdateWithoutTaskListFieldsDataInput
+  upsert: TaskListUpsertWithoutTaskListFieldsInput
+  delete: Boolean
+  disconnect: Boolean
+  connect: TaskListWhereUniqueInput
+}
+
+input TaskListUpdateWithoutTaskListFieldsDataInput {
+  name: String
+  description: String
+  tasks: TaskUpdateManyWithoutTaskListInput
+  slug: String
+}
+
+input TaskListUpdateWithoutTasksDataInput {
+  name: String
+  description: String
+  taskListFields: TaskListFieldUpdateManyWithoutTaskListInput
+  slug: String
+}
+
+input TaskListUpsertWithoutTaskListFieldsInput {
+  update: TaskListUpdateWithoutTaskListFieldsDataInput!
+  create: TaskListCreateWithoutTaskListFieldsInput!
+}
+
+input TaskListUpsertWithoutTasksInput {
+  update: TaskListUpdateWithoutTasksDataInput!
+  create: TaskListCreateWithoutTasksInput!
+}
+
+input TaskListWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  name: String
+  name_not: String
+  name_in: [String!]
+  name_not_in: [String!]
+  name_lt: String
+  name_lte: String
+  name_gt: String
+  name_gte: String
+  name_contains: String
+  name_not_contains: String
+  name_starts_with: String
+  name_not_starts_with: String
+  name_ends_with: String
+  name_not_ends_with: String
+  description: String
+  description_not: String
+  description_in: [String!]
+  description_not_in: [String!]
+  description_lt: String
+  description_lte: String
+  description_gt: String
+  description_gte: String
+  description_contains: String
+  description_not_contains: String
+  description_starts_with: String
+  description_not_starts_with: String
+  description_ends_with: String
+  description_not_ends_with: String
+  taskListFields_every: TaskListFieldWhereInput
+  taskListFields_some: TaskListFieldWhereInput
+  taskListFields_none: TaskListFieldWhereInput
+  tasks_every: TaskWhereInput
+  tasks_some: TaskWhereInput
+  tasks_none: TaskWhereInput
+  slug: String
+  slug_not: String
+  slug_in: [String!]
+  slug_not_in: [String!]
+  slug_lt: String
+  slug_lte: String
+  slug_gt: String
+  slug_gte: String
+  slug_contains: String
+  slug_not_contains: String
+  slug_starts_with: String
+  slug_not_starts_with: String
+  slug_ends_with: String
+  slug_not_ends_with: String
+  AND: [TaskListWhereInput!]
+  OR: [TaskListWhereInput!]
+  NOT: [TaskListWhereInput!]
+}
+
+input TaskListWhereUniqueInput {
+  id: ID
+  name: String
+  slug: String
 }
 
 enum TaskOrderByInput {
@@ -1143,7 +1143,7 @@ input TaskUpdateInput {
   title: String
   description: String
   assets: AssetUpdateManyInput
-  category: CategoryUpdateOneRequiredWithoutTasksInput
+  taskList: TaskListUpdateOneRequiredWithoutTasksInput
   comments: CommentUpdateManyInput
   dueDate: DateTime
   dueWhenPossible: Boolean
@@ -1160,15 +1160,6 @@ input TaskUpdateManyWithoutAssignedToInput {
   upsert: [TaskUpsertWithWhereUniqueWithoutAssignedToInput!]
 }
 
-input TaskUpdateManyWithoutCategoryInput {
-  create: [TaskCreateWithoutCategoryInput!]
-  delete: [TaskWhereUniqueInput!]
-  connect: [TaskWhereUniqueInput!]
-  disconnect: [TaskWhereUniqueInput!]
-  update: [TaskUpdateWithWhereUniqueWithoutCategoryInput!]
-  upsert: [TaskUpsertWithWhereUniqueWithoutCategoryInput!]
-}
-
 input TaskUpdateManyWithoutCreatedByInput {
   create: [TaskCreateWithoutCreatedByInput!]
   delete: [TaskWhereUniqueInput!]
@@ -1178,25 +1169,21 @@ input TaskUpdateManyWithoutCreatedByInput {
   upsert: [TaskUpsertWithWhereUniqueWithoutCreatedByInput!]
 }
 
+input TaskUpdateManyWithoutTaskListInput {
+  create: [TaskCreateWithoutTaskListInput!]
+  delete: [TaskWhereUniqueInput!]
+  connect: [TaskWhereUniqueInput!]
+  disconnect: [TaskWhereUniqueInput!]
+  update: [TaskUpdateWithWhereUniqueWithoutTaskListInput!]
+  upsert: [TaskUpsertWithWhereUniqueWithoutTaskListInput!]
+}
+
 input TaskUpdateWithoutAssignedToDataInput {
   createdBy: UserUpdateOneRequiredWithoutTasksCreatedInput
   title: String
   description: String
   assets: AssetUpdateManyInput
-  category: CategoryUpdateOneRequiredWithoutTasksInput
-  comments: CommentUpdateManyInput
-  dueDate: DateTime
-  dueWhenPossible: Boolean
-  customFields: CustomFieldUpdateManyInput
-  status: TaskStatus
-}
-
-input TaskUpdateWithoutCategoryDataInput {
-  createdBy: UserUpdateOneRequiredWithoutTasksCreatedInput
-  assignedTo: UserUpdateOneWithoutTasksAssignedToInput
-  title: String
-  description: String
-  assets: AssetUpdateManyInput
+  taskList: TaskListUpdateOneRequiredWithoutTasksInput
   comments: CommentUpdateManyInput
   dueDate: DateTime
   dueWhenPossible: Boolean
@@ -1209,7 +1196,20 @@ input TaskUpdateWithoutCreatedByDataInput {
   title: String
   description: String
   assets: AssetUpdateManyInput
-  category: CategoryUpdateOneRequiredWithoutTasksInput
+  taskList: TaskListUpdateOneRequiredWithoutTasksInput
+  comments: CommentUpdateManyInput
+  dueDate: DateTime
+  dueWhenPossible: Boolean
+  customFields: CustomFieldUpdateManyInput
+  status: TaskStatus
+}
+
+input TaskUpdateWithoutTaskListDataInput {
+  createdBy: UserUpdateOneRequiredWithoutTasksCreatedInput
+  assignedTo: UserUpdateOneWithoutTasksAssignedToInput
+  title: String
+  description: String
+  assets: AssetUpdateManyInput
   comments: CommentUpdateManyInput
   dueDate: DateTime
   dueWhenPossible: Boolean
@@ -1222,14 +1222,14 @@ input TaskUpdateWithWhereUniqueWithoutAssignedToInput {
   data: TaskUpdateWithoutAssignedToDataInput!
 }
 
-input TaskUpdateWithWhereUniqueWithoutCategoryInput {
-  where: TaskWhereUniqueInput!
-  data: TaskUpdateWithoutCategoryDataInput!
-}
-
 input TaskUpdateWithWhereUniqueWithoutCreatedByInput {
   where: TaskWhereUniqueInput!
   data: TaskUpdateWithoutCreatedByDataInput!
+}
+
+input TaskUpdateWithWhereUniqueWithoutTaskListInput {
+  where: TaskWhereUniqueInput!
+  data: TaskUpdateWithoutTaskListDataInput!
 }
 
 input TaskUpsertWithWhereUniqueWithoutAssignedToInput {
@@ -1238,16 +1238,16 @@ input TaskUpsertWithWhereUniqueWithoutAssignedToInput {
   create: TaskCreateWithoutAssignedToInput!
 }
 
-input TaskUpsertWithWhereUniqueWithoutCategoryInput {
-  where: TaskWhereUniqueInput!
-  update: TaskUpdateWithoutCategoryDataInput!
-  create: TaskCreateWithoutCategoryInput!
-}
-
 input TaskUpsertWithWhereUniqueWithoutCreatedByInput {
   where: TaskWhereUniqueInput!
   update: TaskUpdateWithoutCreatedByDataInput!
   create: TaskCreateWithoutCreatedByInput!
+}
+
+input TaskUpsertWithWhereUniqueWithoutTaskListInput {
+  where: TaskWhereUniqueInput!
+  update: TaskUpdateWithoutTaskListDataInput!
+  create: TaskCreateWithoutTaskListInput!
 }
 
 input TaskWhereInput {
@@ -1298,7 +1298,7 @@ input TaskWhereInput {
   assets_every: AssetWhereInput
   assets_some: AssetWhereInput
   assets_none: AssetWhereInput
-  category: CategoryWhereInput
+  taskList: TaskListWhereInput
   comments_every: CommentWhereInput
   comments_some: CommentWhereInput
   comments_none: CommentWhereInput

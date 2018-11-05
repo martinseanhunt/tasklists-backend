@@ -8,10 +8,10 @@ exports.createUser = {
   avatar: Joi.string().max(255).allow('')
 }
 
-exports.createCategory = {
+exports.createTaskList = {
   name: Joi.string().min(3).max(100).required(),
   description: Joi.string().min(3).max(500).required(),
-  categoryFields: Joi.array().items(Joi.object().keys({
+  taskListFields: Joi.array().items(Joi.object().keys({
     fieldName: Joi.string().min(3).max(100).required(),
     fieldType: Joi.string().valid('STRING', 'DATE', 'INT', 'ASSET').required()
   }))

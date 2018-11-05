@@ -23,7 +23,7 @@ module.exports = {
     return ctx.prisma.user({ id: ctx.request.userId })
   },
   
-  async categories(parent, args, ctx, info) {
+  async taskLists(parent, args, ctx, info) {
     const { request: { userId } } = ctx
     if(!userId) return []
 
@@ -31,12 +31,12 @@ module.exports = {
     
     // Use fragments to get related custom fields to the category
     const fragment = `
-      fragment categoriesWithCategoryFields on Category {
+      fragment taskListsWithTaskListFields on Category {
         id
         name
         description
         slug
-        categoryFields {
+        taskListFields {
           id
           fieldName
           fieldType
@@ -48,16 +48,16 @@ module.exports = {
       }
     `
 
-    return ctx.prisma.categories().$fragment(fragment)
+    return ctx.prisma.taskLists().$fragment(fragment)
   },
 
-  async category(parent, args, ctx) {
+  async taskList(parent, args, ctx) {
     const { request: { userId } } = ctx
     if(!userId) return []
     
     // Use fragments to get related tasks to the category
     const fragment = `
-      fragment categoriesWithFilteredTasks on Category {
+      fragment taskListsWithFilteredTasks on Category {
         name
         id
         slug
@@ -72,7 +72,7 @@ module.exports = {
     // on the front end
 
     return ctx.prisma
-      .category({ slug: args.slug })
+      .taskList({ slug: args.slug })
       .$fragment(fragment)
 
   },
@@ -81,12 +81,10 @@ module.exports = {
     const { request: { userId } } = ctx
     if(!userId) return []
 
-    console.log(args.slug)
-
     return ctx.prisma
       .tasks({
         where: {
-          category: {
+          taskList: {
             slug: args.taskListSlug
           },
           status_not_in: args.excludeStatus
