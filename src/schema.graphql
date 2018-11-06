@@ -7,6 +7,8 @@ type Query {
   taskLists: [TaskList]
   taskList(slug: String!): TaskList
   tasks(taskListSlug: String!, excludeStatus: [TaskStatus]): [Task]
+  openTasks(taskListSlug: String!): [Task]
+  completedTasks(taskListSlug: String!): [Task]
 }
 
 type Mutation {
@@ -41,6 +43,7 @@ type User {
   slackHandle: String
   role: Role
   status: UserStatus
+  avatar: String
 }
 
 type StatusMessage {

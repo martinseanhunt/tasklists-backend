@@ -90,5 +90,35 @@ module.exports = {
           status_not_in: args.excludeStatus
         }
       })
+  },
+
+  async openTasks(parent, args, ctx) {
+    const { request: { userId } } = ctx
+    if(!userId) return []
+
+    return ctx.prisma
+      .tasks({
+        where: {
+          taskList: {
+            slug: args.taskListSlug
+          },
+          status_not: 'COMPLETED'
+        }
+      })
+  },
+
+  async completedTasks(parent, args, ctx) {
+    const { request: { userId } } = ctx
+    if(!userId) return []
+
+    return ctx.prisma
+      .tasks({
+        where: {
+          taskList: {
+            slug: args.taskListSlug
+          },
+          status: 'COMPLETED'
+        }
+      })
   }
 }
