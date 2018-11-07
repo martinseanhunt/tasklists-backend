@@ -1,6 +1,8 @@
 endpoint: https://us1.prisma.sh/martin-hunt-925e21/devlists/dev
 datamodel: datamodel.prisma
 
+# BIGQUESTION: is this the best way to handle importing all types in to schema.gql
+
 generate:
   - generator: javascript-client
     output: ./src/generated/prisma-client/

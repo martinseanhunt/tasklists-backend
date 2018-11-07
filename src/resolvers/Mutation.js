@@ -12,17 +12,19 @@ const cookieSettings = {
   maxAge: 1000 * 60 * 60 *24 * 365, // 1 year cookie
 }
 
-// TODO make sure we're using Joi for all mutations where accepting external values
+// TODO make sure I'm using Joi for all mutations where accepting external values
 
 module.exports = {
 
   // TODO change the name of this function to invite user 
   // and update on front end
-  async createUser(parent, args, ctx, info) {
+
+  // BIGQUESTION: what is root here?
+  async createUser(root, args, ctx) {
     const { userId } = ctx.request
     if(!userId) throw new Error('You must be logged in to do this')
 
-    // TODO put role on JWT so we can check the users role without calling the DB
+    // TODO put role on JWT so I can check the users role without calling the DB
     const currentUser = await ctx.prisma.user({ id: userId })
     if(!currentUser || !['ADMIN', 'SUPERADMIN'].includes(currentUser.role)) 
       throw new Error('Not authorized')
@@ -63,7 +65,7 @@ module.exports = {
     return user
   },
 
-  async signUp(parent, args, ctx, info) {
+  async signUp(root, args, ctx) {
     const user = await ctx.prisma.user({ signupToken: args.token })
 
     // TODO what's the flow for if a token has expired, how do we send them a new one? 
@@ -95,7 +97,7 @@ module.exports = {
     return signedUpUser
   },
 
-  async signIn(parent, {email, password}, ctx, info) {
+  async signIn(root, {email, password}, ctx) {
     const user = await ctx.prisma.user({ email })    
     if(!user) throw new Error('Email not found')
 
@@ -110,15 +112,15 @@ module.exports = {
     return user
   },
 
-  async signOut(parent, args, ctx, info) {
+  async signOut(root, args, ctx) {
     ctx.response.clearCookie('token')
     return { message: 'Success' }
   },
 
-  async createTaskList(parent, args, ctx, info) {
+  async createTaskList(root, args, ctx) {
     // TODO helper function for protected routes
 
-    // TODO Put role on JWT so we don't have to check the DB when not needed for permissions
+    // TODO Put role on JWT so I don't have to check the DB when not needed for permissions
     const { userId } = ctx.request
     if(!userId) throw new Error('You must be logged in to do this')
 

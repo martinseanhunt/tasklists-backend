@@ -25,7 +25,7 @@ const server = new GraphQLServer({
 
 server.express.use(cookieParser())
 
-// Custom middleware to decode cookie and out the userId on
+// middleware to decode cookie and out the userId on
 // each request
 server.express.use((req, res, next) => {
   const { token } = req.cookies

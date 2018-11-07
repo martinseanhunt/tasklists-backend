@@ -1,5 +1,5 @@
 module.exports = {
-  async userByToken(parent, args, ctx, info) {
+  async userByToken(root, args, ctx) {
     const user = await ctx.prisma.user({ signupToken: args.token })
     if(!user) throw new Error('Signup token is invalid')
     if(user.password) throw new Error(`You've already signed up`)
@@ -8,7 +8,7 @@ module.exports = {
     return user
   },
 
-  async users(parent, args, ctx, info) {
+  async users(root, args, ctx) {
     const { request: { userId } } = ctx
     if(!userId) return []
 
@@ -18,16 +18,19 @@ module.exports = {
     return ctx.prisma.users()
   },
 
-  me(parent, args, ctx, info) {
+  me(root, args, ctx) {
     if(!ctx.request.userId) return null
     return ctx.prisma.user({ id: ctx.request.userId })
   },
   
-  async taskLists(parent, args, ctx, info) {
+  async taskLists(root, args, ctx, info) {
     const { request: { userId } } = ctx
     if(!userId) return []
 
-    // DECISION: do we need to limit getting all categories to admin / superadmin?
+    // DECISION: do I need to limit getting all categories to admin / superadmin?
+
+    // BIGQUESTION: is a fragment the best thing here? It removes a lot of flexibility on the front end
+    // would it be better to use prisma bindings at the same time as the client so can use when needed? 
     
     // Use fragments to get related custom fields to the category
     const fragment = `
@@ -41,7 +44,9 @@ module.exports = {
           fieldName
           fieldType
         }
-        tasks {
+        tasks(where: {
+          status_not: CLOSED
+        }) {
           id
           status
         }
@@ -51,7 +56,7 @@ module.exports = {
     return ctx.prisma.taskLists().$fragment(fragment)
   },
 
-  async taskList(parent, args, ctx) {
+  async taskList(root, args, ctx) {
     const { request: { userId } } = ctx
     if(!userId) return []
     
@@ -77,7 +82,7 @@ module.exports = {
 
   },
 
-  async tasks(parent, args, ctx) {
+  async tasks(root, args, ctx) {
     const { request: { userId } } = ctx
     if(!userId) return []
 
@@ -92,7 +97,7 @@ module.exports = {
       })
   },
 
-  async openTasks(parent, args, ctx) {
+  async openTasks(root, args, ctx) {
     const { request: { userId } } = ctx
     if(!userId) return []
 
@@ -107,7 +112,7 @@ module.exports = {
       })
   },
 
-  async completedTasks(parent, args, ctx) {
+  async completedTasks(root, args, ctx) {
     const { request: { userId } } = ctx
     if(!userId) return []
 

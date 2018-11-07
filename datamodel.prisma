@@ -61,7 +61,7 @@ type Task {
 
 type CustomField {
   id: ID! @unique
-  # duplicate fieldName / type here incase the categoryField is ever changed - we don't want to update existing Tasks
+  # duplicate fieldName / type here incase the categoryField is ever changed - don't want to update existing Tasks
   fieldName: String!, 
   fieldType: FieldType!,
   fieldValue: String!
