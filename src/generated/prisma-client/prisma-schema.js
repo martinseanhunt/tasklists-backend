@@ -32,6 +32,7 @@ type Asset {
   createdBy: User!
   assetUrl: String!
   createdAt: DateTime!
+  assetType: AssetType!
 }
 
 type AssetConnection {
@@ -43,6 +44,7 @@ type AssetConnection {
 input AssetCreateInput {
   createdBy: UserCreateOneInput!
   assetUrl: String!
+  assetType: AssetType!
 }
 
 input AssetCreateManyInput {
@@ -62,6 +64,8 @@ enum AssetOrderByInput {
   assetUrl_DESC
   createdAt_ASC
   createdAt_DESC
+  assetType_ASC
+  assetType_DESC
   updatedAt_ASC
   updatedAt_DESC
 }
@@ -70,6 +74,7 @@ type AssetPreviousValues {
   id: ID!
   assetUrl: String!
   createdAt: DateTime!
+  assetType: AssetType!
 }
 
 type AssetSubscriptionPayload {
@@ -90,14 +95,22 @@ input AssetSubscriptionWhereInput {
   NOT: [AssetSubscriptionWhereInput!]
 }
 
+enum AssetType {
+  IMAGE
+  VIDEO
+  FILE
+}
+
 input AssetUpdateDataInput {
   createdBy: UserUpdateOneRequiredInput
   assetUrl: String
+  assetType: AssetType
 }
 
 input AssetUpdateInput {
   createdBy: UserUpdateOneRequiredInput
   assetUrl: String
+  assetType: AssetType
 }
 
 input AssetUpdateManyInput {
@@ -158,6 +171,10 @@ input AssetWhereInput {
   createdAt_lte: DateTime
   createdAt_gt: DateTime
   createdAt_gte: DateTime
+  assetType: AssetType
+  assetType_not: AssetType
+  assetType_in: [AssetType!]
+  assetType_not_in: [AssetType!]
   AND: [AssetWhereInput!]
   OR: [AssetWhereInput!]
   NOT: [AssetWhereInput!]
@@ -614,7 +631,7 @@ type Task {
   taskList: TaskList!
   comments(where: CommentWhereInput, orderBy: CommentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Comment!]
   dueDate: DateTime
-  dueWhenPossible: Boolean!
+  due: TaskDue!
   createdAt: DateTime!
   updatedAt: DateTime!
   customFields(where: CustomFieldWhereInput, orderBy: CustomFieldOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [CustomField!]
@@ -636,7 +653,7 @@ input TaskCreateInput {
   taskList: TaskListCreateOneWithoutTasksInput!
   comments: CommentCreateManyInput
   dueDate: DateTime
-  dueWhenPossible: Boolean
+  due: TaskDue
   customFields: CustomFieldCreateManyInput
   status: TaskStatus
 }
@@ -664,7 +681,7 @@ input TaskCreateWithoutAssignedToInput {
   taskList: TaskListCreateOneWithoutTasksInput!
   comments: CommentCreateManyInput
   dueDate: DateTime
-  dueWhenPossible: Boolean
+  due: TaskDue
   customFields: CustomFieldCreateManyInput
   status: TaskStatus
 }
@@ -677,7 +694,7 @@ input TaskCreateWithoutCreatedByInput {
   taskList: TaskListCreateOneWithoutTasksInput!
   comments: CommentCreateManyInput
   dueDate: DateTime
-  dueWhenPossible: Boolean
+  due: TaskDue
   customFields: CustomFieldCreateManyInput
   status: TaskStatus
 }
@@ -690,9 +707,16 @@ input TaskCreateWithoutTaskListInput {
   assets: AssetCreateManyInput
   comments: CommentCreateManyInput
   dueDate: DateTime
-  dueWhenPossible: Boolean
+  due: TaskDue
   customFields: CustomFieldCreateManyInput
   status: TaskStatus
+}
+
+enum TaskDue {
+  WHENPOSSIBLE
+  ASAP
+  BYDATE
+  ONDATE
 }
 
 type TaskEdge {
@@ -1091,8 +1115,8 @@ enum TaskOrderByInput {
   description_DESC
   dueDate_ASC
   dueDate_DESC
-  dueWhenPossible_ASC
-  dueWhenPossible_DESC
+  due_ASC
+  due_DESC
   createdAt_ASC
   createdAt_DESC
   updatedAt_ASC
@@ -1106,7 +1130,7 @@ type TaskPreviousValues {
   title: String!
   description: String!
   dueDate: DateTime
-  dueWhenPossible: Boolean!
+  due: TaskDue!
   createdAt: DateTime!
   updatedAt: DateTime!
   status: TaskStatus!
@@ -1147,7 +1171,7 @@ input TaskUpdateInput {
   taskList: TaskListUpdateOneRequiredWithoutTasksInput
   comments: CommentUpdateManyInput
   dueDate: DateTime
-  dueWhenPossible: Boolean
+  due: TaskDue
   customFields: CustomFieldUpdateManyInput
   status: TaskStatus
 }
@@ -1187,7 +1211,7 @@ input TaskUpdateWithoutAssignedToDataInput {
   taskList: TaskListUpdateOneRequiredWithoutTasksInput
   comments: CommentUpdateManyInput
   dueDate: DateTime
-  dueWhenPossible: Boolean
+  due: TaskDue
   customFields: CustomFieldUpdateManyInput
   status: TaskStatus
 }
@@ -1200,7 +1224,7 @@ input TaskUpdateWithoutCreatedByDataInput {
   taskList: TaskListUpdateOneRequiredWithoutTasksInput
   comments: CommentUpdateManyInput
   dueDate: DateTime
-  dueWhenPossible: Boolean
+  due: TaskDue
   customFields: CustomFieldUpdateManyInput
   status: TaskStatus
 }
@@ -1213,7 +1237,7 @@ input TaskUpdateWithoutTaskListDataInput {
   assets: AssetUpdateManyInput
   comments: CommentUpdateManyInput
   dueDate: DateTime
-  dueWhenPossible: Boolean
+  due: TaskDue
   customFields: CustomFieldUpdateManyInput
   status: TaskStatus
 }
@@ -1311,8 +1335,10 @@ input TaskWhereInput {
   dueDate_lte: DateTime
   dueDate_gt: DateTime
   dueDate_gte: DateTime
-  dueWhenPossible: Boolean
-  dueWhenPossible_not: Boolean
+  due: TaskDue
+  due_not: TaskDue
+  due_in: [TaskDue!]
+  due_not_in: [TaskDue!]
   createdAt: DateTime
   createdAt_not: DateTime
   createdAt_in: [DateTime!]

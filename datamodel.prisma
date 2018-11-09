@@ -1,30 +1,3 @@
-enum Role {
-  SUPERADMIN,
-  ADMIN,
-  STAFF,
-}
-
-enum UserStatus {
-  JOINED, 
-  INVITED,
-  DELETED
-}
-
-enum TaskStatus {
-  CREATED,
-  ASSIGNED,
-  AWAITINGINPUT,
-  COMPLETED, 
-  CLOSED
-}
-
-enum FieldType { 
-  STRING,
-  INT,
-  DATE,
-  ASSET
-}
-
 type User {
   id: ID! @unique
   email: String! @unique
@@ -42,6 +15,19 @@ type User {
   status: UserStatus! @default(value: INVITED)
 }
 
+enum Role {
+  SUPERADMIN,
+  ADMIN,
+  STAFF,
+}
+
+enum UserStatus {
+  JOINED, 
+  INVITED,
+  DELETED
+}
+
+# get rid of dueWhenPossible and make due an enum
 type Task { 
   id: ID! @unique
   createdBy: User! @relation(name: "TaskCreatedByUser")
@@ -52,20 +38,42 @@ type Task {
   taskList: TaskList!
   comments: [Comment!]!
   dueDate: DateTime
-  dueWhenPossible: Boolean! @default(value: "false")
+  due: TaskDue! @default(value: WHENPOSSIBLE)
   createdAt: DateTime!
   updatedAt: DateTime!
   customFields: [CustomField!]!
   status: TaskStatus! @default(value: CREATED)
 }
 
+enum TaskStatus {
+  CREATED,
+  ASSIGNED,
+  AWAITINGINPUT,
+  COMPLETED, 
+  CLOSED
+}
+
+enum TaskDue { 
+  WHENPOSSIBLE,
+  ASAP,
+  BYDATE,
+  ONDATE
+}
+
 type CustomField {
   id: ID! @unique
-  # duplicate fieldName / type here incase the categoryField is ever changed - don't want to update existing Tasks
+  # duplicate fieldName / if the categoryField is ever changed - don't want to update existing Tasks
   fieldName: String!, 
   fieldType: FieldType!,
   fieldValue: String!
   taskListField: TaskListField!
+}
+
+enum FieldType { 
+  STRING,
+  INT,
+  DATE,
+  ASSET
 }
 
 type TaskList {
@@ -98,5 +106,12 @@ type Asset {
   createdBy: User!
   assetUrl: String!
   createdAt: DateTime!
+  assetType: AssetType!
+}
+
+enum AssetType {
+  IMAGE,
+  VIDEO,
+  FILE
 }
 

@@ -1,5 +1,8 @@
 const Joi = require('joi')
 
+// BIGQUESTION: Is joi the righ thting to be using here? Would it be better to validate 
+// at the prisma layer? 
+
 exports.createUser = {
   name: Joi.string().min(3).max(100).required(),
   email: Joi.string().email({ minDomainAtoms: 2 }).min(3).max(255).required(),

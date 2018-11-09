@@ -62,11 +62,16 @@ module.exports = {
     
     // Use fragments to get related tasks to the category
     const fragment = `
-      fragment taskListsWithFilteredTasks on Category {
+      fragment taskListsWithFields on Category {
         name
         id
         slug
         description
+        taskListFields {
+          id
+          fieldName
+          fieldType
+        }
       }
     `
 

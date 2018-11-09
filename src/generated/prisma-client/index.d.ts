@@ -365,7 +365,11 @@ export type Role = "SUPERADMIN" | "ADMIN" | "STAFF";
 
 export type UserStatus = "JOINED" | "INVITED" | "DELETED";
 
+export type AssetType = "IMAGE" | "VIDEO" | "FILE";
+
 export type FieldType = "STRING" | "INT" | "DATE" | "ASSET";
+
+export type TaskDue = "WHENPOSSIBLE" | "ASAP" | "BYDATE" | "ONDATE";
 
 export type TaskStatus =
   | "CREATED"
@@ -383,8 +387,8 @@ export type TaskOrderByInput =
   | "description_DESC"
   | "dueDate_ASC"
   | "dueDate_DESC"
-  | "dueWhenPossible_ASC"
-  | "dueWhenPossible_DESC"
+  | "due_ASC"
+  | "due_DESC"
   | "createdAt_ASC"
   | "createdAt_DESC"
   | "updatedAt_ASC"
@@ -399,6 +403,8 @@ export type AssetOrderByInput =
   | "assetUrl_DESC"
   | "createdAt_ASC"
   | "createdAt_DESC"
+  | "assetType_ASC"
+  | "assetType_DESC"
   | "updatedAt_ASC"
   | "updatedAt_DESC";
 
@@ -548,8 +554,10 @@ export interface TaskWhereInput {
   dueDate_lte?: DateTimeInput;
   dueDate_gt?: DateTimeInput;
   dueDate_gte?: DateTimeInput;
-  dueWhenPossible?: Boolean;
-  dueWhenPossible_not?: Boolean;
+  due?: TaskDue;
+  due_not?: TaskDue;
+  due_in?: TaskDue[] | TaskDue;
+  due_not_in?: TaskDue[] | TaskDue;
   createdAt?: DateTimeInput;
   createdAt_not?: DateTimeInput;
   createdAt_in?: DateTimeInput[] | DateTimeInput;
@@ -764,6 +772,10 @@ export interface AssetWhereInput {
   createdAt_lte?: DateTimeInput;
   createdAt_gt?: DateTimeInput;
   createdAt_gte?: DateTimeInput;
+  assetType?: AssetType;
+  assetType_not?: AssetType;
+  assetType_in?: AssetType[] | AssetType;
+  assetType_not_in?: AssetType[] | AssetType;
   AND?: AssetWhereInput[] | AssetWhereInput;
   OR?: AssetWhereInput[] | AssetWhereInput;
   NOT?: AssetWhereInput[] | AssetWhereInput;
@@ -1015,6 +1027,7 @@ export type UserWhereUniqueInput = AtLeastOne<{
 export interface AssetCreateInput {
   createdBy: UserCreateOneInput;
   assetUrl: String;
+  assetType: AssetType;
 }
 
 export interface UserCreateOneInput {
@@ -1051,7 +1064,7 @@ export interface TaskCreateWithoutCreatedByInput {
   taskList: TaskListCreateOneWithoutTasksInput;
   comments?: CommentCreateManyInput;
   dueDate?: DateTimeInput;
-  dueWhenPossible?: Boolean;
+  due?: TaskDue;
   customFields?: CustomFieldCreateManyInput;
   status?: TaskStatus;
 }
@@ -1164,7 +1177,7 @@ export interface TaskCreateWithoutTaskListInput {
   assets?: AssetCreateManyInput;
   comments?: CommentCreateManyInput;
   dueDate?: DateTimeInput;
-  dueWhenPossible?: Boolean;
+  due?: TaskDue;
   customFields?: CustomFieldCreateManyInput;
   status?: TaskStatus;
 }
@@ -1204,7 +1217,7 @@ export interface TaskCreateWithoutAssignedToInput {
   taskList: TaskListCreateOneWithoutTasksInput;
   comments?: CommentCreateManyInput;
   dueDate?: DateTimeInput;
-  dueWhenPossible?: Boolean;
+  due?: TaskDue;
   customFields?: CustomFieldCreateManyInput;
   status?: TaskStatus;
 }
@@ -1212,6 +1225,7 @@ export interface TaskCreateWithoutAssignedToInput {
 export interface AssetUpdateInput {
   createdBy?: UserUpdateOneRequiredInput;
   assetUrl?: String;
+  assetType?: AssetType;
 }
 
 export interface UserUpdateOneRequiredInput {
@@ -1263,7 +1277,7 @@ export interface TaskUpdateWithoutCreatedByDataInput {
   taskList?: TaskListUpdateOneRequiredWithoutTasksInput;
   comments?: CommentUpdateManyInput;
   dueDate?: DateTimeInput;
-  dueWhenPossible?: Boolean;
+  due?: TaskDue;
   customFields?: CustomFieldUpdateManyInput;
   status?: TaskStatus;
 }
@@ -1318,6 +1332,7 @@ export interface AssetUpdateWithWhereUniqueNestedInput {
 export interface AssetUpdateDataInput {
   createdBy?: UserUpdateOneRequiredInput;
   assetUrl?: String;
+  assetType?: AssetType;
 }
 
 export interface AssetUpsertWithWhereUniqueNestedInput {
@@ -1500,7 +1515,7 @@ export interface TaskUpdateWithoutTaskListDataInput {
   assets?: AssetUpdateManyInput;
   comments?: CommentUpdateManyInput;
   dueDate?: DateTimeInput;
-  dueWhenPossible?: Boolean;
+  due?: TaskDue;
   customFields?: CustomFieldUpdateManyInput;
   status?: TaskStatus;
 }
@@ -1555,7 +1570,7 @@ export interface TaskUpdateWithoutAssignedToDataInput {
   taskList?: TaskListUpdateOneRequiredWithoutTasksInput;
   comments?: CommentUpdateManyInput;
   dueDate?: DateTimeInput;
-  dueWhenPossible?: Boolean;
+  due?: TaskDue;
   customFields?: CustomFieldUpdateManyInput;
   status?: TaskStatus;
 }
@@ -1621,7 +1636,7 @@ export interface TaskCreateInput {
   taskList: TaskListCreateOneWithoutTasksInput;
   comments?: CommentCreateManyInput;
   dueDate?: DateTimeInput;
-  dueWhenPossible?: Boolean;
+  due?: TaskDue;
   customFields?: CustomFieldCreateManyInput;
   status?: TaskStatus;
 }
@@ -1635,7 +1650,7 @@ export interface TaskUpdateInput {
   taskList?: TaskListUpdateOneRequiredWithoutTasksInput;
   comments?: CommentUpdateManyInput;
   dueDate?: DateTimeInput;
-  dueWhenPossible?: Boolean;
+  due?: TaskDue;
   customFields?: CustomFieldUpdateManyInput;
   status?: TaskStatus;
 }
@@ -1769,6 +1784,7 @@ export interface AssetNode {
   id: ID_Output;
   assetUrl: String;
   createdAt: DateTimeOutput;
+  assetType: AssetType;
 }
 
 export interface Asset extends Promise<AssetNode>, Fragmentable {
@@ -1776,6 +1792,7 @@ export interface Asset extends Promise<AssetNode>, Fragmentable {
   createdBy: <T = User>() => T;
   assetUrl: () => Promise<String>;
   createdAt: () => Promise<DateTimeOutput>;
+  assetType: () => Promise<AssetType>;
 }
 
 export interface AssetSubscription
@@ -1785,6 +1802,7 @@ export interface AssetSubscription
   createdBy: <T = UserSubscription>() => T;
   assetUrl: () => Promise<AsyncIterator<String>>;
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  assetType: () => Promise<AsyncIterator<AssetType>>;
 }
 
 export interface UserNode {
@@ -1883,7 +1901,7 @@ export interface TaskNode {
   title: String;
   description: String;
   dueDate?: DateTimeOutput;
-  dueWhenPossible: Boolean;
+  due: TaskDue;
   createdAt: DateTimeOutput;
   updatedAt: DateTimeOutput;
   status: TaskStatus;
@@ -1919,7 +1937,7 @@ export interface Task extends Promise<TaskNode>, Fragmentable {
     }
   ) => T;
   dueDate: () => Promise<DateTimeOutput>;
-  dueWhenPossible: () => Promise<Boolean>;
+  due: () => Promise<TaskDue>;
   createdAt: () => Promise<DateTimeOutput>;
   updatedAt: () => Promise<DateTimeOutput>;
   customFields: <T = FragmentableArray<CustomFieldNode>>(
@@ -1968,7 +1986,7 @@ export interface TaskSubscription
     }
   ) => T;
   dueDate: () => Promise<AsyncIterator<DateTimeOutput>>;
-  dueWhenPossible: () => Promise<AsyncIterator<Boolean>>;
+  due: () => Promise<AsyncIterator<TaskDue>>;
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   customFields: <T = Promise<AsyncIterator<CustomFieldSubscription>>>(
@@ -2566,6 +2584,7 @@ export interface AssetPreviousValuesNode {
   id: ID_Output;
   assetUrl: String;
   createdAt: DateTimeOutput;
+  assetType: AssetType;
 }
 
 export interface AssetPreviousValues
@@ -2574,6 +2593,7 @@ export interface AssetPreviousValues
   id: () => Promise<ID_Output>;
   assetUrl: () => Promise<String>;
   createdAt: () => Promise<DateTimeOutput>;
+  assetType: () => Promise<AssetType>;
 }
 
 export interface AssetPreviousValuesSubscription
@@ -2582,6 +2602,7 @@ export interface AssetPreviousValuesSubscription
   id: () => Promise<AsyncIterator<ID_Output>>;
   assetUrl: () => Promise<AsyncIterator<String>>;
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  assetType: () => Promise<AsyncIterator<AssetType>>;
 }
 
 export interface CommentSubscriptionPayloadNode {
@@ -2708,7 +2729,7 @@ export interface TaskPreviousValuesNode {
   title: String;
   description: String;
   dueDate?: DateTimeOutput;
-  dueWhenPossible: Boolean;
+  due: TaskDue;
   createdAt: DateTimeOutput;
   updatedAt: DateTimeOutput;
   status: TaskStatus;
@@ -2721,7 +2742,7 @@ export interface TaskPreviousValues
   title: () => Promise<String>;
   description: () => Promise<String>;
   dueDate: () => Promise<DateTimeOutput>;
-  dueWhenPossible: () => Promise<Boolean>;
+  due: () => Promise<TaskDue>;
   createdAt: () => Promise<DateTimeOutput>;
   updatedAt: () => Promise<DateTimeOutput>;
   status: () => Promise<TaskStatus>;
@@ -2734,7 +2755,7 @@ export interface TaskPreviousValuesSubscription
   title: () => Promise<AsyncIterator<String>>;
   description: () => Promise<AsyncIterator<String>>;
   dueDate: () => Promise<AsyncIterator<DateTimeOutput>>;
-  dueWhenPossible: () => Promise<AsyncIterator<Boolean>>;
+  due: () => Promise<AsyncIterator<TaskDue>>;
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   status: () => Promise<AsyncIterator<TaskStatus>>;
@@ -2932,14 +2953,14 @@ DateTime scalar output type, which is always a string
 export type DateTimeOutput = string;
 
 /*
-The `Boolean` scalar type represents `true` or `false`.
-*/
-export type Boolean = boolean;
-
-/*
 The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1. 
 */
 export type Int = number;
+
+/*
+The `Boolean` scalar type represents `true` or `false`.
+*/
+export type Boolean = boolean;
 
 export type Long = string;
 

@@ -140,5 +140,53 @@ module.exports = {
     })
 
     return taskList
+  },
+
+  // TODO / BIGQUESTION this whole process feels like a nightmare!
+  // Shoudl i just be creating my own input types for more complicated
+  // Mutations rather than using the imported ones so I don't have to 
+  // coerce the data so much on the front end. is that the best solution? 
+  // seems like it will lead to a lot of
+  async createTask(root, args, ctx) {
+    const { userId } = ctx.request
+    if(!userId) throw new Error('You must be logged in to do this')
+
+    const user = await ctx.prisma.user({ id: userId })
+    if(!user) throw new Error('You must be logged in to do this')
+
+    const task = await ctx.prisma.createTask({
+      ...args,
+      taskList: {
+        connect: {
+          slug: args.taskList
+        }
+      },
+      assignedTo: args.assignedTo && args.assignedTo !== '' ? {
+        connect: {
+          id: args.assignedTo
+        }
+      } : null,
+      createdBy: {
+        connect: {
+          id: user.id 
+        }
+      },
+      assets: {
+        create: args.assets
+          .filter(a => a.asset)
+          .map(a => ({
+            ...a,
+            createdBy: {
+              connect: { id: user.id } 
+            }
+          }
+        ))
+      },
+      customFields: {
+        create: args.customFields
+      }
+    })
+    
+    return task
   }
 }

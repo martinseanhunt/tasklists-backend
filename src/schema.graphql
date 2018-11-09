@@ -1,3 +1,5 @@
+# BIGQUESTION Is this exposing anythign I don't want to be exposing? 
+
 # import * from './generated/prisma.graphql'
 
 type Query {
@@ -26,6 +28,17 @@ type Mutation {
     taskListFields: [TaskListFieldCreateWithoutTaskListInput]
   ): TaskList
 
+  createTask(
+    title: String!
+    description: String!
+    due: TaskDue!
+    dueDate: String
+    assignedTo: String
+    customFields: [CustomFieldCreateInput]
+    taskList: String!
+    assets: [AssetCreateInput]
+  ): Task
+
   signUp(token: String!, password: String!, avatar: String): User
   
   signIn(email: String!, password: String!): User
@@ -33,8 +46,7 @@ type Mutation {
   signOut: StatusMessage
 }
 
-# TODO make sure that the API isn't esposing anything we don't want it to
-# check for all relationships etc etc - do we need to limit by role ?
+# BIGQUESTION How could I only expose the user email to the front end if the logged in user making the query has a specific role? 
 
 type User {
   id: ID!
