@@ -34,9 +34,9 @@ type Mutation {
     due: TaskDue!
     dueDate: String
     assignedTo: String
-    customFields: [CustomFieldCreateInput]
+    customFields: [CustomFieldCreateWithTaskInput]
     taskList: String!
-    assets: [AssetCreateInput]
+    assets: [AssetCreateWithTaskInput]
   ): Task
 
   signUp(token: String!, password: String!, avatar: String): User
@@ -60,4 +60,26 @@ type User {
 
 type StatusMessage {
   message: String
+}
+
+# BIGQUESTION is creating my own input types here the answer for 
+# Creating multiple related nodes within a create Mutation. Otherwise
+# I'd have to pass connect: { id: theId } from the frontend and that doesn't 
+# feel right. This way I can just pass along the ID and make the connections
+# server side.
+
+input CreateRelatedCustomField {
+  fieldName: String!
+  fieldType: FieldType!
+  fieldValue: String!
+  taskListField: ID!
+}
+
+# Same thing here, I don't want to have to pass the user email along with every asset
+# on the front end so creating my own input type seems like the right idea. so I can 
+# set createdBy serverside
+
+input CreateRelatedAsset {
+  assetUrl: String!
+  assetType: AssetType!
 }
