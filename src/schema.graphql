@@ -34,9 +34,9 @@ type Mutation {
     due: TaskDue!
     dueDate: String
     assignedTo: String
-    customFields: [CustomFieldCreateWithTaskInput]
+    customFields: [CreateRelatedCustomField]
     taskList: String!
-    assets: [AssetCreateWithTaskInput]
+    assets: [CreateRelatedAsset]
   ): Task
 
   signUp(token: String!, password: String!, avatar: String): User
