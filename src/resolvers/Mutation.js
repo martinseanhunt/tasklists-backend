@@ -173,7 +173,7 @@ module.exports = {
       },
       assets: {
         create: args.assets
-          .filter(a => a.asset)
+          .filter(a => a.assetUrl)
           .map(a => ({
             ...a,
             createdBy: {
@@ -189,9 +189,33 @@ module.exports = {
             ...field, 
             taskListField: { connect: { id: field.taskListField } }
           }))
-      }
+      },
+      status: args.assignedTo && args.assignedTo !== '' 
+        ? 'ASSIGNED'
+        : 'CREATED' 
     })
     
     return task
+  },
+
+  async updateTaskStatus(root, args, ctx) {
+    const { userId } = ctx.request
+    if(!userId) throw new Error('You must be logged in to do this')
+
+    const user = await ctx.prisma.user({ id: userId })
+    if(!user) throw new Error('You must be logged in to do this')
+
+    const task = await ctx.prisma.task({ id: args.id })
+    if(!task) throw new Error('No task found')
+
+    if(!(['ADMIN', 'SUPERADMIN'].includes(user.role)
+    || task.createdBy.id === userData.me.id
+    || (task.assignedTo && task.assignedTo.id === userData.me.id))) 
+      throw new Error('You do not have permission to update this task')
+
+    return ctx.prisma.updateTask({ 
+      where: { id: task.id },
+      data: { status: args.status }
+    })
   }
 }

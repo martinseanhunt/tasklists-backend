@@ -130,5 +130,60 @@ module.exports = {
           status: 'COMPLETED'
         }
       })
+  },
+
+  async task(root, args, ctx) {
+    const { request: { userId } } = ctx
+    if(!userId) throw new Error('You must be logged in to access a task')
+
+    const fragment = `
+      fragment taskWithTaskList on Task {
+        id
+        title
+        description
+        createdBy {
+          name
+          id
+          avatar
+        }
+        assignedTo {
+          name 
+          id
+          avatar
+        }
+        due
+        dueDate
+        assets {
+          id
+          assetUrl
+          assetType
+        }
+        taskList {
+          name
+          slug
+        }
+        createdAt
+        updatedAt
+        customFields {
+          id
+          fieldName
+          fieldValue
+          fieldType
+        }
+        status
+      }
+    `
+
+    /* BIGQUESTION is there some way to use this syntax and get back both
+    the task and the taskList ? 
+    
+      const task = await ctx.prisma
+        .task({ id: args.id })
+        .taskList()
+    */
+    const task = await ctx.prisma.task({ id: args.id }).$fragment(fragment)
+    if(!task) throw new Error('Task not found')
+
+    return task
   }
 }

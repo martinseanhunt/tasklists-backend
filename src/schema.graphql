@@ -11,6 +11,7 @@ type Query {
   tasks(taskListSlug: String!, excludeStatus: [TaskStatus]): [Task]
   openTasks(taskListSlug: String!): [Task]
   completedTasks(taskListSlug: String!): [Task]
+  task(id: ID!): Task
 }
 
 type Mutation {
@@ -44,6 +45,8 @@ type Mutation {
   signIn(email: String!, password: String!): User
   
   signOut: StatusMessage
+
+  updateTaskStatus(id: ID!, status: TaskStatus!): Task
 }
 
 # BIGQUESTION How could I only expose the user email to the front end if the logged in user making the query has a specific role? 
