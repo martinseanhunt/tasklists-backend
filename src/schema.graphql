@@ -65,6 +65,17 @@ type StatusMessage {
   message: String
 }
 
+type TaskList {
+  id: ID!
+  name: String!
+  description: String
+  taskListFields: [TaskListField!]!
+  tasks: [Task!]!
+  slug: String!
+  totalTaskCount: Int
+  completedTaskCount: Int
+}
+
 # BIGQUESTION is creating my own input types here the answer for 
 # Creating multiple related nodes within a create Mutation. Otherwise
 # I'd have to pass connect: { id: theId } from the frontend and that doesn't 

@@ -7,6 +7,7 @@ const jwt = require('jsonwebtoken')
 
 const Mutation = require('./resolvers/Mutation')
 const Query = require('./resolvers/Query')
+const TaskList = require('./resolvers/TaskList')
 
 sgMail.setApiKey(process.env.SENDGRID_KEY)
 
@@ -14,7 +15,8 @@ const server = new GraphQLServer({
   typeDefs: './src/schema.graphql',
   resolvers: {
     Mutation,
-    Query
+    Query,
+    TaskList
   },
   context: req => ({
     ...req,

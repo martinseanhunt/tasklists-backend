@@ -26,34 +26,10 @@ module.exports = {
   async taskLists(root, args, ctx, info) {
     const { request: { userId } } = ctx
     if(!userId) return []
-
+    
     // DECISION: do I need to limit getting all categories to admin / superadmin?
 
-    // BIGQUESTION: is a fragment the best thing here? It removes a lot of flexibility on the front end
-    // would it be better to use prisma bindings at the same time as the client so can use when needed? 
-    
-    // Use fragments to get related custom fields to the category
-    const fragment = `
-      fragment taskListsWithTaskListFields on Category {
-        id
-        name
-        description
-        slug
-        taskListFields {
-          id
-          fieldName
-          fieldType
-        }
-        tasks(where: {
-          status_not: CLOSED
-        }) {
-          id
-          status
-        }
-      }
-    `
-
-    return ctx.prisma.taskLists().$fragment(fragment)
+    return ctx.prisma.taskLists()
   },
 
   async taskList(root, args, ctx) {
