@@ -26,7 +26,7 @@ module.exports = {
   async taskLists(root, args, ctx, info) {
     const { request: { userId } } = ctx
     if(!userId) return []
-    
+
     // DECISION: do I need to limit getting all categories to admin / superadmin?
 
     return ctx.prisma.taskLists()
@@ -35,32 +35,8 @@ module.exports = {
   async taskList(root, args, ctx) {
     const { request: { userId } } = ctx
     if(!userId) return []
-    
-    // Use fragments to get related tasks to the category
-    const fragment = `
-      fragment taskListsWithFields on Category {
-        name
-        id
-        slug
-        description
-        taskListFields {
-          id
-          fieldName
-          fieldType
-        }
-      }
-    `
 
-    // BIGQUESTION: Do we really need fragments to do this? 
-
-    // Can i run prisma bindings in parralel with prisma client so I don't have
-    // to explicity state what fields to return here all the time! it removes so much flexibility
-    // on the front end
-
-    return ctx.prisma
-      .taskList({ slug: args.slug })
-      .$fragment(fragment)
-
+    return ctx.prisma.taskList({ slug: args.slug })
   },
 
   async tasks(root, args, ctx) {
@@ -112,52 +88,7 @@ module.exports = {
     const { request: { userId } } = ctx
     if(!userId) throw new Error('You must be logged in to access a task')
 
-    const fragment = `
-      fragment taskWithTaskList on Task {
-        id
-        title
-        description
-        createdBy {
-          name
-          id
-          avatar
-        }
-        assignedTo {
-          name 
-          id
-          avatar
-        }
-        due
-        dueDate
-        assets {
-          id
-          assetUrl
-          assetType
-        }
-        taskList {
-          name
-          slug
-        }
-        createdAt
-        updatedAt
-        customFields {
-          id
-          fieldName
-          fieldValue
-          fieldType
-        }
-        status
-      }
-    `
-
-    /* BIGQUESTION is there some way to use this syntax and get back both
-    the task and the taskList ? 
-    
-      const task = await ctx.prisma
-        .task({ id: args.id })
-        .taskList()
-    */
-    const task = await ctx.prisma.task({ id: args.id }).$fragment(fragment)
+    const task = await ctx.prisma.task({ id: args.id })
     if(!task) throw new Error('Task not found')
 
     return task
