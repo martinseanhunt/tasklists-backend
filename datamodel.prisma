@@ -3,9 +3,11 @@ type User {
   email: String! @unique
   name: String
   avatar: String
+  # This is now the slack user ID
   slackHandle: String
   tasksCreated: [Task!]! @relation(name: "TaskCreatedByUser")
   tasksAssignedTo: [Task!]! @relation(name: "TaskAssignedToUser")
+  commentsCreated: [Comment!]! @relation(name: "CommentCreatedByUser")
   role: Role! @default(value: STAFF)
   password: String
   resetToken: String @unique
@@ -95,10 +97,11 @@ type TaskListField {
 type Comment {
   id: ID! @unique
   comment: String!
-  user: User
-  assets: [Asset!]!
+  createdBy: User! @relation(name: "CommentCreatedByUser")
   createdAt: DateTime!
   updatedAt: DateTime!
+  assets: [Asset!]!
+  task: Task!
 }
 
 type Asset {

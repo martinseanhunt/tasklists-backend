@@ -9,6 +9,7 @@ const Mutation = require('./resolvers/Mutation')
 const Query = require('./resolvers/Query')
 const TaskList = require('./resolvers/TaskList')
 const Task = require('./resolvers/Task')
+const Comment = require('./resolvers/Comment')
 
 sgMail.setApiKey(process.env.SENDGRID_KEY)
 
@@ -18,7 +19,8 @@ const server = new GraphQLServer({
     Mutation,
     Query,
     TaskList,
-    Task
+    Task,
+    Comment
   },
   context: req => ({
     ...req,

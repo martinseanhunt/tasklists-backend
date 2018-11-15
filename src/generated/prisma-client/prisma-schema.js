@@ -191,10 +191,11 @@ type BatchPayload {
 type Comment {
   id: ID!
   comment: String!
-  user: User
-  assets(where: AssetWhereInput, orderBy: AssetOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Asset!]
+  createdBy: User!
   createdAt: DateTime!
   updatedAt: DateTime!
+  assets(where: AssetWhereInput, orderBy: AssetOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Asset!]
+  task: Task!
 }
 
 type CommentConnection {
@@ -205,13 +206,31 @@ type CommentConnection {
 
 input CommentCreateInput {
   comment: String!
-  user: UserCreateOneInput
+  createdBy: UserCreateOneWithoutCommentsCreatedInput!
   assets: AssetCreateManyInput
+  task: TaskCreateOneWithoutCommentsInput!
 }
 
-input CommentCreateManyInput {
-  create: [CommentCreateInput!]
+input CommentCreateManyWithoutCreatedByInput {
+  create: [CommentCreateWithoutCreatedByInput!]
   connect: [CommentWhereUniqueInput!]
+}
+
+input CommentCreateManyWithoutTaskInput {
+  create: [CommentCreateWithoutTaskInput!]
+  connect: [CommentWhereUniqueInput!]
+}
+
+input CommentCreateWithoutCreatedByInput {
+  comment: String!
+  assets: AssetCreateManyInput
+  task: TaskCreateOneWithoutCommentsInput!
+}
+
+input CommentCreateWithoutTaskInput {
+  comment: String!
+  createdBy: UserCreateOneWithoutCommentsCreatedInput!
+  assets: AssetCreateManyInput
 }
 
 type CommentEdge {
@@ -255,36 +274,63 @@ input CommentSubscriptionWhereInput {
   NOT: [CommentSubscriptionWhereInput!]
 }
 
-input CommentUpdateDataInput {
-  comment: String
-  user: UserUpdateOneInput
-  assets: AssetUpdateManyInput
-}
-
 input CommentUpdateInput {
   comment: String
-  user: UserUpdateOneInput
+  createdBy: UserUpdateOneRequiredWithoutCommentsCreatedInput
   assets: AssetUpdateManyInput
+  task: TaskUpdateOneRequiredWithoutCommentsInput
 }
 
-input CommentUpdateManyInput {
-  create: [CommentCreateInput!]
-  update: [CommentUpdateWithWhereUniqueNestedInput!]
-  upsert: [CommentUpsertWithWhereUniqueNestedInput!]
+input CommentUpdateManyWithoutCreatedByInput {
+  create: [CommentCreateWithoutCreatedByInput!]
   delete: [CommentWhereUniqueInput!]
   connect: [CommentWhereUniqueInput!]
   disconnect: [CommentWhereUniqueInput!]
+  update: [CommentUpdateWithWhereUniqueWithoutCreatedByInput!]
+  upsert: [CommentUpsertWithWhereUniqueWithoutCreatedByInput!]
 }
 
-input CommentUpdateWithWhereUniqueNestedInput {
-  where: CommentWhereUniqueInput!
-  data: CommentUpdateDataInput!
+input CommentUpdateManyWithoutTaskInput {
+  create: [CommentCreateWithoutTaskInput!]
+  delete: [CommentWhereUniqueInput!]
+  connect: [CommentWhereUniqueInput!]
+  disconnect: [CommentWhereUniqueInput!]
+  update: [CommentUpdateWithWhereUniqueWithoutTaskInput!]
+  upsert: [CommentUpsertWithWhereUniqueWithoutTaskInput!]
 }
 
-input CommentUpsertWithWhereUniqueNestedInput {
+input CommentUpdateWithoutCreatedByDataInput {
+  comment: String
+  assets: AssetUpdateManyInput
+  task: TaskUpdateOneRequiredWithoutCommentsInput
+}
+
+input CommentUpdateWithoutTaskDataInput {
+  comment: String
+  createdBy: UserUpdateOneRequiredWithoutCommentsCreatedInput
+  assets: AssetUpdateManyInput
+}
+
+input CommentUpdateWithWhereUniqueWithoutCreatedByInput {
   where: CommentWhereUniqueInput!
-  update: CommentUpdateDataInput!
-  create: CommentCreateInput!
+  data: CommentUpdateWithoutCreatedByDataInput!
+}
+
+input CommentUpdateWithWhereUniqueWithoutTaskInput {
+  where: CommentWhereUniqueInput!
+  data: CommentUpdateWithoutTaskDataInput!
+}
+
+input CommentUpsertWithWhereUniqueWithoutCreatedByInput {
+  where: CommentWhereUniqueInput!
+  update: CommentUpdateWithoutCreatedByDataInput!
+  create: CommentCreateWithoutCreatedByInput!
+}
+
+input CommentUpsertWithWhereUniqueWithoutTaskInput {
+  where: CommentWhereUniqueInput!
+  update: CommentUpdateWithoutTaskDataInput!
+  create: CommentCreateWithoutTaskInput!
 }
 
 input CommentWhereInput {
@@ -316,10 +362,7 @@ input CommentWhereInput {
   comment_not_starts_with: String
   comment_ends_with: String
   comment_not_ends_with: String
-  user: UserWhereInput
-  assets_every: AssetWhereInput
-  assets_some: AssetWhereInput
-  assets_none: AssetWhereInput
+  createdBy: UserWhereInput
   createdAt: DateTime
   createdAt_not: DateTime
   createdAt_in: [DateTime!]
@@ -336,6 +379,10 @@ input CommentWhereInput {
   updatedAt_lte: DateTime
   updatedAt_gt: DateTime
   updatedAt_gte: DateTime
+  assets_every: AssetWhereInput
+  assets_some: AssetWhereInput
+  assets_none: AssetWhereInput
+  task: TaskWhereInput
   AND: [CommentWhereInput!]
   OR: [CommentWhereInput!]
   NOT: [CommentWhereInput!]
@@ -651,7 +698,7 @@ input TaskCreateInput {
   description: String!
   assets: AssetCreateManyInput
   taskList: TaskListCreateOneWithoutTasksInput!
-  comments: CommentCreateManyInput
+  comments: CommentCreateManyWithoutTaskInput
   dueDate: DateTime
   due: TaskDue
   customFields: CustomFieldCreateManyInput
@@ -673,13 +720,31 @@ input TaskCreateManyWithoutTaskListInput {
   connect: [TaskWhereUniqueInput!]
 }
 
+input TaskCreateOneWithoutCommentsInput {
+  create: TaskCreateWithoutCommentsInput
+  connect: TaskWhereUniqueInput
+}
+
 input TaskCreateWithoutAssignedToInput {
   createdBy: UserCreateOneWithoutTasksCreatedInput!
   title: String!
   description: String!
   assets: AssetCreateManyInput
   taskList: TaskListCreateOneWithoutTasksInput!
-  comments: CommentCreateManyInput
+  comments: CommentCreateManyWithoutTaskInput
+  dueDate: DateTime
+  due: TaskDue
+  customFields: CustomFieldCreateManyInput
+  status: TaskStatus
+}
+
+input TaskCreateWithoutCommentsInput {
+  createdBy: UserCreateOneWithoutTasksCreatedInput!
+  assignedTo: UserCreateOneWithoutTasksAssignedToInput
+  title: String!
+  description: String!
+  assets: AssetCreateManyInput
+  taskList: TaskListCreateOneWithoutTasksInput!
   dueDate: DateTime
   due: TaskDue
   customFields: CustomFieldCreateManyInput
@@ -692,7 +757,7 @@ input TaskCreateWithoutCreatedByInput {
   description: String!
   assets: AssetCreateManyInput
   taskList: TaskListCreateOneWithoutTasksInput!
-  comments: CommentCreateManyInput
+  comments: CommentCreateManyWithoutTaskInput
   dueDate: DateTime
   due: TaskDue
   customFields: CustomFieldCreateManyInput
@@ -705,7 +770,7 @@ input TaskCreateWithoutTaskListInput {
   title: String!
   description: String!
   assets: AssetCreateManyInput
-  comments: CommentCreateManyInput
+  comments: CommentCreateManyWithoutTaskInput
   dueDate: DateTime
   due: TaskDue
   customFields: CustomFieldCreateManyInput
@@ -1169,7 +1234,7 @@ input TaskUpdateInput {
   description: String
   assets: AssetUpdateManyInput
   taskList: TaskListUpdateOneRequiredWithoutTasksInput
-  comments: CommentUpdateManyInput
+  comments: CommentUpdateManyWithoutTaskInput
   dueDate: DateTime
   due: TaskDue
   customFields: CustomFieldUpdateManyInput
@@ -1203,13 +1268,33 @@ input TaskUpdateManyWithoutTaskListInput {
   upsert: [TaskUpsertWithWhereUniqueWithoutTaskListInput!]
 }
 
+input TaskUpdateOneRequiredWithoutCommentsInput {
+  create: TaskCreateWithoutCommentsInput
+  update: TaskUpdateWithoutCommentsDataInput
+  upsert: TaskUpsertWithoutCommentsInput
+  connect: TaskWhereUniqueInput
+}
+
 input TaskUpdateWithoutAssignedToDataInput {
   createdBy: UserUpdateOneRequiredWithoutTasksCreatedInput
   title: String
   description: String
   assets: AssetUpdateManyInput
   taskList: TaskListUpdateOneRequiredWithoutTasksInput
-  comments: CommentUpdateManyInput
+  comments: CommentUpdateManyWithoutTaskInput
+  dueDate: DateTime
+  due: TaskDue
+  customFields: CustomFieldUpdateManyInput
+  status: TaskStatus
+}
+
+input TaskUpdateWithoutCommentsDataInput {
+  createdBy: UserUpdateOneRequiredWithoutTasksCreatedInput
+  assignedTo: UserUpdateOneWithoutTasksAssignedToInput
+  title: String
+  description: String
+  assets: AssetUpdateManyInput
+  taskList: TaskListUpdateOneRequiredWithoutTasksInput
   dueDate: DateTime
   due: TaskDue
   customFields: CustomFieldUpdateManyInput
@@ -1222,7 +1307,7 @@ input TaskUpdateWithoutCreatedByDataInput {
   description: String
   assets: AssetUpdateManyInput
   taskList: TaskListUpdateOneRequiredWithoutTasksInput
-  comments: CommentUpdateManyInput
+  comments: CommentUpdateManyWithoutTaskInput
   dueDate: DateTime
   due: TaskDue
   customFields: CustomFieldUpdateManyInput
@@ -1235,7 +1320,7 @@ input TaskUpdateWithoutTaskListDataInput {
   title: String
   description: String
   assets: AssetUpdateManyInput
-  comments: CommentUpdateManyInput
+  comments: CommentUpdateManyWithoutTaskInput
   dueDate: DateTime
   due: TaskDue
   customFields: CustomFieldUpdateManyInput
@@ -1255,6 +1340,11 @@ input TaskUpdateWithWhereUniqueWithoutCreatedByInput {
 input TaskUpdateWithWhereUniqueWithoutTaskListInput {
   where: TaskWhereUniqueInput!
   data: TaskUpdateWithoutTaskListDataInput!
+}
+
+input TaskUpsertWithoutCommentsInput {
+  update: TaskUpdateWithoutCommentsDataInput!
+  create: TaskCreateWithoutCommentsInput!
 }
 
 input TaskUpsertWithWhereUniqueWithoutAssignedToInput {
@@ -1379,6 +1469,7 @@ type User {
   slackHandle: String
   tasksCreated(where: TaskWhereInput, orderBy: TaskOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Task!]
   tasksAssignedTo(where: TaskWhereInput, orderBy: TaskOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Task!]
+  commentsCreated(where: CommentWhereInput, orderBy: CommentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Comment!]
   role: Role!
   password: String
   resetToken: String
@@ -1401,6 +1492,7 @@ input UserCreateInput {
   slackHandle: String
   tasksCreated: TaskCreateManyWithoutCreatedByInput
   tasksAssignedTo: TaskCreateManyWithoutAssignedToInput
+  commentsCreated: CommentCreateManyWithoutCreatedByInput
   role: Role
   password: String
   resetToken: String
@@ -1415,6 +1507,11 @@ input UserCreateOneInput {
   connect: UserWhereUniqueInput
 }
 
+input UserCreateOneWithoutCommentsCreatedInput {
+  create: UserCreateWithoutCommentsCreatedInput
+  connect: UserWhereUniqueInput
+}
+
 input UserCreateOneWithoutTasksAssignedToInput {
   create: UserCreateWithoutTasksAssignedToInput
   connect: UserWhereUniqueInput
@@ -1425,12 +1522,29 @@ input UserCreateOneWithoutTasksCreatedInput {
   connect: UserWhereUniqueInput
 }
 
+input UserCreateWithoutCommentsCreatedInput {
+  email: String!
+  name: String
+  avatar: String
+  slackHandle: String
+  tasksCreated: TaskCreateManyWithoutCreatedByInput
+  tasksAssignedTo: TaskCreateManyWithoutAssignedToInput
+  role: Role
+  password: String
+  resetToken: String
+  resetTokenExpiry: Float
+  signupToken: String
+  signupTokenExpiry: Float
+  status: UserStatus
+}
+
 input UserCreateWithoutTasksAssignedToInput {
   email: String!
   name: String
   avatar: String
   slackHandle: String
   tasksCreated: TaskCreateManyWithoutCreatedByInput
+  commentsCreated: CommentCreateManyWithoutCreatedByInput
   role: Role
   password: String
   resetToken: String
@@ -1446,6 +1560,7 @@ input UserCreateWithoutTasksCreatedInput {
   avatar: String
   slackHandle: String
   tasksAssignedTo: TaskCreateManyWithoutAssignedToInput
+  commentsCreated: CommentCreateManyWithoutCreatedByInput
   role: Role
   password: String
   resetToken: String
@@ -1537,6 +1652,7 @@ input UserUpdateDataInput {
   slackHandle: String
   tasksCreated: TaskUpdateManyWithoutCreatedByInput
   tasksAssignedTo: TaskUpdateManyWithoutAssignedToInput
+  commentsCreated: CommentUpdateManyWithoutCreatedByInput
   role: Role
   password: String
   resetToken: String
@@ -1553,6 +1669,7 @@ input UserUpdateInput {
   slackHandle: String
   tasksCreated: TaskUpdateManyWithoutCreatedByInput
   tasksAssignedTo: TaskUpdateManyWithoutAssignedToInput
+  commentsCreated: CommentUpdateManyWithoutCreatedByInput
   role: Role
   password: String
   resetToken: String
@@ -1562,19 +1679,17 @@ input UserUpdateInput {
   status: UserStatus
 }
 
-input UserUpdateOneInput {
-  create: UserCreateInput
-  update: UserUpdateDataInput
-  upsert: UserUpsertNestedInput
-  delete: Boolean
-  disconnect: Boolean
-  connect: UserWhereUniqueInput
-}
-
 input UserUpdateOneRequiredInput {
   create: UserCreateInput
   update: UserUpdateDataInput
   upsert: UserUpsertNestedInput
+  connect: UserWhereUniqueInput
+}
+
+input UserUpdateOneRequiredWithoutCommentsCreatedInput {
+  create: UserCreateWithoutCommentsCreatedInput
+  update: UserUpdateWithoutCommentsCreatedDataInput
+  upsert: UserUpsertWithoutCommentsCreatedInput
   connect: UserWhereUniqueInput
 }
 
@@ -1594,12 +1709,29 @@ input UserUpdateOneWithoutTasksAssignedToInput {
   connect: UserWhereUniqueInput
 }
 
+input UserUpdateWithoutCommentsCreatedDataInput {
+  email: String
+  name: String
+  avatar: String
+  slackHandle: String
+  tasksCreated: TaskUpdateManyWithoutCreatedByInput
+  tasksAssignedTo: TaskUpdateManyWithoutAssignedToInput
+  role: Role
+  password: String
+  resetToken: String
+  resetTokenExpiry: Float
+  signupToken: String
+  signupTokenExpiry: Float
+  status: UserStatus
+}
+
 input UserUpdateWithoutTasksAssignedToDataInput {
   email: String
   name: String
   avatar: String
   slackHandle: String
   tasksCreated: TaskUpdateManyWithoutCreatedByInput
+  commentsCreated: CommentUpdateManyWithoutCreatedByInput
   role: Role
   password: String
   resetToken: String
@@ -1615,6 +1747,7 @@ input UserUpdateWithoutTasksCreatedDataInput {
   avatar: String
   slackHandle: String
   tasksAssignedTo: TaskUpdateManyWithoutAssignedToInput
+  commentsCreated: CommentUpdateManyWithoutCreatedByInput
   role: Role
   password: String
   resetToken: String
@@ -1627,6 +1760,11 @@ input UserUpdateWithoutTasksCreatedDataInput {
 input UserUpsertNestedInput {
   update: UserUpdateDataInput!
   create: UserCreateInput!
+}
+
+input UserUpsertWithoutCommentsCreatedInput {
+  update: UserUpdateWithoutCommentsCreatedDataInput!
+  create: UserCreateWithoutCommentsCreatedInput!
 }
 
 input UserUpsertWithoutTasksAssignedToInput {
@@ -1716,6 +1854,9 @@ input UserWhereInput {
   tasksAssignedTo_every: TaskWhereInput
   tasksAssignedTo_some: TaskWhereInput
   tasksAssignedTo_none: TaskWhereInput
+  commentsCreated_every: CommentWhereInput
+  commentsCreated_some: CommentWhereInput
+  commentsCreated_none: CommentWhereInput
   role: Role
   role_not: Role
   role_in: [Role!]

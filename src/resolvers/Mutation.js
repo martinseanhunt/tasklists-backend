@@ -217,5 +217,31 @@ module.exports = {
       where: { id: task.id },
       data: { status: args.status }
     })
+  },
+
+  async createComment(root, args, ctx) {
+    const { userId } = ctx.request
+    if(!userId) throw new Error('You must be logged in to do this')
+
+    const user = await ctx.prisma.user({ id: userId })
+    if(!user) throw new Error('You must be logged in to do this')
+
+    // TODO Send notification if notify
+
+    const comment = {
+      comment: args.comment,
+      task: {
+        connect: {
+          id: args.task
+        }
+      },
+      createdBy: {
+        connect: {
+          id: user.id
+        }
+      }
+    }
+
+    return await ctx.prisma.createComment(comment)
   }
 }

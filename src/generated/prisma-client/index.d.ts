@@ -361,11 +361,11 @@ export interface ClientConstructor<T> {
  * Types
  */
 
+export type AssetType = "IMAGE" | "VIDEO" | "FILE";
+
 export type Role = "SUPERADMIN" | "ADMIN" | "STAFF";
 
 export type UserStatus = "JOINED" | "INVITED" | "DELETED";
-
-export type AssetType = "IMAGE" | "VIDEO" | "FILE";
 
 export type FieldType = "STRING" | "INT" | "DATE" | "ASSET";
 
@@ -663,6 +663,9 @@ export interface UserWhereInput {
   tasksAssignedTo_every?: TaskWhereInput;
   tasksAssignedTo_some?: TaskWhereInput;
   tasksAssignedTo_none?: TaskWhereInput;
+  commentsCreated_every?: CommentWhereInput;
+  commentsCreated_some?: CommentWhereInput;
+  commentsCreated_none?: CommentWhereInput;
   role?: Role;
   role_not?: Role;
   role_in?: Role[] | Role;
@@ -732,6 +735,61 @@ export interface UserWhereInput {
   AND?: UserWhereInput[] | UserWhereInput;
   OR?: UserWhereInput[] | UserWhereInput;
   NOT?: UserWhereInput[] | UserWhereInput;
+}
+
+export interface CommentWhereInput {
+  id?: ID_Input;
+  id_not?: ID_Input;
+  id_in?: ID_Input[] | ID_Input;
+  id_not_in?: ID_Input[] | ID_Input;
+  id_lt?: ID_Input;
+  id_lte?: ID_Input;
+  id_gt?: ID_Input;
+  id_gte?: ID_Input;
+  id_contains?: ID_Input;
+  id_not_contains?: ID_Input;
+  id_starts_with?: ID_Input;
+  id_not_starts_with?: ID_Input;
+  id_ends_with?: ID_Input;
+  id_not_ends_with?: ID_Input;
+  comment?: String;
+  comment_not?: String;
+  comment_in?: String[] | String;
+  comment_not_in?: String[] | String;
+  comment_lt?: String;
+  comment_lte?: String;
+  comment_gt?: String;
+  comment_gte?: String;
+  comment_contains?: String;
+  comment_not_contains?: String;
+  comment_starts_with?: String;
+  comment_not_starts_with?: String;
+  comment_ends_with?: String;
+  comment_not_ends_with?: String;
+  createdBy?: UserWhereInput;
+  createdAt?: DateTimeInput;
+  createdAt_not?: DateTimeInput;
+  createdAt_in?: DateTimeInput[] | DateTimeInput;
+  createdAt_not_in?: DateTimeInput[] | DateTimeInput;
+  createdAt_lt?: DateTimeInput;
+  createdAt_lte?: DateTimeInput;
+  createdAt_gt?: DateTimeInput;
+  createdAt_gte?: DateTimeInput;
+  updatedAt?: DateTimeInput;
+  updatedAt_not?: DateTimeInput;
+  updatedAt_in?: DateTimeInput[] | DateTimeInput;
+  updatedAt_not_in?: DateTimeInput[] | DateTimeInput;
+  updatedAt_lt?: DateTimeInput;
+  updatedAt_lte?: DateTimeInput;
+  updatedAt_gt?: DateTimeInput;
+  updatedAt_gte?: DateTimeInput;
+  assets_every?: AssetWhereInput;
+  assets_some?: AssetWhereInput;
+  assets_none?: AssetWhereInput;
+  task?: TaskWhereInput;
+  AND?: CommentWhereInput[] | CommentWhereInput;
+  OR?: CommentWhereInput[] | CommentWhereInput;
+  NOT?: CommentWhereInput[] | CommentWhereInput;
 }
 
 export interface AssetWhereInput {
@@ -888,60 +946,6 @@ export interface TaskListFieldWhereInput {
   NOT?: TaskListFieldWhereInput[] | TaskListFieldWhereInput;
 }
 
-export interface CommentWhereInput {
-  id?: ID_Input;
-  id_not?: ID_Input;
-  id_in?: ID_Input[] | ID_Input;
-  id_not_in?: ID_Input[] | ID_Input;
-  id_lt?: ID_Input;
-  id_lte?: ID_Input;
-  id_gt?: ID_Input;
-  id_gte?: ID_Input;
-  id_contains?: ID_Input;
-  id_not_contains?: ID_Input;
-  id_starts_with?: ID_Input;
-  id_not_starts_with?: ID_Input;
-  id_ends_with?: ID_Input;
-  id_not_ends_with?: ID_Input;
-  comment?: String;
-  comment_not?: String;
-  comment_in?: String[] | String;
-  comment_not_in?: String[] | String;
-  comment_lt?: String;
-  comment_lte?: String;
-  comment_gt?: String;
-  comment_gte?: String;
-  comment_contains?: String;
-  comment_not_contains?: String;
-  comment_starts_with?: String;
-  comment_not_starts_with?: String;
-  comment_ends_with?: String;
-  comment_not_ends_with?: String;
-  user?: UserWhereInput;
-  assets_every?: AssetWhereInput;
-  assets_some?: AssetWhereInput;
-  assets_none?: AssetWhereInput;
-  createdAt?: DateTimeInput;
-  createdAt_not?: DateTimeInput;
-  createdAt_in?: DateTimeInput[] | DateTimeInput;
-  createdAt_not_in?: DateTimeInput[] | DateTimeInput;
-  createdAt_lt?: DateTimeInput;
-  createdAt_lte?: DateTimeInput;
-  createdAt_gt?: DateTimeInput;
-  createdAt_gte?: DateTimeInput;
-  updatedAt?: DateTimeInput;
-  updatedAt_not?: DateTimeInput;
-  updatedAt_in?: DateTimeInput[] | DateTimeInput;
-  updatedAt_not_in?: DateTimeInput[] | DateTimeInput;
-  updatedAt_lt?: DateTimeInput;
-  updatedAt_lte?: DateTimeInput;
-  updatedAt_gt?: DateTimeInput;
-  updatedAt_gte?: DateTimeInput;
-  AND?: CommentWhereInput[] | CommentWhereInput;
-  OR?: CommentWhereInput[] | CommentWhereInput;
-  NOT?: CommentWhereInput[] | CommentWhereInput;
-}
-
 export interface CustomFieldWhereInput {
   id?: ID_Input;
   id_not?: ID_Input;
@@ -1042,6 +1046,7 @@ export interface UserCreateInput {
   slackHandle?: String;
   tasksCreated?: TaskCreateManyWithoutCreatedByInput;
   tasksAssignedTo?: TaskCreateManyWithoutAssignedToInput;
+  commentsCreated?: CommentCreateManyWithoutCreatedByInput;
   role?: Role;
   password?: String;
   resetToken?: String;
@@ -1062,7 +1067,7 @@ export interface TaskCreateWithoutCreatedByInput {
   description: String;
   assets?: AssetCreateManyInput;
   taskList: TaskListCreateOneWithoutTasksInput;
-  comments?: CommentCreateManyInput;
+  comments?: CommentCreateManyWithoutTaskInput;
   dueDate?: DateTimeInput;
   due?: TaskDue;
   customFields?: CustomFieldCreateManyInput;
@@ -1080,6 +1085,7 @@ export interface UserCreateWithoutTasksAssignedToInput {
   avatar?: String;
   slackHandle?: String;
   tasksCreated?: TaskCreateManyWithoutCreatedByInput;
+  commentsCreated?: CommentCreateManyWithoutCreatedByInput;
   role?: Role;
   password?: String;
   resetToken?: String;
@@ -1089,9 +1095,81 @@ export interface UserCreateWithoutTasksAssignedToInput {
   status?: UserStatus;
 }
 
+export interface CommentCreateManyWithoutCreatedByInput {
+  create?:
+    | CommentCreateWithoutCreatedByInput[]
+    | CommentCreateWithoutCreatedByInput;
+  connect?: CommentWhereUniqueInput[] | CommentWhereUniqueInput;
+}
+
+export interface CommentCreateWithoutCreatedByInput {
+  comment: String;
+  assets?: AssetCreateManyInput;
+  task: TaskCreateOneWithoutCommentsInput;
+}
+
 export interface AssetCreateManyInput {
   create?: AssetCreateInput[] | AssetCreateInput;
   connect?: AssetWhereUniqueInput[] | AssetWhereUniqueInput;
+}
+
+export interface TaskCreateOneWithoutCommentsInput {
+  create?: TaskCreateWithoutCommentsInput;
+  connect?: TaskWhereUniqueInput;
+}
+
+export interface TaskCreateWithoutCommentsInput {
+  createdBy: UserCreateOneWithoutTasksCreatedInput;
+  assignedTo?: UserCreateOneWithoutTasksAssignedToInput;
+  title: String;
+  description: String;
+  assets?: AssetCreateManyInput;
+  taskList: TaskListCreateOneWithoutTasksInput;
+  dueDate?: DateTimeInput;
+  due?: TaskDue;
+  customFields?: CustomFieldCreateManyInput;
+  status?: TaskStatus;
+}
+
+export interface UserCreateOneWithoutTasksCreatedInput {
+  create?: UserCreateWithoutTasksCreatedInput;
+  connect?: UserWhereUniqueInput;
+}
+
+export interface UserCreateWithoutTasksCreatedInput {
+  email: String;
+  name?: String;
+  avatar?: String;
+  slackHandle?: String;
+  tasksAssignedTo?: TaskCreateManyWithoutAssignedToInput;
+  commentsCreated?: CommentCreateManyWithoutCreatedByInput;
+  role?: Role;
+  password?: String;
+  resetToken?: String;
+  resetTokenExpiry?: Float;
+  signupToken?: String;
+  signupTokenExpiry?: Float;
+  status?: UserStatus;
+}
+
+export interface TaskCreateManyWithoutAssignedToInput {
+  create?:
+    | TaskCreateWithoutAssignedToInput[]
+    | TaskCreateWithoutAssignedToInput;
+  connect?: TaskWhereUniqueInput[] | TaskWhereUniqueInput;
+}
+
+export interface TaskCreateWithoutAssignedToInput {
+  createdBy: UserCreateOneWithoutTasksCreatedInput;
+  title: String;
+  description: String;
+  assets?: AssetCreateManyInput;
+  taskList: TaskListCreateOneWithoutTasksInput;
+  comments?: CommentCreateManyWithoutTaskInput;
+  dueDate?: DateTimeInput;
+  due?: TaskDue;
+  customFields?: CustomFieldCreateManyInput;
+  status?: TaskStatus;
 }
 
 export interface TaskListCreateOneWithoutTasksInput {
@@ -1118,15 +1196,36 @@ export interface TaskListFieldCreateWithoutTaskListInput {
   fieldType: FieldType;
 }
 
-export interface CommentCreateManyInput {
-  create?: CommentCreateInput[] | CommentCreateInput;
+export interface CommentCreateManyWithoutTaskInput {
+  create?: CommentCreateWithoutTaskInput[] | CommentCreateWithoutTaskInput;
   connect?: CommentWhereUniqueInput[] | CommentWhereUniqueInput;
 }
 
-export interface CommentCreateInput {
+export interface CommentCreateWithoutTaskInput {
   comment: String;
-  user?: UserCreateOneInput;
+  createdBy: UserCreateOneWithoutCommentsCreatedInput;
   assets?: AssetCreateManyInput;
+}
+
+export interface UserCreateOneWithoutCommentsCreatedInput {
+  create?: UserCreateWithoutCommentsCreatedInput;
+  connect?: UserWhereUniqueInput;
+}
+
+export interface UserCreateWithoutCommentsCreatedInput {
+  email: String;
+  name?: String;
+  avatar?: String;
+  slackHandle?: String;
+  tasksCreated?: TaskCreateManyWithoutCreatedByInput;
+  tasksAssignedTo?: TaskCreateManyWithoutAssignedToInput;
+  role?: Role;
+  password?: String;
+  resetToken?: String;
+  resetTokenExpiry?: Float;
+  signupToken?: String;
+  signupTokenExpiry?: Float;
+  status?: UserStatus;
 }
 
 export interface CustomFieldCreateManyInput {
@@ -1175,47 +1274,7 @@ export interface TaskCreateWithoutTaskListInput {
   title: String;
   description: String;
   assets?: AssetCreateManyInput;
-  comments?: CommentCreateManyInput;
-  dueDate?: DateTimeInput;
-  due?: TaskDue;
-  customFields?: CustomFieldCreateManyInput;
-  status?: TaskStatus;
-}
-
-export interface UserCreateOneWithoutTasksCreatedInput {
-  create?: UserCreateWithoutTasksCreatedInput;
-  connect?: UserWhereUniqueInput;
-}
-
-export interface UserCreateWithoutTasksCreatedInput {
-  email: String;
-  name?: String;
-  avatar?: String;
-  slackHandle?: String;
-  tasksAssignedTo?: TaskCreateManyWithoutAssignedToInput;
-  role?: Role;
-  password?: String;
-  resetToken?: String;
-  resetTokenExpiry?: Float;
-  signupToken?: String;
-  signupTokenExpiry?: Float;
-  status?: UserStatus;
-}
-
-export interface TaskCreateManyWithoutAssignedToInput {
-  create?:
-    | TaskCreateWithoutAssignedToInput[]
-    | TaskCreateWithoutAssignedToInput;
-  connect?: TaskWhereUniqueInput[] | TaskWhereUniqueInput;
-}
-
-export interface TaskCreateWithoutAssignedToInput {
-  createdBy: UserCreateOneWithoutTasksCreatedInput;
-  title: String;
-  description: String;
-  assets?: AssetCreateManyInput;
-  taskList: TaskListCreateOneWithoutTasksInput;
-  comments?: CommentCreateManyInput;
+  comments?: CommentCreateManyWithoutTaskInput;
   dueDate?: DateTimeInput;
   due?: TaskDue;
   customFields?: CustomFieldCreateManyInput;
@@ -1242,6 +1301,7 @@ export interface UserUpdateDataInput {
   slackHandle?: String;
   tasksCreated?: TaskUpdateManyWithoutCreatedByInput;
   tasksAssignedTo?: TaskUpdateManyWithoutAssignedToInput;
+  commentsCreated?: CommentUpdateManyWithoutCreatedByInput;
   role?: Role;
   password?: String;
   resetToken?: String;
@@ -1275,7 +1335,7 @@ export interface TaskUpdateWithoutCreatedByDataInput {
   description?: String;
   assets?: AssetUpdateManyInput;
   taskList?: TaskListUpdateOneRequiredWithoutTasksInput;
-  comments?: CommentUpdateManyInput;
+  comments?: CommentUpdateManyWithoutTaskInput;
   dueDate?: DateTimeInput;
   due?: TaskDue;
   customFields?: CustomFieldUpdateManyInput;
@@ -1297,6 +1357,7 @@ export interface UserUpdateWithoutTasksAssignedToDataInput {
   avatar?: String;
   slackHandle?: String;
   tasksCreated?: TaskUpdateManyWithoutCreatedByInput;
+  commentsCreated?: CommentUpdateManyWithoutCreatedByInput;
   role?: Role;
   password?: String;
   resetToken?: String;
@@ -1306,9 +1367,30 @@ export interface UserUpdateWithoutTasksAssignedToDataInput {
   status?: UserStatus;
 }
 
-export interface UserUpsertWithoutTasksAssignedToInput {
-  update: UserUpdateWithoutTasksAssignedToDataInput;
-  create: UserCreateWithoutTasksAssignedToInput;
+export interface CommentUpdateManyWithoutCreatedByInput {
+  create?:
+    | CommentCreateWithoutCreatedByInput[]
+    | CommentCreateWithoutCreatedByInput;
+  delete?: CommentWhereUniqueInput[] | CommentWhereUniqueInput;
+  connect?: CommentWhereUniqueInput[] | CommentWhereUniqueInput;
+  disconnect?: CommentWhereUniqueInput[] | CommentWhereUniqueInput;
+  update?:
+    | CommentUpdateWithWhereUniqueWithoutCreatedByInput[]
+    | CommentUpdateWithWhereUniqueWithoutCreatedByInput;
+  upsert?:
+    | CommentUpsertWithWhereUniqueWithoutCreatedByInput[]
+    | CommentUpsertWithWhereUniqueWithoutCreatedByInput;
+}
+
+export interface CommentUpdateWithWhereUniqueWithoutCreatedByInput {
+  where: CommentWhereUniqueInput;
+  data: CommentUpdateWithoutCreatedByDataInput;
+}
+
+export interface CommentUpdateWithoutCreatedByDataInput {
+  comment?: String;
+  assets?: AssetUpdateManyInput;
+  task?: TaskUpdateOneRequiredWithoutCommentsInput;
 }
 
 export interface AssetUpdateManyInput {
@@ -1339,6 +1421,82 @@ export interface AssetUpsertWithWhereUniqueNestedInput {
   where: AssetWhereUniqueInput;
   update: AssetUpdateDataInput;
   create: AssetCreateInput;
+}
+
+export interface TaskUpdateOneRequiredWithoutCommentsInput {
+  create?: TaskCreateWithoutCommentsInput;
+  update?: TaskUpdateWithoutCommentsDataInput;
+  upsert?: TaskUpsertWithoutCommentsInput;
+  connect?: TaskWhereUniqueInput;
+}
+
+export interface TaskUpdateWithoutCommentsDataInput {
+  createdBy?: UserUpdateOneRequiredWithoutTasksCreatedInput;
+  assignedTo?: UserUpdateOneWithoutTasksAssignedToInput;
+  title?: String;
+  description?: String;
+  assets?: AssetUpdateManyInput;
+  taskList?: TaskListUpdateOneRequiredWithoutTasksInput;
+  dueDate?: DateTimeInput;
+  due?: TaskDue;
+  customFields?: CustomFieldUpdateManyInput;
+  status?: TaskStatus;
+}
+
+export interface UserUpdateOneRequiredWithoutTasksCreatedInput {
+  create?: UserCreateWithoutTasksCreatedInput;
+  update?: UserUpdateWithoutTasksCreatedDataInput;
+  upsert?: UserUpsertWithoutTasksCreatedInput;
+  connect?: UserWhereUniqueInput;
+}
+
+export interface UserUpdateWithoutTasksCreatedDataInput {
+  email?: String;
+  name?: String;
+  avatar?: String;
+  slackHandle?: String;
+  tasksAssignedTo?: TaskUpdateManyWithoutAssignedToInput;
+  commentsCreated?: CommentUpdateManyWithoutCreatedByInput;
+  role?: Role;
+  password?: String;
+  resetToken?: String;
+  resetTokenExpiry?: Float;
+  signupToken?: String;
+  signupTokenExpiry?: Float;
+  status?: UserStatus;
+}
+
+export interface TaskUpdateManyWithoutAssignedToInput {
+  create?:
+    | TaskCreateWithoutAssignedToInput[]
+    | TaskCreateWithoutAssignedToInput;
+  delete?: TaskWhereUniqueInput[] | TaskWhereUniqueInput;
+  connect?: TaskWhereUniqueInput[] | TaskWhereUniqueInput;
+  disconnect?: TaskWhereUniqueInput[] | TaskWhereUniqueInput;
+  update?:
+    | TaskUpdateWithWhereUniqueWithoutAssignedToInput[]
+    | TaskUpdateWithWhereUniqueWithoutAssignedToInput;
+  upsert?:
+    | TaskUpsertWithWhereUniqueWithoutAssignedToInput[]
+    | TaskUpsertWithWhereUniqueWithoutAssignedToInput;
+}
+
+export interface TaskUpdateWithWhereUniqueWithoutAssignedToInput {
+  where: TaskWhereUniqueInput;
+  data: TaskUpdateWithoutAssignedToDataInput;
+}
+
+export interface TaskUpdateWithoutAssignedToDataInput {
+  createdBy?: UserUpdateOneRequiredWithoutTasksCreatedInput;
+  title?: String;
+  description?: String;
+  assets?: AssetUpdateManyInput;
+  taskList?: TaskListUpdateOneRequiredWithoutTasksInput;
+  comments?: CommentUpdateManyWithoutTaskInput;
+  dueDate?: DateTimeInput;
+  due?: TaskDue;
+  customFields?: CustomFieldUpdateManyInput;
+  status?: TaskStatus;
 }
 
 export interface TaskListUpdateOneRequiredWithoutTasksInput {
@@ -1391,48 +1549,62 @@ export interface TaskListUpsertWithoutTasksInput {
   create: TaskListCreateWithoutTasksInput;
 }
 
-export interface CommentUpdateManyInput {
-  create?: CommentCreateInput[] | CommentCreateInput;
-  update?:
-    | CommentUpdateWithWhereUniqueNestedInput[]
-    | CommentUpdateWithWhereUniqueNestedInput;
-  upsert?:
-    | CommentUpsertWithWhereUniqueNestedInput[]
-    | CommentUpsertWithWhereUniqueNestedInput;
+export interface CommentUpdateManyWithoutTaskInput {
+  create?: CommentCreateWithoutTaskInput[] | CommentCreateWithoutTaskInput;
   delete?: CommentWhereUniqueInput[] | CommentWhereUniqueInput;
   connect?: CommentWhereUniqueInput[] | CommentWhereUniqueInput;
   disconnect?: CommentWhereUniqueInput[] | CommentWhereUniqueInput;
+  update?:
+    | CommentUpdateWithWhereUniqueWithoutTaskInput[]
+    | CommentUpdateWithWhereUniqueWithoutTaskInput;
+  upsert?:
+    | CommentUpsertWithWhereUniqueWithoutTaskInput[]
+    | CommentUpsertWithWhereUniqueWithoutTaskInput;
 }
 
-export interface CommentUpdateWithWhereUniqueNestedInput {
+export interface CommentUpdateWithWhereUniqueWithoutTaskInput {
   where: CommentWhereUniqueInput;
-  data: CommentUpdateDataInput;
+  data: CommentUpdateWithoutTaskDataInput;
 }
 
-export interface CommentUpdateDataInput {
+export interface CommentUpdateWithoutTaskDataInput {
   comment?: String;
-  user?: UserUpdateOneInput;
+  createdBy?: UserUpdateOneRequiredWithoutCommentsCreatedInput;
   assets?: AssetUpdateManyInput;
 }
 
-export interface UserUpdateOneInput {
-  create?: UserCreateInput;
-  update?: UserUpdateDataInput;
-  upsert?: UserUpsertNestedInput;
-  delete?: Boolean;
-  disconnect?: Boolean;
+export interface UserUpdateOneRequiredWithoutCommentsCreatedInput {
+  create?: UserCreateWithoutCommentsCreatedInput;
+  update?: UserUpdateWithoutCommentsCreatedDataInput;
+  upsert?: UserUpsertWithoutCommentsCreatedInput;
   connect?: UserWhereUniqueInput;
 }
 
-export interface UserUpsertNestedInput {
-  update: UserUpdateDataInput;
-  create: UserCreateInput;
+export interface UserUpdateWithoutCommentsCreatedDataInput {
+  email?: String;
+  name?: String;
+  avatar?: String;
+  slackHandle?: String;
+  tasksCreated?: TaskUpdateManyWithoutCreatedByInput;
+  tasksAssignedTo?: TaskUpdateManyWithoutAssignedToInput;
+  role?: Role;
+  password?: String;
+  resetToken?: String;
+  resetTokenExpiry?: Float;
+  signupToken?: String;
+  signupTokenExpiry?: Float;
+  status?: UserStatus;
 }
 
-export interface CommentUpsertWithWhereUniqueNestedInput {
+export interface UserUpsertWithoutCommentsCreatedInput {
+  update: UserUpdateWithoutCommentsCreatedDataInput;
+  create: UserCreateWithoutCommentsCreatedInput;
+}
+
+export interface CommentUpsertWithWhereUniqueWithoutTaskInput {
   where: CommentWhereUniqueInput;
-  update: CommentUpdateDataInput;
-  create: CommentCreateInput;
+  update: CommentUpdateWithoutTaskDataInput;
+  create: CommentCreateWithoutTaskInput;
 }
 
 export interface CustomFieldUpdateManyInput {
@@ -1513,77 +1685,11 @@ export interface TaskUpdateWithoutTaskListDataInput {
   title?: String;
   description?: String;
   assets?: AssetUpdateManyInput;
-  comments?: CommentUpdateManyInput;
+  comments?: CommentUpdateManyWithoutTaskInput;
   dueDate?: DateTimeInput;
   due?: TaskDue;
   customFields?: CustomFieldUpdateManyInput;
   status?: TaskStatus;
-}
-
-export interface UserUpdateOneRequiredWithoutTasksCreatedInput {
-  create?: UserCreateWithoutTasksCreatedInput;
-  update?: UserUpdateWithoutTasksCreatedDataInput;
-  upsert?: UserUpsertWithoutTasksCreatedInput;
-  connect?: UserWhereUniqueInput;
-}
-
-export interface UserUpdateWithoutTasksCreatedDataInput {
-  email?: String;
-  name?: String;
-  avatar?: String;
-  slackHandle?: String;
-  tasksAssignedTo?: TaskUpdateManyWithoutAssignedToInput;
-  role?: Role;
-  password?: String;
-  resetToken?: String;
-  resetTokenExpiry?: Float;
-  signupToken?: String;
-  signupTokenExpiry?: Float;
-  status?: UserStatus;
-}
-
-export interface TaskUpdateManyWithoutAssignedToInput {
-  create?:
-    | TaskCreateWithoutAssignedToInput[]
-    | TaskCreateWithoutAssignedToInput;
-  delete?: TaskWhereUniqueInput[] | TaskWhereUniqueInput;
-  connect?: TaskWhereUniqueInput[] | TaskWhereUniqueInput;
-  disconnect?: TaskWhereUniqueInput[] | TaskWhereUniqueInput;
-  update?:
-    | TaskUpdateWithWhereUniqueWithoutAssignedToInput[]
-    | TaskUpdateWithWhereUniqueWithoutAssignedToInput;
-  upsert?:
-    | TaskUpsertWithWhereUniqueWithoutAssignedToInput[]
-    | TaskUpsertWithWhereUniqueWithoutAssignedToInput;
-}
-
-export interface TaskUpdateWithWhereUniqueWithoutAssignedToInput {
-  where: TaskWhereUniqueInput;
-  data: TaskUpdateWithoutAssignedToDataInput;
-}
-
-export interface TaskUpdateWithoutAssignedToDataInput {
-  createdBy?: UserUpdateOneRequiredWithoutTasksCreatedInput;
-  title?: String;
-  description?: String;
-  assets?: AssetUpdateManyInput;
-  taskList?: TaskListUpdateOneRequiredWithoutTasksInput;
-  comments?: CommentUpdateManyInput;
-  dueDate?: DateTimeInput;
-  due?: TaskDue;
-  customFields?: CustomFieldUpdateManyInput;
-  status?: TaskStatus;
-}
-
-export interface TaskUpsertWithWhereUniqueWithoutAssignedToInput {
-  where: TaskWhereUniqueInput;
-  update: TaskUpdateWithoutAssignedToDataInput;
-  create: TaskCreateWithoutAssignedToInput;
-}
-
-export interface UserUpsertWithoutTasksCreatedInput {
-  update: UserUpdateWithoutTasksCreatedDataInput;
-  create: UserCreateWithoutTasksCreatedInput;
 }
 
 export interface TaskUpsertWithWhereUniqueWithoutTaskListInput {
@@ -1608,16 +1714,56 @@ export interface CustomFieldUpsertWithWhereUniqueNestedInput {
   create: CustomFieldCreateInput;
 }
 
+export interface TaskUpsertWithWhereUniqueWithoutAssignedToInput {
+  where: TaskWhereUniqueInput;
+  update: TaskUpdateWithoutAssignedToDataInput;
+  create: TaskCreateWithoutAssignedToInput;
+}
+
+export interface UserUpsertWithoutTasksCreatedInput {
+  update: UserUpdateWithoutTasksCreatedDataInput;
+  create: UserCreateWithoutTasksCreatedInput;
+}
+
+export interface TaskUpsertWithoutCommentsInput {
+  update: TaskUpdateWithoutCommentsDataInput;
+  create: TaskCreateWithoutCommentsInput;
+}
+
+export interface CommentUpsertWithWhereUniqueWithoutCreatedByInput {
+  where: CommentWhereUniqueInput;
+  update: CommentUpdateWithoutCreatedByDataInput;
+  create: CommentCreateWithoutCreatedByInput;
+}
+
+export interface UserUpsertWithoutTasksAssignedToInput {
+  update: UserUpdateWithoutTasksAssignedToDataInput;
+  create: UserCreateWithoutTasksAssignedToInput;
+}
+
 export interface TaskUpsertWithWhereUniqueWithoutCreatedByInput {
   where: TaskWhereUniqueInput;
   update: TaskUpdateWithoutCreatedByDataInput;
   create: TaskCreateWithoutCreatedByInput;
 }
 
+export interface UserUpsertNestedInput {
+  update: UserUpdateDataInput;
+  create: UserCreateInput;
+}
+
+export interface CommentCreateInput {
+  comment: String;
+  createdBy: UserCreateOneWithoutCommentsCreatedInput;
+  assets?: AssetCreateManyInput;
+  task: TaskCreateOneWithoutCommentsInput;
+}
+
 export interface CommentUpdateInput {
   comment?: String;
-  user?: UserUpdateOneInput;
+  createdBy?: UserUpdateOneRequiredWithoutCommentsCreatedInput;
   assets?: AssetUpdateManyInput;
+  task?: TaskUpdateOneRequiredWithoutCommentsInput;
 }
 
 export interface CustomFieldUpdateInput {
@@ -1634,7 +1780,7 @@ export interface TaskCreateInput {
   description: String;
   assets?: AssetCreateManyInput;
   taskList: TaskListCreateOneWithoutTasksInput;
-  comments?: CommentCreateManyInput;
+  comments?: CommentCreateManyWithoutTaskInput;
   dueDate?: DateTimeInput;
   due?: TaskDue;
   customFields?: CustomFieldCreateManyInput;
@@ -1648,7 +1794,7 @@ export interface TaskUpdateInput {
   description?: String;
   assets?: AssetUpdateManyInput;
   taskList?: TaskListUpdateOneRequiredWithoutTasksInput;
-  comments?: CommentUpdateManyInput;
+  comments?: CommentUpdateManyWithoutTaskInput;
   dueDate?: DateTimeInput;
   due?: TaskDue;
   customFields?: CustomFieldUpdateManyInput;
@@ -1684,6 +1830,7 @@ export interface UserUpdateInput {
   slackHandle?: String;
   tasksCreated?: TaskUpdateManyWithoutCreatedByInput;
   tasksAssignedTo?: TaskUpdateManyWithoutAssignedToInput;
+  commentsCreated?: CommentUpdateManyWithoutCreatedByInput;
   role?: Role;
   password?: String;
   resetToken?: String;
@@ -1848,6 +1995,17 @@ export interface User extends Promise<UserNode>, Fragmentable {
       last?: Int;
     }
   ) => T;
+  commentsCreated: <T = FragmentableArray<CommentNode>>(
+    args?: {
+      where?: CommentWhereInput;
+      orderBy?: CommentOrderByInput;
+      skip?: Int;
+      after?: String;
+      before?: String;
+      first?: Int;
+      last?: Int;
+    }
+  ) => T;
   role: () => Promise<Role>;
   password: () => Promise<String>;
   resetToken: () => Promise<String>;
@@ -1880,6 +2038,17 @@ export interface UserSubscription
     args?: {
       where?: TaskWhereInput;
       orderBy?: TaskOrderByInput;
+      skip?: Int;
+      after?: String;
+      before?: String;
+      first?: Int;
+      last?: Int;
+    }
+  ) => T;
+  commentsCreated: <T = Promise<AsyncIterator<CommentSubscription>>>(
+    args?: {
+      where?: CommentWhereInput;
+      orderBy?: CommentOrderByInput;
       skip?: Int;
       after?: String;
       before?: String;
@@ -2104,7 +2273,9 @@ export interface CommentNode {
 export interface Comment extends Promise<CommentNode>, Fragmentable {
   id: () => Promise<ID_Output>;
   comment: () => Promise<String>;
-  user: <T = User>() => T;
+  createdBy: <T = User>() => T;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
   assets: <T = FragmentableArray<AssetNode>>(
     args?: {
       where?: AssetWhereInput;
@@ -2116,8 +2287,7 @@ export interface Comment extends Promise<CommentNode>, Fragmentable {
       last?: Int;
     }
   ) => T;
-  createdAt: () => Promise<DateTimeOutput>;
-  updatedAt: () => Promise<DateTimeOutput>;
+  task: <T = Task>() => T;
 }
 
 export interface CommentSubscription
@@ -2125,7 +2295,9 @@ export interface CommentSubscription
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
   comment: () => Promise<AsyncIterator<String>>;
-  user: <T = UserSubscription>() => T;
+  createdBy: <T = UserSubscription>() => T;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   assets: <T = Promise<AsyncIterator<AssetSubscription>>>(
     args?: {
       where?: AssetWhereInput;
@@ -2137,8 +2309,7 @@ export interface CommentSubscription
       last?: Int;
     }
   ) => T;
-  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  task: <T = TaskSubscription>() => T;
 }
 
 export interface CustomFieldNode {
@@ -2938,11 +3109,6 @@ The `String` scalar type represents textual data, represented as UTF-8 character
 export type String = string;
 
 /*
-The `Float` scalar type represents signed double-precision fractional values as specified by [IEEE 754](http://en.wikipedia.org/wiki/IEEE_floating_point). 
-*/
-export type Float = number;
-
-/*
 DateTime scalar input type, allowing Date
 */
 export type DateTimeInput = Date | string;
@@ -2951,6 +3117,11 @@ export type DateTimeInput = Date | string;
 DateTime scalar output type, which is always a string
 */
 export type DateTimeOutput = string;
+
+/*
+The `Float` scalar type represents signed double-precision fractional values as specified by [IEEE 754](http://en.wikipedia.org/wiki/IEEE_floating_point). 
+*/
+export type Float = number;
 
 /*
 The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1. 
