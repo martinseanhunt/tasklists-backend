@@ -6,6 +6,7 @@ const Joi = require('joi')
 var slug = require('slug')
 
 const validationSchemas = require('../validationSchemas')
+const { sendSlackDM } = require('../utils/slack')
 
 const cookieSettings = {
   httpOnly: true, 
@@ -226,7 +227,16 @@ module.exports = {
     const user = await ctx.prisma.user({ id: userId })
     if(!user) throw new Error('You must be logged in to do this')
 
-    // TODO Send notification if notify
+    const task = await ctx.prisma.task({ id: args.task })
+    if(!task) throw new Error('No task found')
+
+    // Send slack message if notify and user has a slack handle
+    if(args.notify && user.slackHandle) {
+      const notifyUser = await ctx.prisma.user({ id: args.notify })
+      if(!notifyUser) console.error('No user found')
+
+      sendSlackDM(notifyUser.slackHandle, `👋 <@${user.slackHandle}> mentioned you in a discussion the task \`${task.title}\`. \n \n *${user.name} wrote:* \n \`\`\`${args.comment}\`\`\` \n Click here to view the task and respond ${process.env.FRONTEND_URL}/task/${args.task} \r \n`)
+    }
 
     const comment = {
       comment: args.comment,
