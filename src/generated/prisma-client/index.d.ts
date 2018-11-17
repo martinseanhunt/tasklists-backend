@@ -444,20 +444,6 @@ export type CustomFieldOrderByInput =
   | "updatedAt_ASC"
   | "updatedAt_DESC";
 
-export type TaskListOrderByInput =
-  | "id_ASC"
-  | "id_DESC"
-  | "name_ASC"
-  | "name_DESC"
-  | "description_ASC"
-  | "description_DESC"
-  | "slug_ASC"
-  | "slug_DESC"
-  | "createdAt_ASC"
-  | "createdAt_DESC"
-  | "updatedAt_ASC"
-  | "updatedAt_DESC";
-
 export type UserOrderByInput =
   | "id_ASC"
   | "id_DESC"
@@ -483,6 +469,20 @@ export type UserOrderByInput =
   | "signupTokenExpiry_DESC"
   | "status_ASC"
   | "status_DESC"
+  | "createdAt_ASC"
+  | "createdAt_DESC"
+  | "updatedAt_ASC"
+  | "updatedAt_DESC";
+
+export type TaskListOrderByInput =
+  | "id_ASC"
+  | "id_DESC"
+  | "name_ASC"
+  | "name_DESC"
+  | "description_ASC"
+  | "description_DESC"
+  | "slug_ASC"
+  | "slug_DESC"
   | "createdAt_ASC"
   | "createdAt_DESC"
   | "updatedAt_ASC"
@@ -581,6 +581,9 @@ export interface TaskWhereInput {
   status_not?: TaskStatus;
   status_in?: TaskStatus[] | TaskStatus;
   status_not_in?: TaskStatus[] | TaskStatus;
+  subscribedUsers_every?: UserWhereInput;
+  subscribedUsers_some?: UserWhereInput;
+  subscribedUsers_none?: UserWhereInput;
   AND?: TaskWhereInput[] | TaskWhereInput;
   OR?: TaskWhereInput[] | TaskWhereInput;
   NOT?: TaskWhereInput[] | TaskWhereInput;
@@ -732,6 +735,9 @@ export interface UserWhereInput {
   status_not?: UserStatus;
   status_in?: UserStatus[] | UserStatus;
   status_not_in?: UserStatus[] | UserStatus;
+  subscribedTasks_every?: TaskWhereInput;
+  subscribedTasks_some?: TaskWhereInput;
+  subscribedTasks_none?: TaskWhereInput;
   AND?: UserWhereInput[] | UserWhereInput;
   OR?: UserWhereInput[] | UserWhereInput;
   NOT?: UserWhereInput[] | UserWhereInput;
@@ -1054,6 +1060,7 @@ export interface UserCreateInput {
   signupToken?: String;
   signupTokenExpiry?: Float;
   status?: UserStatus;
+  subscribedTasks?: TaskCreateManyWithoutSubscribedUsersInput;
 }
 
 export interface TaskCreateManyWithoutCreatedByInput {
@@ -1072,6 +1079,7 @@ export interface TaskCreateWithoutCreatedByInput {
   due?: TaskDue;
   customFields?: CustomFieldCreateManyInput;
   status?: TaskStatus;
+  subscribedUsers?: UserCreateManyWithoutSubscribedTasksInput;
 }
 
 export interface UserCreateOneWithoutTasksAssignedToInput {
@@ -1093,6 +1101,7 @@ export interface UserCreateWithoutTasksAssignedToInput {
   signupToken?: String;
   signupTokenExpiry?: Float;
   status?: UserStatus;
+  subscribedTasks?: TaskCreateManyWithoutSubscribedUsersInput;
 }
 
 export interface CommentCreateManyWithoutCreatedByInput {
@@ -1129,6 +1138,7 @@ export interface TaskCreateWithoutCommentsInput {
   due?: TaskDue;
   customFields?: CustomFieldCreateManyInput;
   status?: TaskStatus;
+  subscribedUsers?: UserCreateManyWithoutSubscribedTasksInput;
 }
 
 export interface UserCreateOneWithoutTasksCreatedInput {
@@ -1150,6 +1160,7 @@ export interface UserCreateWithoutTasksCreatedInput {
   signupToken?: String;
   signupTokenExpiry?: Float;
   status?: UserStatus;
+  subscribedTasks?: TaskCreateManyWithoutSubscribedUsersInput;
 }
 
 export interface TaskCreateManyWithoutAssignedToInput {
@@ -1170,6 +1181,7 @@ export interface TaskCreateWithoutAssignedToInput {
   due?: TaskDue;
   customFields?: CustomFieldCreateManyInput;
   status?: TaskStatus;
+  subscribedUsers?: UserCreateManyWithoutSubscribedTasksInput;
 }
 
 export interface TaskListCreateOneWithoutTasksInput {
@@ -1226,6 +1238,28 @@ export interface UserCreateWithoutCommentsCreatedInput {
   signupToken?: String;
   signupTokenExpiry?: Float;
   status?: UserStatus;
+  subscribedTasks?: TaskCreateManyWithoutSubscribedUsersInput;
+}
+
+export interface TaskCreateManyWithoutSubscribedUsersInput {
+  create?:
+    | TaskCreateWithoutSubscribedUsersInput[]
+    | TaskCreateWithoutSubscribedUsersInput;
+  connect?: TaskWhereUniqueInput[] | TaskWhereUniqueInput;
+}
+
+export interface TaskCreateWithoutSubscribedUsersInput {
+  createdBy: UserCreateOneWithoutTasksCreatedInput;
+  assignedTo?: UserCreateOneWithoutTasksAssignedToInput;
+  title: String;
+  description: String;
+  assets?: AssetCreateManyInput;
+  taskList: TaskListCreateOneWithoutTasksInput;
+  comments?: CommentCreateManyWithoutTaskInput;
+  dueDate?: DateTimeInput;
+  due?: TaskDue;
+  customFields?: CustomFieldCreateManyInput;
+  status?: TaskStatus;
 }
 
 export interface CustomFieldCreateManyInput {
@@ -1279,6 +1313,31 @@ export interface TaskCreateWithoutTaskListInput {
   due?: TaskDue;
   customFields?: CustomFieldCreateManyInput;
   status?: TaskStatus;
+  subscribedUsers?: UserCreateManyWithoutSubscribedTasksInput;
+}
+
+export interface UserCreateManyWithoutSubscribedTasksInput {
+  create?:
+    | UserCreateWithoutSubscribedTasksInput[]
+    | UserCreateWithoutSubscribedTasksInput;
+  connect?: UserWhereUniqueInput[] | UserWhereUniqueInput;
+}
+
+export interface UserCreateWithoutSubscribedTasksInput {
+  email: String;
+  name?: String;
+  avatar?: String;
+  slackHandle?: String;
+  tasksCreated?: TaskCreateManyWithoutCreatedByInput;
+  tasksAssignedTo?: TaskCreateManyWithoutAssignedToInput;
+  commentsCreated?: CommentCreateManyWithoutCreatedByInput;
+  role?: Role;
+  password?: String;
+  resetToken?: String;
+  resetTokenExpiry?: Float;
+  signupToken?: String;
+  signupTokenExpiry?: Float;
+  status?: UserStatus;
 }
 
 export interface AssetUpdateInput {
@@ -1309,6 +1368,7 @@ export interface UserUpdateDataInput {
   signupToken?: String;
   signupTokenExpiry?: Float;
   status?: UserStatus;
+  subscribedTasks?: TaskUpdateManyWithoutSubscribedUsersInput;
 }
 
 export interface TaskUpdateManyWithoutCreatedByInput {
@@ -1340,6 +1400,7 @@ export interface TaskUpdateWithoutCreatedByDataInput {
   due?: TaskDue;
   customFields?: CustomFieldUpdateManyInput;
   status?: TaskStatus;
+  subscribedUsers?: UserUpdateManyWithoutSubscribedTasksInput;
 }
 
 export interface UserUpdateOneWithoutTasksAssignedToInput {
@@ -1365,6 +1426,7 @@ export interface UserUpdateWithoutTasksAssignedToDataInput {
   signupToken?: String;
   signupTokenExpiry?: Float;
   status?: UserStatus;
+  subscribedTasks?: TaskUpdateManyWithoutSubscribedUsersInput;
 }
 
 export interface CommentUpdateManyWithoutCreatedByInput {
@@ -1441,6 +1503,7 @@ export interface TaskUpdateWithoutCommentsDataInput {
   due?: TaskDue;
   customFields?: CustomFieldUpdateManyInput;
   status?: TaskStatus;
+  subscribedUsers?: UserUpdateManyWithoutSubscribedTasksInput;
 }
 
 export interface UserUpdateOneRequiredWithoutTasksCreatedInput {
@@ -1464,6 +1527,7 @@ export interface UserUpdateWithoutTasksCreatedDataInput {
   signupToken?: String;
   signupTokenExpiry?: Float;
   status?: UserStatus;
+  subscribedTasks?: TaskUpdateManyWithoutSubscribedUsersInput;
 }
 
 export interface TaskUpdateManyWithoutAssignedToInput {
@@ -1497,6 +1561,7 @@ export interface TaskUpdateWithoutAssignedToDataInput {
   due?: TaskDue;
   customFields?: CustomFieldUpdateManyInput;
   status?: TaskStatus;
+  subscribedUsers?: UserUpdateManyWithoutSubscribedTasksInput;
 }
 
 export interface TaskListUpdateOneRequiredWithoutTasksInput {
@@ -1594,17 +1659,41 @@ export interface UserUpdateWithoutCommentsCreatedDataInput {
   signupToken?: String;
   signupTokenExpiry?: Float;
   status?: UserStatus;
+  subscribedTasks?: TaskUpdateManyWithoutSubscribedUsersInput;
 }
 
-export interface UserUpsertWithoutCommentsCreatedInput {
-  update: UserUpdateWithoutCommentsCreatedDataInput;
-  create: UserCreateWithoutCommentsCreatedInput;
+export interface TaskUpdateManyWithoutSubscribedUsersInput {
+  create?:
+    | TaskCreateWithoutSubscribedUsersInput[]
+    | TaskCreateWithoutSubscribedUsersInput;
+  delete?: TaskWhereUniqueInput[] | TaskWhereUniqueInput;
+  connect?: TaskWhereUniqueInput[] | TaskWhereUniqueInput;
+  disconnect?: TaskWhereUniqueInput[] | TaskWhereUniqueInput;
+  update?:
+    | TaskUpdateWithWhereUniqueWithoutSubscribedUsersInput[]
+    | TaskUpdateWithWhereUniqueWithoutSubscribedUsersInput;
+  upsert?:
+    | TaskUpsertWithWhereUniqueWithoutSubscribedUsersInput[]
+    | TaskUpsertWithWhereUniqueWithoutSubscribedUsersInput;
 }
 
-export interface CommentUpsertWithWhereUniqueWithoutTaskInput {
-  where: CommentWhereUniqueInput;
-  update: CommentUpdateWithoutTaskDataInput;
-  create: CommentCreateWithoutTaskInput;
+export interface TaskUpdateWithWhereUniqueWithoutSubscribedUsersInput {
+  where: TaskWhereUniqueInput;
+  data: TaskUpdateWithoutSubscribedUsersDataInput;
+}
+
+export interface TaskUpdateWithoutSubscribedUsersDataInput {
+  createdBy?: UserUpdateOneRequiredWithoutTasksCreatedInput;
+  assignedTo?: UserUpdateOneWithoutTasksAssignedToInput;
+  title?: String;
+  description?: String;
+  assets?: AssetUpdateManyInput;
+  taskList?: TaskListUpdateOneRequiredWithoutTasksInput;
+  comments?: CommentUpdateManyWithoutTaskInput;
+  dueDate?: DateTimeInput;
+  due?: TaskDue;
+  customFields?: CustomFieldUpdateManyInput;
+  status?: TaskStatus;
 }
 
 export interface CustomFieldUpdateManyInput {
@@ -1690,6 +1779,50 @@ export interface TaskUpdateWithoutTaskListDataInput {
   due?: TaskDue;
   customFields?: CustomFieldUpdateManyInput;
   status?: TaskStatus;
+  subscribedUsers?: UserUpdateManyWithoutSubscribedTasksInput;
+}
+
+export interface UserUpdateManyWithoutSubscribedTasksInput {
+  create?:
+    | UserCreateWithoutSubscribedTasksInput[]
+    | UserCreateWithoutSubscribedTasksInput;
+  delete?: UserWhereUniqueInput[] | UserWhereUniqueInput;
+  connect?: UserWhereUniqueInput[] | UserWhereUniqueInput;
+  disconnect?: UserWhereUniqueInput[] | UserWhereUniqueInput;
+  update?:
+    | UserUpdateWithWhereUniqueWithoutSubscribedTasksInput[]
+    | UserUpdateWithWhereUniqueWithoutSubscribedTasksInput;
+  upsert?:
+    | UserUpsertWithWhereUniqueWithoutSubscribedTasksInput[]
+    | UserUpsertWithWhereUniqueWithoutSubscribedTasksInput;
+}
+
+export interface UserUpdateWithWhereUniqueWithoutSubscribedTasksInput {
+  where: UserWhereUniqueInput;
+  data: UserUpdateWithoutSubscribedTasksDataInput;
+}
+
+export interface UserUpdateWithoutSubscribedTasksDataInput {
+  email?: String;
+  name?: String;
+  avatar?: String;
+  slackHandle?: String;
+  tasksCreated?: TaskUpdateManyWithoutCreatedByInput;
+  tasksAssignedTo?: TaskUpdateManyWithoutAssignedToInput;
+  commentsCreated?: CommentUpdateManyWithoutCreatedByInput;
+  role?: Role;
+  password?: String;
+  resetToken?: String;
+  resetTokenExpiry?: Float;
+  signupToken?: String;
+  signupTokenExpiry?: Float;
+  status?: UserStatus;
+}
+
+export interface UserUpsertWithWhereUniqueWithoutSubscribedTasksInput {
+  where: UserWhereUniqueInput;
+  update: UserUpdateWithoutSubscribedTasksDataInput;
+  create: UserCreateWithoutSubscribedTasksInput;
 }
 
 export interface TaskUpsertWithWhereUniqueWithoutTaskListInput {
@@ -1712,6 +1845,23 @@ export interface CustomFieldUpsertWithWhereUniqueNestedInput {
   where: CustomFieldWhereUniqueInput;
   update: CustomFieldUpdateDataInput;
   create: CustomFieldCreateInput;
+}
+
+export interface TaskUpsertWithWhereUniqueWithoutSubscribedUsersInput {
+  where: TaskWhereUniqueInput;
+  update: TaskUpdateWithoutSubscribedUsersDataInput;
+  create: TaskCreateWithoutSubscribedUsersInput;
+}
+
+export interface UserUpsertWithoutCommentsCreatedInput {
+  update: UserUpdateWithoutCommentsCreatedDataInput;
+  create: UserCreateWithoutCommentsCreatedInput;
+}
+
+export interface CommentUpsertWithWhereUniqueWithoutTaskInput {
+  where: CommentWhereUniqueInput;
+  update: CommentUpdateWithoutTaskDataInput;
+  create: CommentCreateWithoutTaskInput;
 }
 
 export interface TaskUpsertWithWhereUniqueWithoutAssignedToInput {
@@ -1785,6 +1935,7 @@ export interface TaskCreateInput {
   due?: TaskDue;
   customFields?: CustomFieldCreateManyInput;
   status?: TaskStatus;
+  subscribedUsers?: UserCreateManyWithoutSubscribedTasksInput;
 }
 
 export interface TaskUpdateInput {
@@ -1799,6 +1950,7 @@ export interface TaskUpdateInput {
   due?: TaskDue;
   customFields?: CustomFieldUpdateManyInput;
   status?: TaskStatus;
+  subscribedUsers?: UserUpdateManyWithoutSubscribedTasksInput;
 }
 
 export interface TaskListCreateInput {
@@ -1838,6 +1990,7 @@ export interface UserUpdateInput {
   signupToken?: String;
   signupTokenExpiry?: Float;
   status?: UserStatus;
+  subscribedTasks?: TaskUpdateManyWithoutSubscribedUsersInput;
 }
 
 export interface AssetSubscriptionWhereInput {
@@ -2013,6 +2166,17 @@ export interface User extends Promise<UserNode>, Fragmentable {
   signupToken: () => Promise<String>;
   signupTokenExpiry: () => Promise<Float>;
   status: () => Promise<UserStatus>;
+  subscribedTasks: <T = FragmentableArray<TaskNode>>(
+    args?: {
+      where?: TaskWhereInput;
+      orderBy?: TaskOrderByInput;
+      skip?: Int;
+      after?: String;
+      before?: String;
+      first?: Int;
+      last?: Int;
+    }
+  ) => T;
 }
 
 export interface UserSubscription
@@ -2063,6 +2227,17 @@ export interface UserSubscription
   signupToken: () => Promise<AsyncIterator<String>>;
   signupTokenExpiry: () => Promise<AsyncIterator<Float>>;
   status: () => Promise<AsyncIterator<UserStatus>>;
+  subscribedTasks: <T = Promise<AsyncIterator<TaskSubscription>>>(
+    args?: {
+      where?: TaskWhereInput;
+      orderBy?: TaskOrderByInput;
+      skip?: Int;
+      after?: String;
+      before?: String;
+      first?: Int;
+      last?: Int;
+    }
+  ) => T;
 }
 
 export interface TaskNode {
@@ -2121,6 +2296,17 @@ export interface Task extends Promise<TaskNode>, Fragmentable {
     }
   ) => T;
   status: () => Promise<TaskStatus>;
+  subscribedUsers: <T = FragmentableArray<UserNode>>(
+    args?: {
+      where?: UserWhereInput;
+      orderBy?: UserOrderByInput;
+      skip?: Int;
+      after?: String;
+      before?: String;
+      first?: Int;
+      last?: Int;
+    }
+  ) => T;
 }
 
 export interface TaskSubscription
@@ -2170,6 +2356,17 @@ export interface TaskSubscription
     }
   ) => T;
   status: () => Promise<AsyncIterator<TaskStatus>>;
+  subscribedUsers: <T = Promise<AsyncIterator<UserSubscription>>>(
+    args?: {
+      where?: UserWhereInput;
+      orderBy?: UserOrderByInput;
+      skip?: Int;
+      after?: String;
+      before?: String;
+      first?: Int;
+      last?: Int;
+    }
+  ) => T;
 }
 
 export interface TaskListNode {

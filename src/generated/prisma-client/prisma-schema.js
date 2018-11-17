@@ -683,6 +683,7 @@ type Task {
   updatedAt: DateTime!
   customFields(where: CustomFieldWhereInput, orderBy: CustomFieldOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [CustomField!]
   status: TaskStatus!
+  subscribedUsers(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User!]
 }
 
 type TaskConnection {
@@ -703,6 +704,7 @@ input TaskCreateInput {
   due: TaskDue
   customFields: CustomFieldCreateManyInput
   status: TaskStatus
+  subscribedUsers: UserCreateManyWithoutSubscribedTasksInput
 }
 
 input TaskCreateManyWithoutAssignedToInput {
@@ -712,6 +714,11 @@ input TaskCreateManyWithoutAssignedToInput {
 
 input TaskCreateManyWithoutCreatedByInput {
   create: [TaskCreateWithoutCreatedByInput!]
+  connect: [TaskWhereUniqueInput!]
+}
+
+input TaskCreateManyWithoutSubscribedUsersInput {
+  create: [TaskCreateWithoutSubscribedUsersInput!]
   connect: [TaskWhereUniqueInput!]
 }
 
@@ -736,6 +743,7 @@ input TaskCreateWithoutAssignedToInput {
   due: TaskDue
   customFields: CustomFieldCreateManyInput
   status: TaskStatus
+  subscribedUsers: UserCreateManyWithoutSubscribedTasksInput
 }
 
 input TaskCreateWithoutCommentsInput {
@@ -749,9 +757,25 @@ input TaskCreateWithoutCommentsInput {
   due: TaskDue
   customFields: CustomFieldCreateManyInput
   status: TaskStatus
+  subscribedUsers: UserCreateManyWithoutSubscribedTasksInput
 }
 
 input TaskCreateWithoutCreatedByInput {
+  assignedTo: UserCreateOneWithoutTasksAssignedToInput
+  title: String!
+  description: String!
+  assets: AssetCreateManyInput
+  taskList: TaskListCreateOneWithoutTasksInput!
+  comments: CommentCreateManyWithoutTaskInput
+  dueDate: DateTime
+  due: TaskDue
+  customFields: CustomFieldCreateManyInput
+  status: TaskStatus
+  subscribedUsers: UserCreateManyWithoutSubscribedTasksInput
+}
+
+input TaskCreateWithoutSubscribedUsersInput {
+  createdBy: UserCreateOneWithoutTasksCreatedInput!
   assignedTo: UserCreateOneWithoutTasksAssignedToInput
   title: String!
   description: String!
@@ -775,6 +799,7 @@ input TaskCreateWithoutTaskListInput {
   due: TaskDue
   customFields: CustomFieldCreateManyInput
   status: TaskStatus
+  subscribedUsers: UserCreateManyWithoutSubscribedTasksInput
 }
 
 enum TaskDue {
@@ -1239,6 +1264,7 @@ input TaskUpdateInput {
   due: TaskDue
   customFields: CustomFieldUpdateManyInput
   status: TaskStatus
+  subscribedUsers: UserUpdateManyWithoutSubscribedTasksInput
 }
 
 input TaskUpdateManyWithoutAssignedToInput {
@@ -1257,6 +1283,15 @@ input TaskUpdateManyWithoutCreatedByInput {
   disconnect: [TaskWhereUniqueInput!]
   update: [TaskUpdateWithWhereUniqueWithoutCreatedByInput!]
   upsert: [TaskUpsertWithWhereUniqueWithoutCreatedByInput!]
+}
+
+input TaskUpdateManyWithoutSubscribedUsersInput {
+  create: [TaskCreateWithoutSubscribedUsersInput!]
+  delete: [TaskWhereUniqueInput!]
+  connect: [TaskWhereUniqueInput!]
+  disconnect: [TaskWhereUniqueInput!]
+  update: [TaskUpdateWithWhereUniqueWithoutSubscribedUsersInput!]
+  upsert: [TaskUpsertWithWhereUniqueWithoutSubscribedUsersInput!]
 }
 
 input TaskUpdateManyWithoutTaskListInput {
@@ -1286,6 +1321,7 @@ input TaskUpdateWithoutAssignedToDataInput {
   due: TaskDue
   customFields: CustomFieldUpdateManyInput
   status: TaskStatus
+  subscribedUsers: UserUpdateManyWithoutSubscribedTasksInput
 }
 
 input TaskUpdateWithoutCommentsDataInput {
@@ -1299,9 +1335,25 @@ input TaskUpdateWithoutCommentsDataInput {
   due: TaskDue
   customFields: CustomFieldUpdateManyInput
   status: TaskStatus
+  subscribedUsers: UserUpdateManyWithoutSubscribedTasksInput
 }
 
 input TaskUpdateWithoutCreatedByDataInput {
+  assignedTo: UserUpdateOneWithoutTasksAssignedToInput
+  title: String
+  description: String
+  assets: AssetUpdateManyInput
+  taskList: TaskListUpdateOneRequiredWithoutTasksInput
+  comments: CommentUpdateManyWithoutTaskInput
+  dueDate: DateTime
+  due: TaskDue
+  customFields: CustomFieldUpdateManyInput
+  status: TaskStatus
+  subscribedUsers: UserUpdateManyWithoutSubscribedTasksInput
+}
+
+input TaskUpdateWithoutSubscribedUsersDataInput {
+  createdBy: UserUpdateOneRequiredWithoutTasksCreatedInput
   assignedTo: UserUpdateOneWithoutTasksAssignedToInput
   title: String
   description: String
@@ -1325,6 +1377,7 @@ input TaskUpdateWithoutTaskListDataInput {
   due: TaskDue
   customFields: CustomFieldUpdateManyInput
   status: TaskStatus
+  subscribedUsers: UserUpdateManyWithoutSubscribedTasksInput
 }
 
 input TaskUpdateWithWhereUniqueWithoutAssignedToInput {
@@ -1335,6 +1388,11 @@ input TaskUpdateWithWhereUniqueWithoutAssignedToInput {
 input TaskUpdateWithWhereUniqueWithoutCreatedByInput {
   where: TaskWhereUniqueInput!
   data: TaskUpdateWithoutCreatedByDataInput!
+}
+
+input TaskUpdateWithWhereUniqueWithoutSubscribedUsersInput {
+  where: TaskWhereUniqueInput!
+  data: TaskUpdateWithoutSubscribedUsersDataInput!
 }
 
 input TaskUpdateWithWhereUniqueWithoutTaskListInput {
@@ -1357,6 +1415,12 @@ input TaskUpsertWithWhereUniqueWithoutCreatedByInput {
   where: TaskWhereUniqueInput!
   update: TaskUpdateWithoutCreatedByDataInput!
   create: TaskCreateWithoutCreatedByInput!
+}
+
+input TaskUpsertWithWhereUniqueWithoutSubscribedUsersInput {
+  where: TaskWhereUniqueInput!
+  update: TaskUpdateWithoutSubscribedUsersDataInput!
+  create: TaskCreateWithoutSubscribedUsersInput!
 }
 
 input TaskUpsertWithWhereUniqueWithoutTaskListInput {
@@ -1452,6 +1516,9 @@ input TaskWhereInput {
   status_not: TaskStatus
   status_in: [TaskStatus!]
   status_not_in: [TaskStatus!]
+  subscribedUsers_every: UserWhereInput
+  subscribedUsers_some: UserWhereInput
+  subscribedUsers_none: UserWhereInput
   AND: [TaskWhereInput!]
   OR: [TaskWhereInput!]
   NOT: [TaskWhereInput!]
@@ -1477,6 +1544,7 @@ type User {
   signupToken: String
   signupTokenExpiry: Float
   status: UserStatus!
+  subscribedTasks(where: TaskWhereInput, orderBy: TaskOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Task!]
 }
 
 type UserConnection {
@@ -1500,6 +1568,12 @@ input UserCreateInput {
   signupToken: String
   signupTokenExpiry: Float
   status: UserStatus
+  subscribedTasks: TaskCreateManyWithoutSubscribedUsersInput
+}
+
+input UserCreateManyWithoutSubscribedTasksInput {
+  create: [UserCreateWithoutSubscribedTasksInput!]
+  connect: [UserWhereUniqueInput!]
 }
 
 input UserCreateOneInput {
@@ -1536,6 +1610,24 @@ input UserCreateWithoutCommentsCreatedInput {
   signupToken: String
   signupTokenExpiry: Float
   status: UserStatus
+  subscribedTasks: TaskCreateManyWithoutSubscribedUsersInput
+}
+
+input UserCreateWithoutSubscribedTasksInput {
+  email: String!
+  name: String
+  avatar: String
+  slackHandle: String
+  tasksCreated: TaskCreateManyWithoutCreatedByInput
+  tasksAssignedTo: TaskCreateManyWithoutAssignedToInput
+  commentsCreated: CommentCreateManyWithoutCreatedByInput
+  role: Role
+  password: String
+  resetToken: String
+  resetTokenExpiry: Float
+  signupToken: String
+  signupTokenExpiry: Float
+  status: UserStatus
 }
 
 input UserCreateWithoutTasksAssignedToInput {
@@ -1552,6 +1644,7 @@ input UserCreateWithoutTasksAssignedToInput {
   signupToken: String
   signupTokenExpiry: Float
   status: UserStatus
+  subscribedTasks: TaskCreateManyWithoutSubscribedUsersInput
 }
 
 input UserCreateWithoutTasksCreatedInput {
@@ -1568,6 +1661,7 @@ input UserCreateWithoutTasksCreatedInput {
   signupToken: String
   signupTokenExpiry: Float
   status: UserStatus
+  subscribedTasks: TaskCreateManyWithoutSubscribedUsersInput
 }
 
 type UserEdge {
@@ -1660,6 +1754,7 @@ input UserUpdateDataInput {
   signupToken: String
   signupTokenExpiry: Float
   status: UserStatus
+  subscribedTasks: TaskUpdateManyWithoutSubscribedUsersInput
 }
 
 input UserUpdateInput {
@@ -1677,6 +1772,16 @@ input UserUpdateInput {
   signupToken: String
   signupTokenExpiry: Float
   status: UserStatus
+  subscribedTasks: TaskUpdateManyWithoutSubscribedUsersInput
+}
+
+input UserUpdateManyWithoutSubscribedTasksInput {
+  create: [UserCreateWithoutSubscribedTasksInput!]
+  delete: [UserWhereUniqueInput!]
+  connect: [UserWhereUniqueInput!]
+  disconnect: [UserWhereUniqueInput!]
+  update: [UserUpdateWithWhereUniqueWithoutSubscribedTasksInput!]
+  upsert: [UserUpsertWithWhereUniqueWithoutSubscribedTasksInput!]
 }
 
 input UserUpdateOneRequiredInput {
@@ -1723,6 +1828,24 @@ input UserUpdateWithoutCommentsCreatedDataInput {
   signupToken: String
   signupTokenExpiry: Float
   status: UserStatus
+  subscribedTasks: TaskUpdateManyWithoutSubscribedUsersInput
+}
+
+input UserUpdateWithoutSubscribedTasksDataInput {
+  email: String
+  name: String
+  avatar: String
+  slackHandle: String
+  tasksCreated: TaskUpdateManyWithoutCreatedByInput
+  tasksAssignedTo: TaskUpdateManyWithoutAssignedToInput
+  commentsCreated: CommentUpdateManyWithoutCreatedByInput
+  role: Role
+  password: String
+  resetToken: String
+  resetTokenExpiry: Float
+  signupToken: String
+  signupTokenExpiry: Float
+  status: UserStatus
 }
 
 input UserUpdateWithoutTasksAssignedToDataInput {
@@ -1739,6 +1862,7 @@ input UserUpdateWithoutTasksAssignedToDataInput {
   signupToken: String
   signupTokenExpiry: Float
   status: UserStatus
+  subscribedTasks: TaskUpdateManyWithoutSubscribedUsersInput
 }
 
 input UserUpdateWithoutTasksCreatedDataInput {
@@ -1755,6 +1879,12 @@ input UserUpdateWithoutTasksCreatedDataInput {
   signupToken: String
   signupTokenExpiry: Float
   status: UserStatus
+  subscribedTasks: TaskUpdateManyWithoutSubscribedUsersInput
+}
+
+input UserUpdateWithWhereUniqueWithoutSubscribedTasksInput {
+  where: UserWhereUniqueInput!
+  data: UserUpdateWithoutSubscribedTasksDataInput!
 }
 
 input UserUpsertNestedInput {
@@ -1775,6 +1905,12 @@ input UserUpsertWithoutTasksAssignedToInput {
 input UserUpsertWithoutTasksCreatedInput {
   update: UserUpdateWithoutTasksCreatedDataInput!
   create: UserCreateWithoutTasksCreatedInput!
+}
+
+input UserUpsertWithWhereUniqueWithoutSubscribedTasksInput {
+  where: UserWhereUniqueInput!
+  update: UserUpdateWithoutSubscribedTasksDataInput!
+  create: UserCreateWithoutSubscribedTasksInput!
 }
 
 input UserWhereInput {
@@ -1923,6 +2059,9 @@ input UserWhereInput {
   status_not: UserStatus
   status_in: [UserStatus!]
   status_not_in: [UserStatus!]
+  subscribedTasks_every: TaskWhereInput
+  subscribedTasks_some: TaskWhereInput
+  subscribedTasks_none: TaskWhereInput
   AND: [UserWhereInput!]
   OR: [UserWhereInput!]
   NOT: [UserWhereInput!]

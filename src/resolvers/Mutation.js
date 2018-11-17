@@ -20,7 +20,6 @@ module.exports = {
   // TODO change the name of this function to invite user 
   // and update on front end
 
-  // BIGQUESTION: what is root here?
   async createUser(root, args, ctx) {
     const { userId } = ctx.request
     if(!userId) throw new Error('You must be logged in to do this')
@@ -191,6 +190,10 @@ module.exports = {
             taskListField: { connect: { id: field.taskListField } }
           }))
       },
+      subscribedUsers: { connect: [
+        { id: user.id },
+        { id: args.assignedTo }
+      ] },
       status: args.assignedTo && args.assignedTo !== '' 
         ? 'ASSIGNED'
         : 'CREATED' 
@@ -208,6 +211,8 @@ module.exports = {
 
     const task = await ctx.prisma.task({ id: args.id })
     if(!task) throw new Error('No task found')
+
+    // TODO Slack notifications!
 
     if(!(['ADMIN', 'SUPERADMIN'].includes(user.role)
     || task.createdBy.id === userData.me.id
@@ -230,13 +235,29 @@ module.exports = {
     const task = await ctx.prisma.task({ id: args.task })
     if(!task) throw new Error('No task found')
 
+    let notified = false
     // Send slack message if notify and user has a slack handle
     if(args.notify && user.slackHandle) {
       const notifyUser = await ctx.prisma.user({ id: args.notify })
       if(!notifyUser) console.error('No user found')
 
       sendSlackDM(notifyUser.slackHandle, `👋 <@${user.slackHandle}> mentioned you in a discussion the task \`${task.title}\`. \n \n *${user.name} wrote:* \n \`\`\`${args.comment}\`\`\` \n Click here to view the task and respond ${process.env.FRONTEND_URL}/task/${args.task} \r \n`)
+
+      notified = true
     }
+
+    // TODO different messages if you are the task creator or asignee
+
+    // Send slack message to all users subscribed to Task as long as the user hasn't
+    // Been notified because of a mentiion in the above block
+    const subscribedUsers = await ctx.prisma.task({ id: args.task }).subscribedUsers()
+    if(subscribedUsers.length) {
+      subscribedUsers.forEach(subscribedUser => {
+        !notified && sendSlackDM(subscribedUser.slackHandle, `👋 <@${user.slackHandle}> commented on the task \`${task.title}\` that you are subscribed to. \n \n *${user.name} wrote:* \n \`\`\`${args.comment}\`\`\` \n Click here to view the task ${process.env.FRONTEND_URL}/task/${args.task} \r \n`)
+      })
+    }
+
+    // TODO want to send email here or keep to slack for now ?
 
     const comment = {
       comment: args.comment,
@@ -253,5 +274,45 @@ module.exports = {
     }
 
     return await ctx.prisma.createComment(comment)
+  },
+
+  async subscribeToTask(root, args, ctx) {
+    const { userId } = ctx.request
+    if(!userId) throw new Error('You must be logged in to do this')
+
+    const user = await ctx.prisma.user({ id: userId })
+    if(!user) throw new Error('You must be logged in to do this')
+
+    const taskExists = ctx.prisma.$exists.task({ id: args.task })
+    if(!taskExists) throw new Error('No task found')
+
+    const task = await ctx.prisma.updateTask({ 
+      where: { id: args.task },
+      data: {
+        subscribedUsers: { connect: { id: user.id } }
+      }
+     })
+
+     return task
+  },
+
+  async unsubscribeFromTask(root, args, ctx) {
+    const { userId } = ctx.request
+    if(!userId) throw new Error('You must be logged in to do this')
+
+    const user = await ctx.prisma.user({ id: userId })
+    if(!user) throw new Error('You must be logged in to do this')
+
+    const taskExists = ctx.prisma.$exists.task({ id: args.task })
+    if(!taskExists) throw new Error('No task found')
+
+    const task = await ctx.prisma.updateTask({ 
+      where: { id: args.task },
+      data: {
+        subscribedUsers: { disconnect: { id: user.id } }
+      }
+     })
+
+     return task
   }
 }

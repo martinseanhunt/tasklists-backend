@@ -15,6 +15,7 @@ type User {
   signupToken: String @unique
   signupTokenExpiry: Float
   status: UserStatus! @default(value: INVITED)
+  subscribedTasks: [Task!]! @relation(name: "UserSubscribedToTask")
 }
 
 enum Role {
@@ -45,6 +46,7 @@ type Task {
   updatedAt: DateTime!
   customFields: [CustomField!]!
   status: TaskStatus! @default(value: CREATED)
+  subscribedUsers: [User!]! @relation(name: "UserSubscribedToTask")
 }
 
 enum TaskStatus {

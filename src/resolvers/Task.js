@@ -22,6 +22,8 @@ const Task = {
     ctx.prisma.task({ id: parent.id }).customFields(),
   comments: (parent, args, ctx) =>
     ctx.prisma.task({ id: parent.id }).comments(),
+  subscribedUsers: (parent, args, ctx) =>
+    ctx.prisma.task({ id: parent.id }).subscribedUsers(),
 }
 
 module.exports = Task

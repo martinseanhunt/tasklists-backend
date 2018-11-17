@@ -49,6 +49,10 @@ type Mutation {
   updateTaskStatus(id: ID!, status: TaskStatus!): Task
 
   createComment(comment: String!, task: ID!, notify: ID): Comment
+
+  subscribeToTask(task: ID!): Task!
+
+  unsubscribeFromTask(task: ID!): Task!
 }
 
 # BIGQUESTION How could I only expose the user email to the front end if the logged in user making the query has a specific role? 
