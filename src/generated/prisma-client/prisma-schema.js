@@ -196,6 +196,7 @@ type Comment {
   updatedAt: DateTime!
   assets(where: AssetWhereInput, orderBy: AssetOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Asset!]
   task: Task!
+  mentions(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User!]
 }
 
 type CommentConnection {
@@ -209,6 +210,7 @@ input CommentCreateInput {
   createdBy: UserCreateOneWithoutCommentsCreatedInput!
   assets: AssetCreateManyInput
   task: TaskCreateOneWithoutCommentsInput!
+  mentions: UserCreateManyInput
 }
 
 input CommentCreateManyWithoutCreatedByInput {
@@ -225,12 +227,14 @@ input CommentCreateWithoutCreatedByInput {
   comment: String!
   assets: AssetCreateManyInput
   task: TaskCreateOneWithoutCommentsInput!
+  mentions: UserCreateManyInput
 }
 
 input CommentCreateWithoutTaskInput {
   comment: String!
   createdBy: UserCreateOneWithoutCommentsCreatedInput!
   assets: AssetCreateManyInput
+  mentions: UserCreateManyInput
 }
 
 type CommentEdge {
@@ -279,6 +283,7 @@ input CommentUpdateInput {
   createdBy: UserUpdateOneRequiredWithoutCommentsCreatedInput
   assets: AssetUpdateManyInput
   task: TaskUpdateOneRequiredWithoutCommentsInput
+  mentions: UserUpdateManyInput
 }
 
 input CommentUpdateManyWithoutCreatedByInput {
@@ -303,12 +308,14 @@ input CommentUpdateWithoutCreatedByDataInput {
   comment: String
   assets: AssetUpdateManyInput
   task: TaskUpdateOneRequiredWithoutCommentsInput
+  mentions: UserUpdateManyInput
 }
 
 input CommentUpdateWithoutTaskDataInput {
   comment: String
   createdBy: UserUpdateOneRequiredWithoutCommentsCreatedInput
   assets: AssetUpdateManyInput
+  mentions: UserUpdateManyInput
 }
 
 input CommentUpdateWithWhereUniqueWithoutCreatedByInput {
@@ -383,6 +390,9 @@ input CommentWhereInput {
   assets_some: AssetWhereInput
   assets_none: AssetWhereInput
   task: TaskWhereInput
+  mentions_every: UserWhereInput
+  mentions_some: UserWhereInput
+  mentions_none: UserWhereInput
   AND: [CommentWhereInput!]
   OR: [CommentWhereInput!]
   NOT: [CommentWhereInput!]
@@ -1571,6 +1581,11 @@ input UserCreateInput {
   subscribedTasks: TaskCreateManyWithoutSubscribedUsersInput
 }
 
+input UserCreateManyInput {
+  create: [UserCreateInput!]
+  connect: [UserWhereUniqueInput!]
+}
+
 input UserCreateManyWithoutSubscribedTasksInput {
   create: [UserCreateWithoutSubscribedTasksInput!]
   connect: [UserWhereUniqueInput!]
@@ -1775,6 +1790,15 @@ input UserUpdateInput {
   subscribedTasks: TaskUpdateManyWithoutSubscribedUsersInput
 }
 
+input UserUpdateManyInput {
+  create: [UserCreateInput!]
+  update: [UserUpdateWithWhereUniqueNestedInput!]
+  upsert: [UserUpsertWithWhereUniqueNestedInput!]
+  delete: [UserWhereUniqueInput!]
+  connect: [UserWhereUniqueInput!]
+  disconnect: [UserWhereUniqueInput!]
+}
+
 input UserUpdateManyWithoutSubscribedTasksInput {
   create: [UserCreateWithoutSubscribedTasksInput!]
   delete: [UserWhereUniqueInput!]
@@ -1882,6 +1906,11 @@ input UserUpdateWithoutTasksCreatedDataInput {
   subscribedTasks: TaskUpdateManyWithoutSubscribedUsersInput
 }
 
+input UserUpdateWithWhereUniqueNestedInput {
+  where: UserWhereUniqueInput!
+  data: UserUpdateDataInput!
+}
+
 input UserUpdateWithWhereUniqueWithoutSubscribedTasksInput {
   where: UserWhereUniqueInput!
   data: UserUpdateWithoutSubscribedTasksDataInput!
@@ -1905,6 +1934,12 @@ input UserUpsertWithoutTasksAssignedToInput {
 input UserUpsertWithoutTasksCreatedInput {
   update: UserUpdateWithoutTasksCreatedDataInput!
   create: UserCreateWithoutTasksCreatedInput!
+}
+
+input UserUpsertWithWhereUniqueNestedInput {
+  where: UserWhereUniqueInput!
+  update: UserUpdateDataInput!
+  create: UserCreateInput!
 }
 
 input UserUpsertWithWhereUniqueWithoutSubscribedTasksInput {

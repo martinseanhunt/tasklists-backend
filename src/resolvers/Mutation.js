@@ -234,26 +234,34 @@ module.exports = {
 
     const task = await ctx.prisma.task({ id: args.task })
     if(!task) throw new Error('No task found')
+    
+    // TODO refactor this. These slack sending blocks should be in their own functions
 
-    let notified = false
-    // Send slack message if notify and user has a slack handle
-    if(args.notify && user.slackHandle) {
-      const notifyUser = await ctx.prisma.user({ id: args.notify })
-      if(!notifyUser) console.error('No user found')
+    // Filter out dupliates - users mentioned more than once
+    const usersToNotify = Array.from(new Set(args.notify))
 
-      sendSlackDM(notifyUser.slackHandle, `👋 <@${user.slackHandle}> mentioned you in a discussion the task \`${task.title}\`. \n \n *${user.name} wrote:* \n \`\`\`${args.comment}\`\`\` \n Click here to view the task and respond ${process.env.FRONTEND_URL}/task/${args.task} \r \n`)
+    // Send slack message to all mentioned users
+    const notified = usersToNotify.length 
+      ? await Promise.all(usersToNotify.map(async uid => {
+        const notifyUser = await ctx.prisma.user({ id: uid })
+        if(!notifyUser) console.error('No user found')
 
-      notified = true
-    }
+        sendSlackDM(notifyUser.slackHandle, `👋 <@${user.slackHandle}> mentioned you in a discussion the task \`${task.title}\`. \n \n *${user.name} wrote:* \n \`\`\`${args.comment}\`\`\` \n Click here to view the task and respond ${process.env.FRONTEND_URL}/task/${args.task} \r \n`)
 
+        return uid
+      }))
+      : []
+  
     // TODO different messages if you are the task creator or asignee
 
     // Send slack message to all users subscribed to Task as long as the user hasn't
-    // Been notified because of a mentiion in the above block
+    // already been notified because of a mentiion
     const subscribedUsers = await ctx.prisma.task({ id: args.task }).subscribedUsers()
     if(subscribedUsers.length) {
       subscribedUsers.forEach(subscribedUser => {
-        !notified && sendSlackDM(subscribedUser.slackHandle, `👋 <@${user.slackHandle}> commented on the task \`${task.title}\` that you are subscribed to. \n \n *${user.name} wrote:* \n \`\`\`${args.comment}\`\`\` \n Click here to view the task ${process.env.FRONTEND_URL}/task/${args.task} \r \n`)
+        if(notified.includes(subscribedUser.id)) return true
+
+        sendSlackDM(subscribedUser.slackHandle, `👋 <@${user.slackHandle}> commented on the task \`${task.title}\` that you are subscribed to. \n \n *${user.name} wrote:* \n \`\`\`${args.comment}\`\`\` \n Click here to view the task ${process.env.FRONTEND_URL}/task/${args.task} \r \n`)
       })
     }
 
@@ -270,6 +278,9 @@ module.exports = {
         connect: {
           id: user.id
         }
+      },
+      mentions: {
+        connect: args.notify.map(u => ({ id: u }))
       }
     }
 

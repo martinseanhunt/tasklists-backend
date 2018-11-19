@@ -48,7 +48,7 @@ type Mutation {
 
   updateTaskStatus(id: ID!, status: TaskStatus!): Task
 
-  createComment(comment: String!, task: ID!, notify: ID): Comment
+  createComment(comment: String!, task: ID!, notify: [ID]): Comment
 
   subscribeToTask(task: ID!): Task!
 

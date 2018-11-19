@@ -430,20 +430,6 @@ export type CommentOrderByInput =
   | "updatedAt_ASC"
   | "updatedAt_DESC";
 
-export type CustomFieldOrderByInput =
-  | "id_ASC"
-  | "id_DESC"
-  | "fieldName_ASC"
-  | "fieldName_DESC"
-  | "fieldType_ASC"
-  | "fieldType_DESC"
-  | "fieldValue_ASC"
-  | "fieldValue_DESC"
-  | "createdAt_ASC"
-  | "createdAt_DESC"
-  | "updatedAt_ASC"
-  | "updatedAt_DESC";
-
 export type UserOrderByInput =
   | "id_ASC"
   | "id_DESC"
@@ -469,6 +455,20 @@ export type UserOrderByInput =
   | "signupTokenExpiry_DESC"
   | "status_ASC"
   | "status_DESC"
+  | "createdAt_ASC"
+  | "createdAt_DESC"
+  | "updatedAt_ASC"
+  | "updatedAt_DESC";
+
+export type CustomFieldOrderByInput =
+  | "id_ASC"
+  | "id_DESC"
+  | "fieldName_ASC"
+  | "fieldName_DESC"
+  | "fieldType_ASC"
+  | "fieldType_DESC"
+  | "fieldValue_ASC"
+  | "fieldValue_DESC"
   | "createdAt_ASC"
   | "createdAt_DESC"
   | "updatedAt_ASC"
@@ -793,6 +793,9 @@ export interface CommentWhereInput {
   assets_some?: AssetWhereInput;
   assets_none?: AssetWhereInput;
   task?: TaskWhereInput;
+  mentions_every?: UserWhereInput;
+  mentions_some?: UserWhereInput;
+  mentions_none?: UserWhereInput;
   AND?: CommentWhereInput[] | CommentWhereInput;
   OR?: CommentWhereInput[] | CommentWhereInput;
   NOT?: CommentWhereInput[] | CommentWhereInput;
@@ -1115,6 +1118,7 @@ export interface CommentCreateWithoutCreatedByInput {
   comment: String;
   assets?: AssetCreateManyInput;
   task: TaskCreateOneWithoutCommentsInput;
+  mentions?: UserCreateManyInput;
 }
 
 export interface AssetCreateManyInput {
@@ -1217,6 +1221,7 @@ export interface CommentCreateWithoutTaskInput {
   comment: String;
   createdBy: UserCreateOneWithoutCommentsCreatedInput;
   assets?: AssetCreateManyInput;
+  mentions?: UserCreateManyInput;
 }
 
 export interface UserCreateOneWithoutCommentsCreatedInput {
@@ -1340,6 +1345,11 @@ export interface UserCreateWithoutSubscribedTasksInput {
   status?: UserStatus;
 }
 
+export interface UserCreateManyInput {
+  create?: UserCreateInput[] | UserCreateInput;
+  connect?: UserWhereUniqueInput[] | UserWhereUniqueInput;
+}
+
 export interface AssetUpdateInput {
   createdBy?: UserUpdateOneRequiredInput;
   assetUrl?: String;
@@ -1453,6 +1463,7 @@ export interface CommentUpdateWithoutCreatedByDataInput {
   comment?: String;
   assets?: AssetUpdateManyInput;
   task?: TaskUpdateOneRequiredWithoutCommentsInput;
+  mentions?: UserUpdateManyInput;
 }
 
 export interface AssetUpdateManyInput {
@@ -1636,6 +1647,7 @@ export interface CommentUpdateWithoutTaskDataInput {
   comment?: String;
   createdBy?: UserUpdateOneRequiredWithoutCommentsCreatedInput;
   assets?: AssetUpdateManyInput;
+  mentions?: UserUpdateManyInput;
 }
 
 export interface UserUpdateOneRequiredWithoutCommentsCreatedInput {
@@ -1858,6 +1870,30 @@ export interface UserUpsertWithoutCommentsCreatedInput {
   create: UserCreateWithoutCommentsCreatedInput;
 }
 
+export interface UserUpdateManyInput {
+  create?: UserCreateInput[] | UserCreateInput;
+  update?:
+    | UserUpdateWithWhereUniqueNestedInput[]
+    | UserUpdateWithWhereUniqueNestedInput;
+  upsert?:
+    | UserUpsertWithWhereUniqueNestedInput[]
+    | UserUpsertWithWhereUniqueNestedInput;
+  delete?: UserWhereUniqueInput[] | UserWhereUniqueInput;
+  connect?: UserWhereUniqueInput[] | UserWhereUniqueInput;
+  disconnect?: UserWhereUniqueInput[] | UserWhereUniqueInput;
+}
+
+export interface UserUpdateWithWhereUniqueNestedInput {
+  where: UserWhereUniqueInput;
+  data: UserUpdateDataInput;
+}
+
+export interface UserUpsertWithWhereUniqueNestedInput {
+  where: UserWhereUniqueInput;
+  update: UserUpdateDataInput;
+  create: UserCreateInput;
+}
+
 export interface CommentUpsertWithWhereUniqueWithoutTaskInput {
   where: CommentWhereUniqueInput;
   update: CommentUpdateWithoutTaskDataInput;
@@ -1907,6 +1943,7 @@ export interface CommentCreateInput {
   createdBy: UserCreateOneWithoutCommentsCreatedInput;
   assets?: AssetCreateManyInput;
   task: TaskCreateOneWithoutCommentsInput;
+  mentions?: UserCreateManyInput;
 }
 
 export interface CommentUpdateInput {
@@ -1914,6 +1951,7 @@ export interface CommentUpdateInput {
   createdBy?: UserUpdateOneRequiredWithoutCommentsCreatedInput;
   assets?: AssetUpdateManyInput;
   task?: TaskUpdateOneRequiredWithoutCommentsInput;
+  mentions?: UserUpdateManyInput;
 }
 
 export interface CustomFieldUpdateInput {
@@ -2485,6 +2523,17 @@ export interface Comment extends Promise<CommentNode>, Fragmentable {
     }
   ) => T;
   task: <T = Task>() => T;
+  mentions: <T = FragmentableArray<UserNode>>(
+    args?: {
+      where?: UserWhereInput;
+      orderBy?: UserOrderByInput;
+      skip?: Int;
+      after?: String;
+      before?: String;
+      first?: Int;
+      last?: Int;
+    }
+  ) => T;
 }
 
 export interface CommentSubscription
@@ -2507,6 +2556,17 @@ export interface CommentSubscription
     }
   ) => T;
   task: <T = TaskSubscription>() => T;
+  mentions: <T = Promise<AsyncIterator<UserSubscription>>>(
+    args?: {
+      where?: UserWhereInput;
+      orderBy?: UserOrderByInput;
+      skip?: Int;
+      after?: String;
+      before?: String;
+      first?: Int;
+      last?: Int;
+    }
+  ) => T;
 }
 
 export interface CustomFieldNode {
