@@ -60,7 +60,7 @@ module.exports = {
       html: `<strong>You've been invited to join the ${process.env.COMPANY_NAME} devlist.</strong> Click <a href="${process.env.FRONTEND_URL}/signup?token=${signupToken}">here to get started</a>`,
     })
 
-    // ToDo if .send fails then delete the user from the database and send a good error message
+    // TODO if .send fails then delete the user from the database and send a good error message
 
     return user
   },
@@ -212,12 +212,52 @@ module.exports = {
     const task = await ctx.prisma.task({ id: args.id })
     if(!task) throw new Error('No task found')
 
-    // TODO Slack notifications!
-
     if(!(['ADMIN', 'SUPERADMIN'].includes(user.role)
     || task.createdBy.id === userData.me.id
     || (task.assignedTo && task.assignedTo.id === userData.me.id))) 
       throw new Error('You do not have permission to update this task')
+
+    // Send slack message to all users subscribed to Task
+
+    // TODO refactor this to it's own function
+    const userFrienlyStatus = {
+      COMPLETED: 'Completed',
+      CREATED: 'Open',
+      ASSIGNED: 'Assigned',
+      AWAITINGINPUT: 'Awaiting Input',
+      CLOSED: 'Closed'
+    }
+
+    // TODO refactor this to it's own function
+    let statusMessage = { title: '', message: ''}
+    if(args.status === 'COMPLETED'){ 
+      statusMessage = { 
+        title: 'Task Completed', 
+        message: 'completed'
+      } 
+    } else if(args.status === 'CLOSED') {
+      statusMessage = { 
+        title: 'Task Closed', 
+        message: 'closed'
+      } 
+    } else {
+      statusMessage = { 
+        title: 'Task Re-Opened', 
+        message: 're-opened'
+      } 
+    }
+
+    // TODO different messages if you are the task creator or asignee
+
+    // QUESTION why do I have to do this here? Why does the task reslover not give us access to subscribed users here? 
+    const subscribedUsers = await ctx.prisma.task({ id: task.id }).subscribedUsers()
+    if(subscribedUsers.length) {
+      subscribedUsers.forEach(subscribedUser => {
+        //if(subscribedUser.id === user.id) return true
+
+        sendSlackDM(subscribedUser.slackHandle, `👋 *${statusMessage.title}* \n \n <@${user.slackHandle}> ${statusMessage.message} the task \`${task.title}\` that you are subscribed to. \n \n Click here to view the task ${process.env.FRONTEND_URL}/task/${args.task} \r \n`)
+      })
+    }
 
     return ctx.prisma.updateTask({ 
       where: { id: task.id },
@@ -265,10 +305,30 @@ module.exports = {
       })
     }
 
+    // TODO refactor this in to it's own helper funciton
+
+    // TODO this will probably break if the user uses @ outside the context of a mention... test / Fix!
+
+    // Format comment to replace @mentions with markup to display... Question... Would this be better to do on the front end?
+    const regexp = /\[(.*?)\]/g
+    let matches = []
+    let match = regexp.exec(args.comment)
+
+    while (match != null) {
+      matches = [...matches, match[1]]
+      match = regexp.exec(args.comment)
+    }
+    
+    let formattedComment = args.comment
+    
+    matches.forEach((m, i) => {
+      formattedComment = formattedComment.replace(/\@(.*?)\)/, `<span class="mention">${matches[i]}</span>`) 
+    })
+
     // TODO want to send email here or keep to slack for now ?
 
     const comment = {
-      comment: args.comment,
+      comment: formattedComment,
       task: {
         connect: {
           id: args.task
