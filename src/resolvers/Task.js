@@ -1,3 +1,5 @@
+// TODO / QUESTION: For now this is too slow and I'm using the prisma.$graphql method instead
+
 const Task = {
   id: parent => parent.id,
   title: parent => parent.title,
@@ -21,7 +23,7 @@ const Task = {
   customFields: (parent, args, ctx) =>
     ctx.prisma.task({ id: parent.id }).customFields(),
   comments: (parent, args, ctx) =>
-    ctx.prisma.task({ id: parent.id }).comments(),
+    ctx.prisma.comments({ where: { task: { id: parent.id } } }),
   subscribedUsers: (parent, args, ctx) =>
     ctx.prisma.task({ id: parent.id }).subscribedUsers(),
 }

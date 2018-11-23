@@ -88,9 +88,71 @@ module.exports = {
     const { request: { userId } } = ctx
     if(!userId) throw new Error('You must be logged in to access a task')
 
-    const task = await ctx.prisma.task({ id: args.id })
-    if(!task) throw new Error('Task not found')
+    // const task = await ctx.prisma.task({ id: args.id })
 
-    return task
+    // temporarily use $request as the above isn't working to retireve comments
+    // and the comment related nodes
+
+    const query = `
+      query {
+        task(where:{id:"${args.id}"}){
+          id
+          title
+          description
+          createdBy {
+            name
+            id
+            avatar
+          }
+          assignedTo {
+            name 
+            id
+            avatar
+          }
+          due
+          dueDate
+          assets {
+            id
+            assetUrl
+            assetType
+          }
+          taskList {
+            name
+            slug
+          }
+          createdAt
+          updatedAt
+          customFields {
+            id
+            fieldName
+            fieldValue
+            fieldType
+          }
+          status
+          comments {
+            id
+            comment
+            createdAt
+            assets {
+              id
+            }
+            createdBy {
+              id
+              name
+              avatar
+            }
+          }
+          subscribedUsers {
+            id
+            name
+            avatar
+          }
+        }
+      }
+    `
+    const task = await ctx.prisma.$graphql(query)
+    if(!task.task) throw new Error('Task not found')
+
+    return task.task
   }
 }

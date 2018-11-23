@@ -344,7 +344,13 @@ module.exports = {
       }
     }
 
-    return await ctx.prisma.createComment(comment)
+    // TODO / QUESTION I'm doing it like this because my comment resolver is way too 
+    // slow when returning multiple comments. Would rather be able to return  ctx.prisma.createComment(comment) and for the resolver to take care of it.
+    const createdComment =  await ctx.prisma.createComment(comment)
+    createdComment.createdBy = await ctx.prisma.createComment(comment).createdBy()
+    createdComment.assets = await ctx.prisma.createComment(comment).assets()
+
+    return createdComment
   },
 
   async subscribeToTask(root, args, ctx) {

@@ -19,8 +19,8 @@ const server = new GraphQLServer({
     Mutation,
     Query,
     TaskList,
-    Task,
-    Comment
+    // Task,
+    // Comment
   },
   context: req => ({
     ...req,
