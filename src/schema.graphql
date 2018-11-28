@@ -12,6 +12,8 @@ type Query {
   openTasks(taskListSlug: String!): [Task]
   completedTasks(taskListSlug: String!): [Task]
   task(id: ID!): Task
+  myOpenTasks: [Task]
+  mySubscriptions: [Task]
 }
 
 type Mutation {

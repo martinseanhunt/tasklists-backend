@@ -154,7 +154,7 @@ module.exports = {
 
     // TODO refactor for clarity
 
-    const task = await ctx.prisma.createTask({
+    const taskData = {
       ...args,
       taskList: {
         connect: {
@@ -191,13 +191,21 @@ module.exports = {
           }))
       },
       subscribedUsers: { connect: [
-        { id: user.id },
-        { id: args.assignedTo }
+        { id: user.id }
       ] },
       status: args.assignedTo && args.assignedTo !== '' 
         ? 'ASSIGNED'
         : 'CREATED' 
-    })
+    }
+
+    if(args.assignedTo && args.assignedTo !== '') {
+      taskData.subscribedUsers = { connect: [
+        { id: user.id },
+        { id: args.assignedTo }
+      ] }
+    }
+
+    const task = await ctx.prisma.createTask(taskData)
     
     return task
   },
@@ -347,8 +355,8 @@ module.exports = {
     // TODO / QUESTION I'm doing it like this because my comment resolver is way too 
     // slow when returning multiple comments. Would rather be able to return  ctx.prisma.createComment(comment) and for the resolver to take care of it.
     const createdComment =  await ctx.prisma.createComment(comment)
-    createdComment.createdBy = await ctx.prisma.createComment(comment).createdBy()
-    createdComment.assets = await ctx.prisma.createComment(comment).assets()
+    createdComment.createdBy = await ctx.prisma.comment({ id: createdComment.id }).createdBy()
+    createdComment.assets = await ctx.prisma.comment({ id: createdComment.id }).assets()
 
     return createdComment
   },

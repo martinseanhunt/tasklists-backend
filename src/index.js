@@ -5,6 +5,7 @@ const sgMail = require('@sendgrid/mail')
 const cookieParser = require('cookie-parser')
 const jwt = require('jsonwebtoken')
 
+const cron = require('./utils/cron')
 const Mutation = require('./resolvers/Mutation')
 const Query = require('./resolvers/Query')
 const TaskList = require('./resolvers/TaskList')
@@ -30,6 +31,9 @@ const server = new GraphQLServer({
 })
 
 server.express.use(cookieParser())
+
+// Setup cron jobs
+cron()
 
 // middleware to decode cookie and out the userId on
 // each request

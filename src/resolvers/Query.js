@@ -154,5 +154,33 @@ module.exports = {
     if(!task.task) throw new Error('Task not found')
 
     return task.task
-  }
+  },
+
+  async myOpenTasks(root, args, ctx) {
+    const { request: { userId } } = ctx
+    if(!userId) return []
+
+    return ctx.prisma
+      .tasks({
+        where: {
+          taskList: {
+            slug: args.taskListSlug
+          },
+          createdBy: {
+            id: userId
+          },
+          status_not: 'COMPLETED'
+        }
+      })
+  },
+
+  async mySubscriptions(root, args, ctx) {
+    const { request: { userId } } = ctx
+    if(!userId) return []
+
+    return ctx.prisma
+      .user({ id: userId })
+      .subscribedTasks({ where: { status_not_in: ['COMPLETED', 'CLOSED'] } })
+  },
+
 }
