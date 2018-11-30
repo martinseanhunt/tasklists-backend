@@ -88,9 +88,9 @@ module.exports = {
     const { request: { userId } } = ctx
     if(!userId) throw new Error('You must be logged in to access a task')
 
-    // const task = await ctx.prisma.task({ id: args.id })
+    
 
-    // temporarily use $request as the above isn't working to retireve comments
+    /* temporarily use $request as the above isn't working to retireve comments
     // and the comment related nodes
 
     const query = `
@@ -149,11 +149,13 @@ module.exports = {
           }
         }
       }
-    `
-    const task = await ctx.prisma.$graphql(query)
-    if(!task.task) throw new Error('Task not found')
+    ` 
+    const task = await ctx.prisma.$graphql(query) */
+    
+    const task = await ctx.prisma.task({ id: args.id })
+    if(!task) throw new Error('Task not found')
 
-    return task.task
+    return task
   },
 
   async myOpenTasks(root, args, ctx) {

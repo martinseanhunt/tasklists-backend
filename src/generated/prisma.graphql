@@ -121,6 +121,11 @@ input AssetUpdateManyInput {
   disconnect: [AssetWhereUniqueInput!]
 }
 
+input AssetUpdateManyMutationInput {
+  assetUrl: String
+  assetType: AssetType
+}
+
 input AssetUpdateWithWhereUniqueNestedInput {
   where: AssetWhereUniqueInput!
   data: AssetUpdateDataInput!
@@ -283,6 +288,10 @@ input CommentUpdateInput {
   assets: AssetUpdateManyInput
   task: TaskUpdateOneRequiredWithoutCommentsInput
   mentions: UserUpdateManyInput
+}
+
+input CommentUpdateManyMutationInput {
+  comment: String
 }
 
 input CommentUpdateManyWithoutCreatedByInput {
@@ -495,6 +504,12 @@ input CustomFieldUpdateManyInput {
   disconnect: [CustomFieldWhereUniqueInput!]
 }
 
+input CustomFieldUpdateManyMutationInput {
+  fieldName: String
+  fieldType: FieldType
+  fieldValue: String
+}
+
 input CustomFieldUpdateWithWhereUniqueNestedInput {
   where: CustomFieldWhereUniqueInput!
   data: CustomFieldUpdateDataInput!
@@ -577,43 +592,43 @@ scalar Long
 type Mutation {
   createAsset(data: AssetCreateInput!): Asset!
   updateAsset(data: AssetUpdateInput!, where: AssetWhereUniqueInput!): Asset
-  updateManyAssets(data: AssetUpdateInput!, where: AssetWhereInput): BatchPayload!
+  updateManyAssets(data: AssetUpdateManyMutationInput!, where: AssetWhereInput): BatchPayload!
   upsertAsset(where: AssetWhereUniqueInput!, create: AssetCreateInput!, update: AssetUpdateInput!): Asset!
   deleteAsset(where: AssetWhereUniqueInput!): Asset
   deleteManyAssets(where: AssetWhereInput): BatchPayload!
   createComment(data: CommentCreateInput!): Comment!
   updateComment(data: CommentUpdateInput!, where: CommentWhereUniqueInput!): Comment
-  updateManyComments(data: CommentUpdateInput!, where: CommentWhereInput): BatchPayload!
+  updateManyComments(data: CommentUpdateManyMutationInput!, where: CommentWhereInput): BatchPayload!
   upsertComment(where: CommentWhereUniqueInput!, create: CommentCreateInput!, update: CommentUpdateInput!): Comment!
   deleteComment(where: CommentWhereUniqueInput!): Comment
   deleteManyComments(where: CommentWhereInput): BatchPayload!
   createCustomField(data: CustomFieldCreateInput!): CustomField!
   updateCustomField(data: CustomFieldUpdateInput!, where: CustomFieldWhereUniqueInput!): CustomField
-  updateManyCustomFields(data: CustomFieldUpdateInput!, where: CustomFieldWhereInput): BatchPayload!
+  updateManyCustomFields(data: CustomFieldUpdateManyMutationInput!, where: CustomFieldWhereInput): BatchPayload!
   upsertCustomField(where: CustomFieldWhereUniqueInput!, create: CustomFieldCreateInput!, update: CustomFieldUpdateInput!): CustomField!
   deleteCustomField(where: CustomFieldWhereUniqueInput!): CustomField
   deleteManyCustomFields(where: CustomFieldWhereInput): BatchPayload!
   createTask(data: TaskCreateInput!): Task!
   updateTask(data: TaskUpdateInput!, where: TaskWhereUniqueInput!): Task
-  updateManyTasks(data: TaskUpdateInput!, where: TaskWhereInput): BatchPayload!
+  updateManyTasks(data: TaskUpdateManyMutationInput!, where: TaskWhereInput): BatchPayload!
   upsertTask(where: TaskWhereUniqueInput!, create: TaskCreateInput!, update: TaskUpdateInput!): Task!
   deleteTask(where: TaskWhereUniqueInput!): Task
   deleteManyTasks(where: TaskWhereInput): BatchPayload!
   createTaskList(data: TaskListCreateInput!): TaskList!
   updateTaskList(data: TaskListUpdateInput!, where: TaskListWhereUniqueInput!): TaskList
-  updateManyTaskLists(data: TaskListUpdateInput!, where: TaskListWhereInput): BatchPayload!
+  updateManyTaskLists(data: TaskListUpdateManyMutationInput!, where: TaskListWhereInput): BatchPayload!
   upsertTaskList(where: TaskListWhereUniqueInput!, create: TaskListCreateInput!, update: TaskListUpdateInput!): TaskList!
   deleteTaskList(where: TaskListWhereUniqueInput!): TaskList
   deleteManyTaskLists(where: TaskListWhereInput): BatchPayload!
   createTaskListField(data: TaskListFieldCreateInput!): TaskListField!
   updateTaskListField(data: TaskListFieldUpdateInput!, where: TaskListFieldWhereUniqueInput!): TaskListField
-  updateManyTaskListFields(data: TaskListFieldUpdateInput!, where: TaskListFieldWhereInput): BatchPayload!
+  updateManyTaskListFields(data: TaskListFieldUpdateManyMutationInput!, where: TaskListFieldWhereInput): BatchPayload!
   upsertTaskListField(where: TaskListFieldWhereUniqueInput!, create: TaskListFieldCreateInput!, update: TaskListFieldUpdateInput!): TaskListField!
   deleteTaskListField(where: TaskListFieldWhereUniqueInput!): TaskListField
   deleteManyTaskListFields(where: TaskListFieldWhereInput): BatchPayload!
   createUser(data: UserCreateInput!): User!
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
-  updateManyUsers(data: UserUpdateInput!, where: UserWhereInput): BatchPayload!
+  updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
   upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
   deleteUser(where: UserWhereUniqueInput!): User
   deleteManyUsers(where: UserWhereInput): BatchPayload!
@@ -963,6 +978,11 @@ input TaskListFieldUpdateInput {
   taskList: TaskListUpdateOneWithoutTaskListFieldsInput
 }
 
+input TaskListFieldUpdateManyMutationInput {
+  fieldName: String
+  fieldType: FieldType
+}
+
 input TaskListFieldUpdateManyWithoutTaskListInput {
   create: [TaskListFieldCreateWithoutTaskListInput!]
   delete: [TaskListFieldWhereUniqueInput!]
@@ -1088,6 +1108,12 @@ input TaskListUpdateInput {
   description: String
   taskListFields: TaskListFieldUpdateManyWithoutTaskListInput
   tasks: TaskUpdateManyWithoutTaskListInput
+  slug: String
+}
+
+input TaskListUpdateManyMutationInput {
+  name: String
+  description: String
   slug: String
 }
 
@@ -1274,6 +1300,14 @@ input TaskUpdateInput {
   customFields: CustomFieldUpdateManyInput
   status: TaskStatus
   subscribedUsers: UserUpdateManyWithoutSubscribedTasksInput
+}
+
+input TaskUpdateManyMutationInput {
+  title: String
+  description: String
+  dueDate: DateTime
+  due: TaskDue
+  status: TaskStatus
 }
 
 input TaskUpdateManyWithoutAssignedToInput {
@@ -1796,6 +1830,20 @@ input UserUpdateManyInput {
   delete: [UserWhereUniqueInput!]
   connect: [UserWhereUniqueInput!]
   disconnect: [UserWhereUniqueInput!]
+}
+
+input UserUpdateManyMutationInput {
+  email: String
+  name: String
+  avatar: String
+  slackHandle: String
+  role: Role
+  password: String
+  resetToken: String
+  resetTokenExpiry: Float
+  signupToken: String
+  signupTokenExpiry: Float
+  status: UserStatus
 }
 
 input UserUpdateManyWithoutSubscribedTasksInput {

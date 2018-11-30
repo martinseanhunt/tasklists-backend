@@ -13,7 +13,7 @@ const { sendSlackDM } = require('./slack')
 const delay = ms => new Promise(res => setTimeout(res, ms))
 
 module.exports = () => {
-  cron.schedule("0 15 * * *", async () => {
+  cron.schedule("0 9 * * *", async () => {
     const taskQuery = `(
       where: {
         status_not_in: [COMPLETED, CLOSED],

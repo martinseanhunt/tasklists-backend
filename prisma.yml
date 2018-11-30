@@ -1,4 +1,4 @@
-endpoint: https://us1.prisma.sh/martin-hunt-925e21/devlists/dev
+endpoint: http://localhost:4466/
 datamodel: datamodel.prisma
 
 # BIGQUESTION: is this the best way to handle importing all types in to schema.gql
