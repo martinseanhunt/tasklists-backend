@@ -414,6 +414,8 @@ export type TaskOrderByInput =
 export type AssetOrderByInput =
   | "id_ASC"
   | "id_DESC"
+  | "title_ASC"
+  | "title_DESC"
   | "assetUrl_ASC"
   | "assetUrl_DESC"
   | "createdAt_ASC"
@@ -753,6 +755,9 @@ export interface UserWhereInput {
   subscribedTasks_every?: TaskWhereInput;
   subscribedTasks_some?: TaskWhereInput;
   subscribedTasks_none?: TaskWhereInput;
+  mentions_every?: CommentWhereInput;
+  mentions_some?: CommentWhereInput;
+  mentions_none?: CommentWhereInput;
   AND?: UserWhereInput[] | UserWhereInput;
   OR?: UserWhereInput[] | UserWhereInput;
   NOT?: UserWhereInput[] | UserWhereInput;
@@ -832,6 +837,20 @@ export interface AssetWhereInput {
   id_ends_with?: ID_Input;
   id_not_ends_with?: ID_Input;
   createdBy?: UserWhereInput;
+  title?: String;
+  title_not?: String;
+  title_in?: String[] | String;
+  title_not_in?: String[] | String;
+  title_lt?: String;
+  title_lte?: String;
+  title_gt?: String;
+  title_gte?: String;
+  title_contains?: String;
+  title_not_contains?: String;
+  title_starts_with?: String;
+  title_not_starts_with?: String;
+  title_ends_with?: String;
+  title_not_ends_with?: String;
   assetUrl?: String;
   assetUrl_not?: String;
   assetUrl_in?: String[] | String;
@@ -1054,6 +1073,7 @@ export type UserWhereUniqueInput = AtLeastOne<{
 
 export interface AssetCreateInput {
   createdBy: UserCreateOneInput;
+  title: String;
   assetUrl: String;
   assetType: AssetType;
 }
@@ -1079,6 +1099,7 @@ export interface UserCreateInput {
   signupTokenExpiry?: Float;
   status?: UserStatus;
   subscribedTasks?: TaskCreateManyWithoutSubscribedUsersInput;
+  mentions?: CommentCreateManyWithoutMentionsInput;
 }
 
 export interface TaskCreateManyWithoutCreatedByInput {
@@ -1120,6 +1141,7 @@ export interface UserCreateWithoutTasksAssignedToInput {
   signupTokenExpiry?: Float;
   status?: UserStatus;
   subscribedTasks?: TaskCreateManyWithoutSubscribedUsersInput;
+  mentions?: CommentCreateManyWithoutMentionsInput;
 }
 
 export interface CommentCreateManyWithoutCreatedByInput {
@@ -1133,7 +1155,7 @@ export interface CommentCreateWithoutCreatedByInput {
   comment: String;
   assets?: AssetCreateManyInput;
   task: TaskCreateOneWithoutCommentsInput;
-  mentions?: UserCreateManyInput;
+  mentions?: UserCreateManyWithoutMentionsInput;
 }
 
 export interface AssetCreateManyInput {
@@ -1180,6 +1202,7 @@ export interface UserCreateWithoutTasksCreatedInput {
   signupTokenExpiry?: Float;
   status?: UserStatus;
   subscribedTasks?: TaskCreateManyWithoutSubscribedUsersInput;
+  mentions?: CommentCreateManyWithoutMentionsInput;
 }
 
 export interface TaskCreateManyWithoutAssignedToInput {
@@ -1236,7 +1259,7 @@ export interface CommentCreateWithoutTaskInput {
   comment: String;
   createdBy: UserCreateOneWithoutCommentsCreatedInput;
   assets?: AssetCreateManyInput;
-  mentions?: UserCreateManyInput;
+  mentions?: UserCreateManyWithoutMentionsInput;
 }
 
 export interface UserCreateOneWithoutCommentsCreatedInput {
@@ -1259,6 +1282,7 @@ export interface UserCreateWithoutCommentsCreatedInput {
   signupTokenExpiry?: Float;
   status?: UserStatus;
   subscribedTasks?: TaskCreateManyWithoutSubscribedUsersInput;
+  mentions?: CommentCreateManyWithoutMentionsInput;
 }
 
 export interface TaskCreateManyWithoutSubscribedUsersInput {
@@ -1358,15 +1382,49 @@ export interface UserCreateWithoutSubscribedTasksInput {
   signupToken?: String;
   signupTokenExpiry?: Float;
   status?: UserStatus;
+  mentions?: CommentCreateManyWithoutMentionsInput;
 }
 
-export interface UserCreateManyInput {
-  create?: UserCreateInput[] | UserCreateInput;
+export interface CommentCreateManyWithoutMentionsInput {
+  create?:
+    | CommentCreateWithoutMentionsInput[]
+    | CommentCreateWithoutMentionsInput;
+  connect?: CommentWhereUniqueInput[] | CommentWhereUniqueInput;
+}
+
+export interface CommentCreateWithoutMentionsInput {
+  comment: String;
+  createdBy: UserCreateOneWithoutCommentsCreatedInput;
+  assets?: AssetCreateManyInput;
+  task: TaskCreateOneWithoutCommentsInput;
+}
+
+export interface UserCreateManyWithoutMentionsInput {
+  create?: UserCreateWithoutMentionsInput[] | UserCreateWithoutMentionsInput;
   connect?: UserWhereUniqueInput[] | UserWhereUniqueInput;
+}
+
+export interface UserCreateWithoutMentionsInput {
+  email: String;
+  name?: String;
+  avatar?: String;
+  slackHandle?: String;
+  tasksCreated?: TaskCreateManyWithoutCreatedByInput;
+  tasksAssignedTo?: TaskCreateManyWithoutAssignedToInput;
+  commentsCreated?: CommentCreateManyWithoutCreatedByInput;
+  role?: Role;
+  password?: String;
+  resetToken?: String;
+  resetTokenExpiry?: Float;
+  signupToken?: String;
+  signupTokenExpiry?: Float;
+  status?: UserStatus;
+  subscribedTasks?: TaskCreateManyWithoutSubscribedUsersInput;
 }
 
 export interface AssetUpdateInput {
   createdBy?: UserUpdateOneRequiredInput;
+  title?: String;
   assetUrl?: String;
   assetType?: AssetType;
 }
@@ -1394,6 +1452,7 @@ export interface UserUpdateDataInput {
   signupTokenExpiry?: Float;
   status?: UserStatus;
   subscribedTasks?: TaskUpdateManyWithoutSubscribedUsersInput;
+  mentions?: CommentUpdateManyWithoutMentionsInput;
 }
 
 export interface TaskUpdateManyWithoutCreatedByInput {
@@ -1456,6 +1515,7 @@ export interface UserUpdateWithoutTasksAssignedToDataInput {
   signupTokenExpiry?: Float;
   status?: UserStatus;
   subscribedTasks?: TaskUpdateManyWithoutSubscribedUsersInput;
+  mentions?: CommentUpdateManyWithoutMentionsInput;
 }
 
 export interface CommentUpdateManyWithoutCreatedByInput {
@@ -1486,7 +1546,7 @@ export interface CommentUpdateWithoutCreatedByDataInput {
   comment?: String;
   assets?: AssetUpdateManyInput;
   task?: TaskUpdateOneRequiredWithoutCommentsInput;
-  mentions?: UserUpdateManyInput;
+  mentions?: UserUpdateManyWithoutMentionsInput;
 }
 
 export interface AssetUpdateManyInput {
@@ -1513,6 +1573,7 @@ export interface AssetUpdateWithWhereUniqueNestedInput {
 
 export interface AssetUpdateDataInput {
   createdBy?: UserUpdateOneRequiredInput;
+  title?: String;
   assetUrl?: String;
   assetType?: AssetType;
 }
@@ -1538,6 +1599,20 @@ export interface AssetScalarWhereInput {
   id_not_starts_with?: ID_Input;
   id_ends_with?: ID_Input;
   id_not_ends_with?: ID_Input;
+  title?: String;
+  title_not?: String;
+  title_in?: String[] | String;
+  title_not_in?: String[] | String;
+  title_lt?: String;
+  title_lte?: String;
+  title_gt?: String;
+  title_gte?: String;
+  title_contains?: String;
+  title_not_contains?: String;
+  title_starts_with?: String;
+  title_not_starts_with?: String;
+  title_ends_with?: String;
+  title_not_ends_with?: String;
   assetUrl?: String;
   assetUrl_not?: String;
   assetUrl_in?: String[] | String;
@@ -1575,6 +1650,7 @@ export interface AssetUpdateManyWithWhereNestedInput {
 }
 
 export interface AssetUpdateManyDataInput {
+  title?: String;
   assetUrl?: String;
   assetType?: AssetType;
 }
@@ -1622,6 +1698,7 @@ export interface UserUpdateWithoutTasksCreatedDataInput {
   signupTokenExpiry?: Float;
   status?: UserStatus;
   subscribedTasks?: TaskUpdateManyWithoutSubscribedUsersInput;
+  mentions?: CommentUpdateManyWithoutMentionsInput;
 }
 
 export interface TaskUpdateManyWithoutAssignedToInput {
@@ -1790,7 +1867,7 @@ export interface CommentUpdateWithoutTaskDataInput {
   comment?: String;
   createdBy?: UserUpdateOneRequiredWithoutCommentsCreatedInput;
   assets?: AssetUpdateManyInput;
-  mentions?: UserUpdateManyInput;
+  mentions?: UserUpdateManyWithoutMentionsInput;
 }
 
 export interface UserUpdateOneRequiredWithoutCommentsCreatedInput {
@@ -1815,6 +1892,7 @@ export interface UserUpdateWithoutCommentsCreatedDataInput {
   signupTokenExpiry?: Float;
   status?: UserStatus;
   subscribedTasks?: TaskUpdateManyWithoutSubscribedUsersInput;
+  mentions?: CommentUpdateManyWithoutMentionsInput;
 }
 
 export interface TaskUpdateManyWithoutSubscribedUsersInput {
@@ -1988,6 +2066,103 @@ export interface UserUpdateWithoutSubscribedTasksDataInput {
   signupToken?: String;
   signupTokenExpiry?: Float;
   status?: UserStatus;
+  mentions?: CommentUpdateManyWithoutMentionsInput;
+}
+
+export interface CommentUpdateManyWithoutMentionsInput {
+  create?:
+    | CommentCreateWithoutMentionsInput[]
+    | CommentCreateWithoutMentionsInput;
+  delete?: CommentWhereUniqueInput[] | CommentWhereUniqueInput;
+  connect?: CommentWhereUniqueInput[] | CommentWhereUniqueInput;
+  disconnect?: CommentWhereUniqueInput[] | CommentWhereUniqueInput;
+  update?:
+    | CommentUpdateWithWhereUniqueWithoutMentionsInput[]
+    | CommentUpdateWithWhereUniqueWithoutMentionsInput;
+  upsert?:
+    | CommentUpsertWithWhereUniqueWithoutMentionsInput[]
+    | CommentUpsertWithWhereUniqueWithoutMentionsInput;
+  deleteMany?: CommentScalarWhereInput[] | CommentScalarWhereInput;
+  updateMany?:
+    | CommentUpdateManyWithWhereNestedInput[]
+    | CommentUpdateManyWithWhereNestedInput;
+}
+
+export interface CommentUpdateWithWhereUniqueWithoutMentionsInput {
+  where: CommentWhereUniqueInput;
+  data: CommentUpdateWithoutMentionsDataInput;
+}
+
+export interface CommentUpdateWithoutMentionsDataInput {
+  comment?: String;
+  createdBy?: UserUpdateOneRequiredWithoutCommentsCreatedInput;
+  assets?: AssetUpdateManyInput;
+  task?: TaskUpdateOneRequiredWithoutCommentsInput;
+}
+
+export interface CommentUpsertWithWhereUniqueWithoutMentionsInput {
+  where: CommentWhereUniqueInput;
+  update: CommentUpdateWithoutMentionsDataInput;
+  create: CommentCreateWithoutMentionsInput;
+}
+
+export interface CommentScalarWhereInput {
+  id?: ID_Input;
+  id_not?: ID_Input;
+  id_in?: ID_Input[] | ID_Input;
+  id_not_in?: ID_Input[] | ID_Input;
+  id_lt?: ID_Input;
+  id_lte?: ID_Input;
+  id_gt?: ID_Input;
+  id_gte?: ID_Input;
+  id_contains?: ID_Input;
+  id_not_contains?: ID_Input;
+  id_starts_with?: ID_Input;
+  id_not_starts_with?: ID_Input;
+  id_ends_with?: ID_Input;
+  id_not_ends_with?: ID_Input;
+  comment?: String;
+  comment_not?: String;
+  comment_in?: String[] | String;
+  comment_not_in?: String[] | String;
+  comment_lt?: String;
+  comment_lte?: String;
+  comment_gt?: String;
+  comment_gte?: String;
+  comment_contains?: String;
+  comment_not_contains?: String;
+  comment_starts_with?: String;
+  comment_not_starts_with?: String;
+  comment_ends_with?: String;
+  comment_not_ends_with?: String;
+  createdAt?: DateTimeInput;
+  createdAt_not?: DateTimeInput;
+  createdAt_in?: DateTimeInput[] | DateTimeInput;
+  createdAt_not_in?: DateTimeInput[] | DateTimeInput;
+  createdAt_lt?: DateTimeInput;
+  createdAt_lte?: DateTimeInput;
+  createdAt_gt?: DateTimeInput;
+  createdAt_gte?: DateTimeInput;
+  updatedAt?: DateTimeInput;
+  updatedAt_not?: DateTimeInput;
+  updatedAt_in?: DateTimeInput[] | DateTimeInput;
+  updatedAt_not_in?: DateTimeInput[] | DateTimeInput;
+  updatedAt_lt?: DateTimeInput;
+  updatedAt_lte?: DateTimeInput;
+  updatedAt_gt?: DateTimeInput;
+  updatedAt_gte?: DateTimeInput;
+  AND?: CommentScalarWhereInput[] | CommentScalarWhereInput;
+  OR?: CommentScalarWhereInput[] | CommentScalarWhereInput;
+  NOT?: CommentScalarWhereInput[] | CommentScalarWhereInput;
+}
+
+export interface CommentUpdateManyWithWhereNestedInput {
+  where: CommentScalarWhereInput;
+  data: CommentUpdateManyDataInput;
+}
+
+export interface CommentUpdateManyDataInput {
+  comment?: String;
 }
 
 export interface UserUpsertWithWhereUniqueWithoutSubscribedTasksInput {
@@ -2346,97 +2521,56 @@ export interface UserUpsertWithoutCommentsCreatedInput {
   create: UserCreateWithoutCommentsCreatedInput;
 }
 
-export interface UserUpdateManyInput {
-  create?: UserCreateInput[] | UserCreateInput;
-  update?:
-    | UserUpdateWithWhereUniqueNestedInput[]
-    | UserUpdateWithWhereUniqueNestedInput;
-  upsert?:
-    | UserUpsertWithWhereUniqueNestedInput[]
-    | UserUpsertWithWhereUniqueNestedInput;
+export interface UserUpdateManyWithoutMentionsInput {
+  create?: UserCreateWithoutMentionsInput[] | UserCreateWithoutMentionsInput;
   delete?: UserWhereUniqueInput[] | UserWhereUniqueInput;
   connect?: UserWhereUniqueInput[] | UserWhereUniqueInput;
   disconnect?: UserWhereUniqueInput[] | UserWhereUniqueInput;
+  update?:
+    | UserUpdateWithWhereUniqueWithoutMentionsInput[]
+    | UserUpdateWithWhereUniqueWithoutMentionsInput;
+  upsert?:
+    | UserUpsertWithWhereUniqueWithoutMentionsInput[]
+    | UserUpsertWithWhereUniqueWithoutMentionsInput;
   deleteMany?: UserScalarWhereInput[] | UserScalarWhereInput;
   updateMany?:
     | UserUpdateManyWithWhereNestedInput[]
     | UserUpdateManyWithWhereNestedInput;
 }
 
-export interface UserUpdateWithWhereUniqueNestedInput {
+export interface UserUpdateWithWhereUniqueWithoutMentionsInput {
   where: UserWhereUniqueInput;
-  data: UserUpdateDataInput;
+  data: UserUpdateWithoutMentionsDataInput;
 }
 
-export interface UserUpsertWithWhereUniqueNestedInput {
+export interface UserUpdateWithoutMentionsDataInput {
+  email?: String;
+  name?: String;
+  avatar?: String;
+  slackHandle?: String;
+  tasksCreated?: TaskUpdateManyWithoutCreatedByInput;
+  tasksAssignedTo?: TaskUpdateManyWithoutAssignedToInput;
+  commentsCreated?: CommentUpdateManyWithoutCreatedByInput;
+  role?: Role;
+  password?: String;
+  resetToken?: String;
+  resetTokenExpiry?: Float;
+  signupToken?: String;
+  signupTokenExpiry?: Float;
+  status?: UserStatus;
+  subscribedTasks?: TaskUpdateManyWithoutSubscribedUsersInput;
+}
+
+export interface UserUpsertWithWhereUniqueWithoutMentionsInput {
   where: UserWhereUniqueInput;
-  update: UserUpdateDataInput;
-  create: UserCreateInput;
+  update: UserUpdateWithoutMentionsDataInput;
+  create: UserCreateWithoutMentionsInput;
 }
 
 export interface CommentUpsertWithWhereUniqueWithoutTaskInput {
   where: CommentWhereUniqueInput;
   update: CommentUpdateWithoutTaskDataInput;
   create: CommentCreateWithoutTaskInput;
-}
-
-export interface CommentScalarWhereInput {
-  id?: ID_Input;
-  id_not?: ID_Input;
-  id_in?: ID_Input[] | ID_Input;
-  id_not_in?: ID_Input[] | ID_Input;
-  id_lt?: ID_Input;
-  id_lte?: ID_Input;
-  id_gt?: ID_Input;
-  id_gte?: ID_Input;
-  id_contains?: ID_Input;
-  id_not_contains?: ID_Input;
-  id_starts_with?: ID_Input;
-  id_not_starts_with?: ID_Input;
-  id_ends_with?: ID_Input;
-  id_not_ends_with?: ID_Input;
-  comment?: String;
-  comment_not?: String;
-  comment_in?: String[] | String;
-  comment_not_in?: String[] | String;
-  comment_lt?: String;
-  comment_lte?: String;
-  comment_gt?: String;
-  comment_gte?: String;
-  comment_contains?: String;
-  comment_not_contains?: String;
-  comment_starts_with?: String;
-  comment_not_starts_with?: String;
-  comment_ends_with?: String;
-  comment_not_ends_with?: String;
-  createdAt?: DateTimeInput;
-  createdAt_not?: DateTimeInput;
-  createdAt_in?: DateTimeInput[] | DateTimeInput;
-  createdAt_not_in?: DateTimeInput[] | DateTimeInput;
-  createdAt_lt?: DateTimeInput;
-  createdAt_lte?: DateTimeInput;
-  createdAt_gt?: DateTimeInput;
-  createdAt_gte?: DateTimeInput;
-  updatedAt?: DateTimeInput;
-  updatedAt_not?: DateTimeInput;
-  updatedAt_in?: DateTimeInput[] | DateTimeInput;
-  updatedAt_not_in?: DateTimeInput[] | DateTimeInput;
-  updatedAt_lt?: DateTimeInput;
-  updatedAt_lte?: DateTimeInput;
-  updatedAt_gt?: DateTimeInput;
-  updatedAt_gte?: DateTimeInput;
-  AND?: CommentScalarWhereInput[] | CommentScalarWhereInput;
-  OR?: CommentScalarWhereInput[] | CommentScalarWhereInput;
-  NOT?: CommentScalarWhereInput[] | CommentScalarWhereInput;
-}
-
-export interface CommentUpdateManyWithWhereNestedInput {
-  where: CommentScalarWhereInput;
-  data: CommentUpdateManyDataInput;
-}
-
-export interface CommentUpdateManyDataInput {
-  comment?: String;
 }
 
 export interface TaskUpsertWithWhereUniqueWithoutAssignedToInput {
@@ -2478,6 +2612,7 @@ export interface UserUpsertNestedInput {
 }
 
 export interface AssetUpdateManyMutationInput {
+  title?: String;
   assetUrl?: String;
   assetType?: AssetType;
 }
@@ -2487,7 +2622,7 @@ export interface CommentCreateInput {
   createdBy: UserCreateOneWithoutCommentsCreatedInput;
   assets?: AssetCreateManyInput;
   task: TaskCreateOneWithoutCommentsInput;
-  mentions?: UserCreateManyInput;
+  mentions?: UserCreateManyWithoutMentionsInput;
 }
 
 export interface CommentUpdateInput {
@@ -2495,7 +2630,7 @@ export interface CommentUpdateInput {
   createdBy?: UserUpdateOneRequiredWithoutCommentsCreatedInput;
   assets?: AssetUpdateManyInput;
   task?: TaskUpdateOneRequiredWithoutCommentsInput;
-  mentions?: UserUpdateManyInput;
+  mentions?: UserUpdateManyWithoutMentionsInput;
 }
 
 export interface CommentUpdateManyMutationInput {
@@ -2602,6 +2737,7 @@ export interface UserUpdateInput {
   signupTokenExpiry?: Float;
   status?: UserStatus;
   subscribedTasks?: TaskUpdateManyWithoutSubscribedUsersInput;
+  mentions?: CommentUpdateManyWithoutMentionsInput;
 }
 
 export interface UserUpdateManyMutationInput {
@@ -2707,6 +2843,7 @@ export interface NodeNode {
 
 export interface Asset {
   id: ID_Output;
+  title: String;
   assetUrl: String;
   createdAt: DateTimeOutput;
   assetType: AssetType;
@@ -2715,6 +2852,7 @@ export interface Asset {
 export interface AssetPromise extends Promise<Asset>, Fragmentable {
   id: () => Promise<ID_Output>;
   createdBy: <T = UserPromise>() => T;
+  title: () => Promise<String>;
   assetUrl: () => Promise<String>;
   createdAt: () => Promise<DateTimeOutput>;
   assetType: () => Promise<AssetType>;
@@ -2725,6 +2863,7 @@ export interface AssetSubscription
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
   createdBy: <T = UserSubscription>() => T;
+  title: () => Promise<AsyncIterator<String>>;
   assetUrl: () => Promise<AsyncIterator<String>>;
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   assetType: () => Promise<AsyncIterator<AssetType>>;
@@ -2802,6 +2941,17 @@ export interface UserPromise extends Promise<User>, Fragmentable {
       last?: Int;
     }
   ) => T;
+  mentions: <T = FragmentableArray<Comment>>(
+    args?: {
+      where?: CommentWhereInput;
+      orderBy?: CommentOrderByInput;
+      skip?: Int;
+      after?: String;
+      before?: String;
+      first?: Int;
+      last?: Int;
+    }
+  ) => T;
 }
 
 export interface UserSubscription
@@ -2856,6 +3006,17 @@ export interface UserSubscription
     args?: {
       where?: TaskWhereInput;
       orderBy?: TaskOrderByInput;
+      skip?: Int;
+      after?: String;
+      before?: String;
+      first?: Int;
+      last?: Int;
+    }
+  ) => T;
+  mentions: <T = Promise<AsyncIterator<CommentSubscription>>>(
+    args?: {
+      where?: CommentWhereInput;
+      orderBy?: CommentOrderByInput;
       skip?: Int;
       after?: String;
       before?: String;
@@ -3631,6 +3792,7 @@ export interface AssetSubscriptionPayloadSubscription
 
 export interface AssetPreviousValues {
   id: ID_Output;
+  title: String;
   assetUrl: String;
   createdAt: DateTimeOutput;
   assetType: AssetType;
@@ -3640,6 +3802,7 @@ export interface AssetPreviousValuesPromise
   extends Promise<AssetPreviousValues>,
     Fragmentable {
   id: () => Promise<ID_Output>;
+  title: () => Promise<String>;
   assetUrl: () => Promise<String>;
   createdAt: () => Promise<DateTimeOutput>;
   assetType: () => Promise<AssetType>;
@@ -3649,6 +3812,7 @@ export interface AssetPreviousValuesSubscription
   extends Promise<AsyncIterator<AssetPreviousValues>>,
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
+  title: () => Promise<AsyncIterator<String>>;
   assetUrl: () => Promise<AsyncIterator<String>>;
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   assetType: () => Promise<AsyncIterator<AssetType>>;

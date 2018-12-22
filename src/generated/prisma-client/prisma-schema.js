@@ -30,6 +30,7 @@ type AggregateUser {
 type Asset {
   id: ID!
   createdBy: User!
+  title: String!
   assetUrl: String!
   createdAt: DateTime!
   assetType: AssetType!
@@ -43,6 +44,7 @@ type AssetConnection {
 
 input AssetCreateInput {
   createdBy: UserCreateOneInput!
+  title: String!
   assetUrl: String!
   assetType: AssetType!
 }
@@ -60,6 +62,8 @@ type AssetEdge {
 enum AssetOrderByInput {
   id_ASC
   id_DESC
+  title_ASC
+  title_DESC
   assetUrl_ASC
   assetUrl_DESC
   createdAt_ASC
@@ -72,6 +76,7 @@ enum AssetOrderByInput {
 
 type AssetPreviousValues {
   id: ID!
+  title: String!
   assetUrl: String!
   createdAt: DateTime!
   assetType: AssetType!
@@ -92,6 +97,20 @@ input AssetScalarWhereInput {
   id_not_starts_with: ID
   id_ends_with: ID
   id_not_ends_with: ID
+  title: String
+  title_not: String
+  title_in: [String!]
+  title_not_in: [String!]
+  title_lt: String
+  title_lte: String
+  title_gt: String
+  title_gte: String
+  title_contains: String
+  title_not_contains: String
+  title_starts_with: String
+  title_not_starts_with: String
+  title_ends_with: String
+  title_not_ends_with: String
   assetUrl: String
   assetUrl_not: String
   assetUrl_in: [String!]
@@ -149,17 +168,20 @@ enum AssetType {
 
 input AssetUpdateDataInput {
   createdBy: UserUpdateOneRequiredInput
+  title: String
   assetUrl: String
   assetType: AssetType
 }
 
 input AssetUpdateInput {
   createdBy: UserUpdateOneRequiredInput
+  title: String
   assetUrl: String
   assetType: AssetType
 }
 
 input AssetUpdateManyDataInput {
+  title: String
   assetUrl: String
   assetType: AssetType
 }
@@ -176,6 +198,7 @@ input AssetUpdateManyInput {
 }
 
 input AssetUpdateManyMutationInput {
+  title: String
   assetUrl: String
   assetType: AssetType
 }
@@ -212,6 +235,20 @@ input AssetWhereInput {
   id_ends_with: ID
   id_not_ends_with: ID
   createdBy: UserWhereInput
+  title: String
+  title_not: String
+  title_in: [String!]
+  title_not_in: [String!]
+  title_lt: String
+  title_lte: String
+  title_gt: String
+  title_gte: String
+  title_contains: String
+  title_not_contains: String
+  title_starts_with: String
+  title_not_starts_with: String
+  title_ends_with: String
+  title_not_ends_with: String
   assetUrl: String
   assetUrl_not: String
   assetUrl_in: [String!]
@@ -273,11 +310,16 @@ input CommentCreateInput {
   createdBy: UserCreateOneWithoutCommentsCreatedInput!
   assets: AssetCreateManyInput
   task: TaskCreateOneWithoutCommentsInput!
-  mentions: UserCreateManyInput
+  mentions: UserCreateManyWithoutMentionsInput
 }
 
 input CommentCreateManyWithoutCreatedByInput {
   create: [CommentCreateWithoutCreatedByInput!]
+  connect: [CommentWhereUniqueInput!]
+}
+
+input CommentCreateManyWithoutMentionsInput {
+  create: [CommentCreateWithoutMentionsInput!]
   connect: [CommentWhereUniqueInput!]
 }
 
@@ -290,14 +332,21 @@ input CommentCreateWithoutCreatedByInput {
   comment: String!
   assets: AssetCreateManyInput
   task: TaskCreateOneWithoutCommentsInput!
-  mentions: UserCreateManyInput
+  mentions: UserCreateManyWithoutMentionsInput
+}
+
+input CommentCreateWithoutMentionsInput {
+  comment: String!
+  createdBy: UserCreateOneWithoutCommentsCreatedInput!
+  assets: AssetCreateManyInput
+  task: TaskCreateOneWithoutCommentsInput!
 }
 
 input CommentCreateWithoutTaskInput {
   comment: String!
   createdBy: UserCreateOneWithoutCommentsCreatedInput!
   assets: AssetCreateManyInput
-  mentions: UserCreateManyInput
+  mentions: UserCreateManyWithoutMentionsInput
 }
 
 type CommentEdge {
@@ -396,7 +445,7 @@ input CommentUpdateInput {
   createdBy: UserUpdateOneRequiredWithoutCommentsCreatedInput
   assets: AssetUpdateManyInput
   task: TaskUpdateOneRequiredWithoutCommentsInput
-  mentions: UserUpdateManyInput
+  mentions: UserUpdateManyWithoutMentionsInput
 }
 
 input CommentUpdateManyDataInput {
@@ -414,6 +463,17 @@ input CommentUpdateManyWithoutCreatedByInput {
   disconnect: [CommentWhereUniqueInput!]
   update: [CommentUpdateWithWhereUniqueWithoutCreatedByInput!]
   upsert: [CommentUpsertWithWhereUniqueWithoutCreatedByInput!]
+  deleteMany: [CommentScalarWhereInput!]
+  updateMany: [CommentUpdateManyWithWhereNestedInput!]
+}
+
+input CommentUpdateManyWithoutMentionsInput {
+  create: [CommentCreateWithoutMentionsInput!]
+  delete: [CommentWhereUniqueInput!]
+  connect: [CommentWhereUniqueInput!]
+  disconnect: [CommentWhereUniqueInput!]
+  update: [CommentUpdateWithWhereUniqueWithoutMentionsInput!]
+  upsert: [CommentUpsertWithWhereUniqueWithoutMentionsInput!]
   deleteMany: [CommentScalarWhereInput!]
   updateMany: [CommentUpdateManyWithWhereNestedInput!]
 }
@@ -438,19 +498,31 @@ input CommentUpdateWithoutCreatedByDataInput {
   comment: String
   assets: AssetUpdateManyInput
   task: TaskUpdateOneRequiredWithoutCommentsInput
-  mentions: UserUpdateManyInput
+  mentions: UserUpdateManyWithoutMentionsInput
+}
+
+input CommentUpdateWithoutMentionsDataInput {
+  comment: String
+  createdBy: UserUpdateOneRequiredWithoutCommentsCreatedInput
+  assets: AssetUpdateManyInput
+  task: TaskUpdateOneRequiredWithoutCommentsInput
 }
 
 input CommentUpdateWithoutTaskDataInput {
   comment: String
   createdBy: UserUpdateOneRequiredWithoutCommentsCreatedInput
   assets: AssetUpdateManyInput
-  mentions: UserUpdateManyInput
+  mentions: UserUpdateManyWithoutMentionsInput
 }
 
 input CommentUpdateWithWhereUniqueWithoutCreatedByInput {
   where: CommentWhereUniqueInput!
   data: CommentUpdateWithoutCreatedByDataInput!
+}
+
+input CommentUpdateWithWhereUniqueWithoutMentionsInput {
+  where: CommentWhereUniqueInput!
+  data: CommentUpdateWithoutMentionsDataInput!
 }
 
 input CommentUpdateWithWhereUniqueWithoutTaskInput {
@@ -462,6 +534,12 @@ input CommentUpsertWithWhereUniqueWithoutCreatedByInput {
   where: CommentWhereUniqueInput!
   update: CommentUpdateWithoutCreatedByDataInput!
   create: CommentCreateWithoutCreatedByInput!
+}
+
+input CommentUpsertWithWhereUniqueWithoutMentionsInput {
+  where: CommentWhereUniqueInput!
+  update: CommentUpdateWithoutMentionsDataInput!
+  create: CommentCreateWithoutMentionsInput!
 }
 
 input CommentUpsertWithWhereUniqueWithoutTaskInput {
@@ -1926,6 +2004,7 @@ type User {
   signupTokenExpiry: Float
   status: UserStatus!
   subscribedTasks(where: TaskWhereInput, orderBy: TaskOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Task!]
+  mentions(where: CommentWhereInput, orderBy: CommentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Comment!]
 }
 
 type UserConnection {
@@ -1950,10 +2029,11 @@ input UserCreateInput {
   signupTokenExpiry: Float
   status: UserStatus
   subscribedTasks: TaskCreateManyWithoutSubscribedUsersInput
+  mentions: CommentCreateManyWithoutMentionsInput
 }
 
-input UserCreateManyInput {
-  create: [UserCreateInput!]
+input UserCreateManyWithoutMentionsInput {
+  create: [UserCreateWithoutMentionsInput!]
   connect: [UserWhereUniqueInput!]
 }
 
@@ -1997,6 +2077,25 @@ input UserCreateWithoutCommentsCreatedInput {
   signupTokenExpiry: Float
   status: UserStatus
   subscribedTasks: TaskCreateManyWithoutSubscribedUsersInput
+  mentions: CommentCreateManyWithoutMentionsInput
+}
+
+input UserCreateWithoutMentionsInput {
+  email: String!
+  name: String
+  avatar: String
+  slackHandle: String
+  tasksCreated: TaskCreateManyWithoutCreatedByInput
+  tasksAssignedTo: TaskCreateManyWithoutAssignedToInput
+  commentsCreated: CommentCreateManyWithoutCreatedByInput
+  role: Role
+  password: String
+  resetToken: String
+  resetTokenExpiry: Float
+  signupToken: String
+  signupTokenExpiry: Float
+  status: UserStatus
+  subscribedTasks: TaskCreateManyWithoutSubscribedUsersInput
 }
 
 input UserCreateWithoutSubscribedTasksInput {
@@ -2014,6 +2113,7 @@ input UserCreateWithoutSubscribedTasksInput {
   signupToken: String
   signupTokenExpiry: Float
   status: UserStatus
+  mentions: CommentCreateManyWithoutMentionsInput
 }
 
 input UserCreateWithoutTasksAssignedToInput {
@@ -2031,6 +2131,7 @@ input UserCreateWithoutTasksAssignedToInput {
   signupTokenExpiry: Float
   status: UserStatus
   subscribedTasks: TaskCreateManyWithoutSubscribedUsersInput
+  mentions: CommentCreateManyWithoutMentionsInput
 }
 
 input UserCreateWithoutTasksCreatedInput {
@@ -2048,6 +2149,7 @@ input UserCreateWithoutTasksCreatedInput {
   signupTokenExpiry: Float
   status: UserStatus
   subscribedTasks: TaskCreateManyWithoutSubscribedUsersInput
+  mentions: CommentCreateManyWithoutMentionsInput
 }
 
 type UserEdge {
@@ -2283,6 +2385,7 @@ input UserUpdateDataInput {
   signupTokenExpiry: Float
   status: UserStatus
   subscribedTasks: TaskUpdateManyWithoutSubscribedUsersInput
+  mentions: CommentUpdateManyWithoutMentionsInput
 }
 
 input UserUpdateInput {
@@ -2301,6 +2404,7 @@ input UserUpdateInput {
   signupTokenExpiry: Float
   status: UserStatus
   subscribedTasks: TaskUpdateManyWithoutSubscribedUsersInput
+  mentions: CommentUpdateManyWithoutMentionsInput
 }
 
 input UserUpdateManyDataInput {
@@ -2317,17 +2421,6 @@ input UserUpdateManyDataInput {
   status: UserStatus
 }
 
-input UserUpdateManyInput {
-  create: [UserCreateInput!]
-  update: [UserUpdateWithWhereUniqueNestedInput!]
-  upsert: [UserUpsertWithWhereUniqueNestedInput!]
-  delete: [UserWhereUniqueInput!]
-  connect: [UserWhereUniqueInput!]
-  disconnect: [UserWhereUniqueInput!]
-  deleteMany: [UserScalarWhereInput!]
-  updateMany: [UserUpdateManyWithWhereNestedInput!]
-}
-
 input UserUpdateManyMutationInput {
   email: String
   name: String
@@ -2340,6 +2433,17 @@ input UserUpdateManyMutationInput {
   signupToken: String
   signupTokenExpiry: Float
   status: UserStatus
+}
+
+input UserUpdateManyWithoutMentionsInput {
+  create: [UserCreateWithoutMentionsInput!]
+  delete: [UserWhereUniqueInput!]
+  connect: [UserWhereUniqueInput!]
+  disconnect: [UserWhereUniqueInput!]
+  update: [UserUpdateWithWhereUniqueWithoutMentionsInput!]
+  upsert: [UserUpsertWithWhereUniqueWithoutMentionsInput!]
+  deleteMany: [UserScalarWhereInput!]
+  updateMany: [UserUpdateManyWithWhereNestedInput!]
 }
 
 input UserUpdateManyWithoutSubscribedTasksInput {
@@ -2403,6 +2507,25 @@ input UserUpdateWithoutCommentsCreatedDataInput {
   signupTokenExpiry: Float
   status: UserStatus
   subscribedTasks: TaskUpdateManyWithoutSubscribedUsersInput
+  mentions: CommentUpdateManyWithoutMentionsInput
+}
+
+input UserUpdateWithoutMentionsDataInput {
+  email: String
+  name: String
+  avatar: String
+  slackHandle: String
+  tasksCreated: TaskUpdateManyWithoutCreatedByInput
+  tasksAssignedTo: TaskUpdateManyWithoutAssignedToInput
+  commentsCreated: CommentUpdateManyWithoutCreatedByInput
+  role: Role
+  password: String
+  resetToken: String
+  resetTokenExpiry: Float
+  signupToken: String
+  signupTokenExpiry: Float
+  status: UserStatus
+  subscribedTasks: TaskUpdateManyWithoutSubscribedUsersInput
 }
 
 input UserUpdateWithoutSubscribedTasksDataInput {
@@ -2420,6 +2543,7 @@ input UserUpdateWithoutSubscribedTasksDataInput {
   signupToken: String
   signupTokenExpiry: Float
   status: UserStatus
+  mentions: CommentUpdateManyWithoutMentionsInput
 }
 
 input UserUpdateWithoutTasksAssignedToDataInput {
@@ -2437,6 +2561,7 @@ input UserUpdateWithoutTasksAssignedToDataInput {
   signupTokenExpiry: Float
   status: UserStatus
   subscribedTasks: TaskUpdateManyWithoutSubscribedUsersInput
+  mentions: CommentUpdateManyWithoutMentionsInput
 }
 
 input UserUpdateWithoutTasksCreatedDataInput {
@@ -2454,11 +2579,12 @@ input UserUpdateWithoutTasksCreatedDataInput {
   signupTokenExpiry: Float
   status: UserStatus
   subscribedTasks: TaskUpdateManyWithoutSubscribedUsersInput
+  mentions: CommentUpdateManyWithoutMentionsInput
 }
 
-input UserUpdateWithWhereUniqueNestedInput {
+input UserUpdateWithWhereUniqueWithoutMentionsInput {
   where: UserWhereUniqueInput!
-  data: UserUpdateDataInput!
+  data: UserUpdateWithoutMentionsDataInput!
 }
 
 input UserUpdateWithWhereUniqueWithoutSubscribedTasksInput {
@@ -2486,10 +2612,10 @@ input UserUpsertWithoutTasksCreatedInput {
   create: UserCreateWithoutTasksCreatedInput!
 }
 
-input UserUpsertWithWhereUniqueNestedInput {
+input UserUpsertWithWhereUniqueWithoutMentionsInput {
   where: UserWhereUniqueInput!
-  update: UserUpdateDataInput!
-  create: UserCreateInput!
+  update: UserUpdateWithoutMentionsDataInput!
+  create: UserCreateWithoutMentionsInput!
 }
 
 input UserUpsertWithWhereUniqueWithoutSubscribedTasksInput {
@@ -2647,6 +2773,9 @@ input UserWhereInput {
   subscribedTasks_every: TaskWhereInput
   subscribedTasks_some: TaskWhereInput
   subscribedTasks_none: TaskWhereInput
+  mentions_every: CommentWhereInput
+  mentions_some: CommentWhereInput
+  mentions_none: CommentWhereInput
   AND: [UserWhereInput!]
   OR: [UserWhereInput!]
   NOT: [UserWhereInput!]
