@@ -30,6 +30,7 @@ type AggregateUser {
 type Asset {
   id: ID!
   createdBy: User!
+  title: String!
   assetUrl: String!
   createdAt: DateTime!
   assetType: AssetType!
@@ -43,6 +44,7 @@ type AssetConnection {
 
 input AssetCreateInput {
   createdBy: UserCreateOneInput!
+  title: String!
   assetUrl: String!
   assetType: AssetType!
 }
@@ -60,6 +62,8 @@ type AssetEdge {
 enum AssetOrderByInput {
   id_ASC
   id_DESC
+  title_ASC
+  title_DESC
   assetUrl_ASC
   assetUrl_DESC
   createdAt_ASC
@@ -72,6 +76,7 @@ enum AssetOrderByInput {
 
 type AssetPreviousValues {
   id: ID!
+  title: String!
   assetUrl: String!
   createdAt: DateTime!
   assetType: AssetType!
@@ -102,29 +107,26 @@ enum AssetType {
 }
 
 input AssetUpdateDataInput {
-  createdBy: UserUpdateOneRequiredInput
+  createdBy: UserUpdateOneInput
+  title: String
   assetUrl: String
   assetType: AssetType
 }
 
 input AssetUpdateInput {
-  createdBy: UserUpdateOneRequiredInput
+  createdBy: UserUpdateOneInput
+  title: String
   assetUrl: String
   assetType: AssetType
 }
 
 input AssetUpdateManyInput {
   create: [AssetCreateInput!]
-  update: [AssetUpdateWithWhereUniqueNestedInput!]
-  upsert: [AssetUpsertWithWhereUniqueNestedInput!]
   delete: [AssetWhereUniqueInput!]
   connect: [AssetWhereUniqueInput!]
   disconnect: [AssetWhereUniqueInput!]
-}
-
-input AssetUpdateManyMutationInput {
-  assetUrl: String
-  assetType: AssetType
+  update: [AssetUpdateWithWhereUniqueNestedInput!]
+  upsert: [AssetUpsertWithWhereUniqueNestedInput!]
 }
 
 input AssetUpdateWithWhereUniqueNestedInput {
@@ -154,6 +156,20 @@ input AssetWhereInput {
   id_ends_with: ID
   id_not_ends_with: ID
   createdBy: UserWhereInput
+  title: String
+  title_not: String
+  title_in: [String!]
+  title_not_in: [String!]
+  title_lt: String
+  title_lte: String
+  title_gt: String
+  title_gte: String
+  title_contains: String
+  title_not_contains: String
+  title_starts_with: String
+  title_not_starts_with: String
+  title_ends_with: String
+  title_not_ends_with: String
   assetUrl: String
   assetUrl_not: String
   assetUrl_in: [String!]
@@ -215,11 +231,16 @@ input CommentCreateInput {
   createdBy: UserCreateOneWithoutCommentsCreatedInput!
   assets: AssetCreateManyInput
   task: TaskCreateOneWithoutCommentsInput!
-  mentions: UserCreateManyInput
+  mentions: UserCreateManyWithoutMentionsInput
 }
 
 input CommentCreateManyWithoutCreatedByInput {
   create: [CommentCreateWithoutCreatedByInput!]
+  connect: [CommentWhereUniqueInput!]
+}
+
+input CommentCreateManyWithoutMentionsInput {
+  create: [CommentCreateWithoutMentionsInput!]
   connect: [CommentWhereUniqueInput!]
 }
 
@@ -232,14 +253,21 @@ input CommentCreateWithoutCreatedByInput {
   comment: String!
   assets: AssetCreateManyInput
   task: TaskCreateOneWithoutCommentsInput!
-  mentions: UserCreateManyInput
+  mentions: UserCreateManyWithoutMentionsInput
+}
+
+input CommentCreateWithoutMentionsInput {
+  comment: String!
+  createdBy: UserCreateOneWithoutCommentsCreatedInput!
+  assets: AssetCreateManyInput
+  task: TaskCreateOneWithoutCommentsInput!
 }
 
 input CommentCreateWithoutTaskInput {
   comment: String!
   createdBy: UserCreateOneWithoutCommentsCreatedInput!
   assets: AssetCreateManyInput
-  mentions: UserCreateManyInput
+  mentions: UserCreateManyWithoutMentionsInput
 }
 
 type CommentEdge {
@@ -285,14 +313,10 @@ input CommentSubscriptionWhereInput {
 
 input CommentUpdateInput {
   comment: String
-  createdBy: UserUpdateOneRequiredWithoutCommentsCreatedInput
+  createdBy: UserUpdateOneWithoutCommentsCreatedInput
   assets: AssetUpdateManyInput
-  task: TaskUpdateOneRequiredWithoutCommentsInput
-  mentions: UserUpdateManyInput
-}
-
-input CommentUpdateManyMutationInput {
-  comment: String
+  task: TaskUpdateOneWithoutCommentsInput
+  mentions: UserUpdateManyWithoutMentionsInput
 }
 
 input CommentUpdateManyWithoutCreatedByInput {
@@ -302,6 +326,15 @@ input CommentUpdateManyWithoutCreatedByInput {
   disconnect: [CommentWhereUniqueInput!]
   update: [CommentUpdateWithWhereUniqueWithoutCreatedByInput!]
   upsert: [CommentUpsertWithWhereUniqueWithoutCreatedByInput!]
+}
+
+input CommentUpdateManyWithoutMentionsInput {
+  create: [CommentCreateWithoutMentionsInput!]
+  delete: [CommentWhereUniqueInput!]
+  connect: [CommentWhereUniqueInput!]
+  disconnect: [CommentWhereUniqueInput!]
+  update: [CommentUpdateWithWhereUniqueWithoutMentionsInput!]
+  upsert: [CommentUpsertWithWhereUniqueWithoutMentionsInput!]
 }
 
 input CommentUpdateManyWithoutTaskInput {
@@ -316,20 +349,32 @@ input CommentUpdateManyWithoutTaskInput {
 input CommentUpdateWithoutCreatedByDataInput {
   comment: String
   assets: AssetUpdateManyInput
-  task: TaskUpdateOneRequiredWithoutCommentsInput
-  mentions: UserUpdateManyInput
+  task: TaskUpdateOneWithoutCommentsInput
+  mentions: UserUpdateManyWithoutMentionsInput
+}
+
+input CommentUpdateWithoutMentionsDataInput {
+  comment: String
+  createdBy: UserUpdateOneWithoutCommentsCreatedInput
+  assets: AssetUpdateManyInput
+  task: TaskUpdateOneWithoutCommentsInput
 }
 
 input CommentUpdateWithoutTaskDataInput {
   comment: String
-  createdBy: UserUpdateOneRequiredWithoutCommentsCreatedInput
+  createdBy: UserUpdateOneWithoutCommentsCreatedInput
   assets: AssetUpdateManyInput
-  mentions: UserUpdateManyInput
+  mentions: UserUpdateManyWithoutMentionsInput
 }
 
 input CommentUpdateWithWhereUniqueWithoutCreatedByInput {
   where: CommentWhereUniqueInput!
   data: CommentUpdateWithoutCreatedByDataInput!
+}
+
+input CommentUpdateWithWhereUniqueWithoutMentionsInput {
+  where: CommentWhereUniqueInput!
+  data: CommentUpdateWithoutMentionsDataInput!
 }
 
 input CommentUpdateWithWhereUniqueWithoutTaskInput {
@@ -341,6 +386,12 @@ input CommentUpsertWithWhereUniqueWithoutCreatedByInput {
   where: CommentWhereUniqueInput!
   update: CommentUpdateWithoutCreatedByDataInput!
   create: CommentCreateWithoutCreatedByInput!
+}
+
+input CommentUpsertWithWhereUniqueWithoutMentionsInput {
+  where: CommentWhereUniqueInput!
+  update: CommentUpdateWithoutMentionsDataInput!
+  create: CommentCreateWithoutMentionsInput!
 }
 
 input CommentUpsertWithWhereUniqueWithoutTaskInput {
@@ -486,29 +537,23 @@ input CustomFieldUpdateDataInput {
   fieldName: String
   fieldType: FieldType
   fieldValue: String
-  taskListField: TaskListFieldUpdateOneRequiredInput
+  taskListField: TaskListFieldUpdateOneInput
 }
 
 input CustomFieldUpdateInput {
   fieldName: String
   fieldType: FieldType
   fieldValue: String
-  taskListField: TaskListFieldUpdateOneRequiredInput
+  taskListField: TaskListFieldUpdateOneInput
 }
 
 input CustomFieldUpdateManyInput {
   create: [CustomFieldCreateInput!]
-  update: [CustomFieldUpdateWithWhereUniqueNestedInput!]
-  upsert: [CustomFieldUpsertWithWhereUniqueNestedInput!]
   delete: [CustomFieldWhereUniqueInput!]
   connect: [CustomFieldWhereUniqueInput!]
   disconnect: [CustomFieldWhereUniqueInput!]
-}
-
-input CustomFieldUpdateManyMutationInput {
-  fieldName: String
-  fieldType: FieldType
-  fieldValue: String
+  update: [CustomFieldUpdateWithWhereUniqueNestedInput!]
+  upsert: [CustomFieldUpsertWithWhereUniqueNestedInput!]
 }
 
 input CustomFieldUpdateWithWhereUniqueNestedInput {
@@ -591,48 +636,48 @@ enum FieldType {
 scalar Long
 
 type Mutation {
-  createAsset(data: AssetCreateInput!): Asset!
-  updateAsset(data: AssetUpdateInput!, where: AssetWhereUniqueInput!): Asset
-  updateManyAssets(data: AssetUpdateManyMutationInput!, where: AssetWhereInput): BatchPayload!
-  upsertAsset(where: AssetWhereUniqueInput!, create: AssetCreateInput!, update: AssetUpdateInput!): Asset!
-  deleteAsset(where: AssetWhereUniqueInput!): Asset
-  deleteManyAssets(where: AssetWhereInput): BatchPayload!
-  createComment(data: CommentCreateInput!): Comment!
-  updateComment(data: CommentUpdateInput!, where: CommentWhereUniqueInput!): Comment
-  updateManyComments(data: CommentUpdateManyMutationInput!, where: CommentWhereInput): BatchPayload!
-  upsertComment(where: CommentWhereUniqueInput!, create: CommentCreateInput!, update: CommentUpdateInput!): Comment!
-  deleteComment(where: CommentWhereUniqueInput!): Comment
-  deleteManyComments(where: CommentWhereInput): BatchPayload!
-  createCustomField(data: CustomFieldCreateInput!): CustomField!
-  updateCustomField(data: CustomFieldUpdateInput!, where: CustomFieldWhereUniqueInput!): CustomField
-  updateManyCustomFields(data: CustomFieldUpdateManyMutationInput!, where: CustomFieldWhereInput): BatchPayload!
-  upsertCustomField(where: CustomFieldWhereUniqueInput!, create: CustomFieldCreateInput!, update: CustomFieldUpdateInput!): CustomField!
-  deleteCustomField(where: CustomFieldWhereUniqueInput!): CustomField
-  deleteManyCustomFields(where: CustomFieldWhereInput): BatchPayload!
+  createUser(data: UserCreateInput!): User!
+  updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
+  updateManyUsers(data: UserUpdateInput!, where: UserWhereInput): BatchPayload!
+  upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
+  deleteUser(where: UserWhereUniqueInput!): User
+  deleteManyUsers(where: UserWhereInput): BatchPayload!
   createTask(data: TaskCreateInput!): Task!
   updateTask(data: TaskUpdateInput!, where: TaskWhereUniqueInput!): Task
-  updateManyTasks(data: TaskUpdateManyMutationInput!, where: TaskWhereInput): BatchPayload!
+  updateManyTasks(data: TaskUpdateInput!, where: TaskWhereInput): BatchPayload!
   upsertTask(where: TaskWhereUniqueInput!, create: TaskCreateInput!, update: TaskUpdateInput!): Task!
   deleteTask(where: TaskWhereUniqueInput!): Task
   deleteManyTasks(where: TaskWhereInput): BatchPayload!
+  createCustomField(data: CustomFieldCreateInput!): CustomField!
+  updateCustomField(data: CustomFieldUpdateInput!, where: CustomFieldWhereUniqueInput!): CustomField
+  updateManyCustomFields(data: CustomFieldUpdateInput!, where: CustomFieldWhereInput): BatchPayload!
+  upsertCustomField(where: CustomFieldWhereUniqueInput!, create: CustomFieldCreateInput!, update: CustomFieldUpdateInput!): CustomField!
+  deleteCustomField(where: CustomFieldWhereUniqueInput!): CustomField
+  deleteManyCustomFields(where: CustomFieldWhereInput): BatchPayload!
   createTaskList(data: TaskListCreateInput!): TaskList!
   updateTaskList(data: TaskListUpdateInput!, where: TaskListWhereUniqueInput!): TaskList
-  updateManyTaskLists(data: TaskListUpdateManyMutationInput!, where: TaskListWhereInput): BatchPayload!
+  updateManyTaskLists(data: TaskListUpdateInput!, where: TaskListWhereInput): BatchPayload!
   upsertTaskList(where: TaskListWhereUniqueInput!, create: TaskListCreateInput!, update: TaskListUpdateInput!): TaskList!
   deleteTaskList(where: TaskListWhereUniqueInput!): TaskList
   deleteManyTaskLists(where: TaskListWhereInput): BatchPayload!
   createTaskListField(data: TaskListFieldCreateInput!): TaskListField!
   updateTaskListField(data: TaskListFieldUpdateInput!, where: TaskListFieldWhereUniqueInput!): TaskListField
-  updateManyTaskListFields(data: TaskListFieldUpdateManyMutationInput!, where: TaskListFieldWhereInput): BatchPayload!
+  updateManyTaskListFields(data: TaskListFieldUpdateInput!, where: TaskListFieldWhereInput): BatchPayload!
   upsertTaskListField(where: TaskListFieldWhereUniqueInput!, create: TaskListFieldCreateInput!, update: TaskListFieldUpdateInput!): TaskListField!
   deleteTaskListField(where: TaskListFieldWhereUniqueInput!): TaskListField
   deleteManyTaskListFields(where: TaskListFieldWhereInput): BatchPayload!
-  createUser(data: UserCreateInput!): User!
-  updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
-  updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
-  upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
-  deleteUser(where: UserWhereUniqueInput!): User
-  deleteManyUsers(where: UserWhereInput): BatchPayload!
+  createComment(data: CommentCreateInput!): Comment!
+  updateComment(data: CommentUpdateInput!, where: CommentWhereUniqueInput!): Comment
+  updateManyComments(data: CommentUpdateInput!, where: CommentWhereInput): BatchPayload!
+  upsertComment(where: CommentWhereUniqueInput!, create: CommentCreateInput!, update: CommentUpdateInput!): Comment!
+  deleteComment(where: CommentWhereUniqueInput!): Comment
+  deleteManyComments(where: CommentWhereInput): BatchPayload!
+  createAsset(data: AssetCreateInput!): Asset!
+  updateAsset(data: AssetUpdateInput!, where: AssetWhereUniqueInput!): Asset
+  updateManyAssets(data: AssetUpdateInput!, where: AssetWhereInput): BatchPayload!
+  upsertAsset(where: AssetWhereUniqueInput!, create: AssetCreateInput!, update: AssetUpdateInput!): Asset!
+  deleteAsset(where: AssetWhereUniqueInput!): Asset
+  deleteManyAssets(where: AssetWhereInput): BatchPayload!
 }
 
 enum MutationType {
@@ -653,27 +698,27 @@ type PageInfo {
 }
 
 type Query {
-  asset(where: AssetWhereUniqueInput!): Asset
-  assets(where: AssetWhereInput, orderBy: AssetOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Asset]!
-  assetsConnection(where: AssetWhereInput, orderBy: AssetOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): AssetConnection!
-  comment(where: CommentWhereUniqueInput!): Comment
-  comments(where: CommentWhereInput, orderBy: CommentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Comment]!
-  commentsConnection(where: CommentWhereInput, orderBy: CommentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): CommentConnection!
-  customField(where: CustomFieldWhereUniqueInput!): CustomField
-  customFields(where: CustomFieldWhereInput, orderBy: CustomFieldOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [CustomField]!
-  customFieldsConnection(where: CustomFieldWhereInput, orderBy: CustomFieldOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): CustomFieldConnection!
+  user(where: UserWhereUniqueInput!): User
+  users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
+  usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
   task(where: TaskWhereUniqueInput!): Task
   tasks(where: TaskWhereInput, orderBy: TaskOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Task]!
   tasksConnection(where: TaskWhereInput, orderBy: TaskOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): TaskConnection!
+  customField(where: CustomFieldWhereUniqueInput!): CustomField
+  customFields(where: CustomFieldWhereInput, orderBy: CustomFieldOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [CustomField]!
+  customFieldsConnection(where: CustomFieldWhereInput, orderBy: CustomFieldOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): CustomFieldConnection!
   taskList(where: TaskListWhereUniqueInput!): TaskList
   taskLists(where: TaskListWhereInput, orderBy: TaskListOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [TaskList]!
   taskListsConnection(where: TaskListWhereInput, orderBy: TaskListOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): TaskListConnection!
   taskListField(where: TaskListFieldWhereUniqueInput!): TaskListField
   taskListFields(where: TaskListFieldWhereInput, orderBy: TaskListFieldOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [TaskListField]!
   taskListFieldsConnection(where: TaskListFieldWhereInput, orderBy: TaskListFieldOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): TaskListFieldConnection!
-  user(where: UserWhereUniqueInput!): User
-  users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
-  usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
+  comment(where: CommentWhereUniqueInput!): Comment
+  comments(where: CommentWhereInput, orderBy: CommentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Comment]!
+  commentsConnection(where: CommentWhereInput, orderBy: CommentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): CommentConnection!
+  asset(where: AssetWhereUniqueInput!): Asset
+  assets(where: AssetWhereInput, orderBy: AssetOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Asset]!
+  assetsConnection(where: AssetWhereInput, orderBy: AssetOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): AssetConnection!
   node(id: ID!): Node
 }
 
@@ -684,13 +729,13 @@ enum Role {
 }
 
 type Subscription {
-  asset(where: AssetSubscriptionWhereInput): AssetSubscriptionPayload
-  comment(where: CommentSubscriptionWhereInput): CommentSubscriptionPayload
-  customField(where: CustomFieldSubscriptionWhereInput): CustomFieldSubscriptionPayload
+  user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
   task(where: TaskSubscriptionWhereInput): TaskSubscriptionPayload
+  customField(where: CustomFieldSubscriptionWhereInput): CustomFieldSubscriptionPayload
   taskList(where: TaskListSubscriptionWhereInput): TaskListSubscriptionPayload
   taskListField(where: TaskListFieldSubscriptionWhereInput): TaskListFieldSubscriptionPayload
-  user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
+  comment(where: CommentSubscriptionWhereInput): CommentSubscriptionPayload
+  asset(where: AssetSubscriptionWhereInput): AssetSubscriptionPayload
 }
 
 type Task {
@@ -979,11 +1024,6 @@ input TaskListFieldUpdateInput {
   taskList: TaskListUpdateOneWithoutTaskListFieldsInput
 }
 
-input TaskListFieldUpdateManyMutationInput {
-  fieldName: String
-  fieldType: FieldType
-}
-
 input TaskListFieldUpdateManyWithoutTaskListInput {
   create: [TaskListFieldCreateWithoutTaskListInput!]
   delete: [TaskListFieldWhereUniqueInput!]
@@ -993,10 +1033,11 @@ input TaskListFieldUpdateManyWithoutTaskListInput {
   upsert: [TaskListFieldUpsertWithWhereUniqueWithoutTaskListInput!]
 }
 
-input TaskListFieldUpdateOneRequiredInput {
+input TaskListFieldUpdateOneInput {
   create: TaskListFieldCreateInput
   update: TaskListFieldUpdateDataInput
   upsert: TaskListFieldUpsertNestedInput
+  delete: Boolean
   connect: TaskListFieldWhereUniqueInput
 }
 
@@ -1112,25 +1153,20 @@ input TaskListUpdateInput {
   slug: String
 }
 
-input TaskListUpdateManyMutationInput {
-  name: String
-  description: String
-  slug: String
-}
-
-input TaskListUpdateOneRequiredWithoutTasksInput {
-  create: TaskListCreateWithoutTasksInput
-  update: TaskListUpdateWithoutTasksDataInput
-  upsert: TaskListUpsertWithoutTasksInput
-  connect: TaskListWhereUniqueInput
-}
-
 input TaskListUpdateOneWithoutTaskListFieldsInput {
   create: TaskListCreateWithoutTaskListFieldsInput
   update: TaskListUpdateWithoutTaskListFieldsDataInput
   upsert: TaskListUpsertWithoutTaskListFieldsInput
   delete: Boolean
   disconnect: Boolean
+  connect: TaskListWhereUniqueInput
+}
+
+input TaskListUpdateOneWithoutTasksInput {
+  create: TaskListCreateWithoutTasksInput
+  update: TaskListUpdateWithoutTasksDataInput
+  upsert: TaskListUpsertWithoutTasksInput
+  delete: Boolean
   connect: TaskListWhereUniqueInput
 }
 
@@ -1289,26 +1325,18 @@ input TaskSubscriptionWhereInput {
 }
 
 input TaskUpdateInput {
-  createdBy: UserUpdateOneRequiredWithoutTasksCreatedInput
+  createdBy: UserUpdateOneWithoutTasksCreatedInput
   assignedTo: UserUpdateOneWithoutTasksAssignedToInput
   title: String
   description: String
   assets: AssetUpdateManyInput
-  taskList: TaskListUpdateOneRequiredWithoutTasksInput
+  taskList: TaskListUpdateOneWithoutTasksInput
   comments: CommentUpdateManyWithoutTaskInput
   dueDate: DateTime
   due: TaskDue
   customFields: CustomFieldUpdateManyInput
   status: TaskStatus
   subscribedUsers: UserUpdateManyWithoutSubscribedTasksInput
-}
-
-input TaskUpdateManyMutationInput {
-  title: String
-  description: String
-  dueDate: DateTime
-  due: TaskDue
-  status: TaskStatus
 }
 
 input TaskUpdateManyWithoutAssignedToInput {
@@ -1347,19 +1375,20 @@ input TaskUpdateManyWithoutTaskListInput {
   upsert: [TaskUpsertWithWhereUniqueWithoutTaskListInput!]
 }
 
-input TaskUpdateOneRequiredWithoutCommentsInput {
+input TaskUpdateOneWithoutCommentsInput {
   create: TaskCreateWithoutCommentsInput
   update: TaskUpdateWithoutCommentsDataInput
   upsert: TaskUpsertWithoutCommentsInput
+  delete: Boolean
   connect: TaskWhereUniqueInput
 }
 
 input TaskUpdateWithoutAssignedToDataInput {
-  createdBy: UserUpdateOneRequiredWithoutTasksCreatedInput
+  createdBy: UserUpdateOneWithoutTasksCreatedInput
   title: String
   description: String
   assets: AssetUpdateManyInput
-  taskList: TaskListUpdateOneRequiredWithoutTasksInput
+  taskList: TaskListUpdateOneWithoutTasksInput
   comments: CommentUpdateManyWithoutTaskInput
   dueDate: DateTime
   due: TaskDue
@@ -1369,12 +1398,12 @@ input TaskUpdateWithoutAssignedToDataInput {
 }
 
 input TaskUpdateWithoutCommentsDataInput {
-  createdBy: UserUpdateOneRequiredWithoutTasksCreatedInput
+  createdBy: UserUpdateOneWithoutTasksCreatedInput
   assignedTo: UserUpdateOneWithoutTasksAssignedToInput
   title: String
   description: String
   assets: AssetUpdateManyInput
-  taskList: TaskListUpdateOneRequiredWithoutTasksInput
+  taskList: TaskListUpdateOneWithoutTasksInput
   dueDate: DateTime
   due: TaskDue
   customFields: CustomFieldUpdateManyInput
@@ -1387,7 +1416,7 @@ input TaskUpdateWithoutCreatedByDataInput {
   title: String
   description: String
   assets: AssetUpdateManyInput
-  taskList: TaskListUpdateOneRequiredWithoutTasksInput
+  taskList: TaskListUpdateOneWithoutTasksInput
   comments: CommentUpdateManyWithoutTaskInput
   dueDate: DateTime
   due: TaskDue
@@ -1397,12 +1426,12 @@ input TaskUpdateWithoutCreatedByDataInput {
 }
 
 input TaskUpdateWithoutSubscribedUsersDataInput {
-  createdBy: UserUpdateOneRequiredWithoutTasksCreatedInput
+  createdBy: UserUpdateOneWithoutTasksCreatedInput
   assignedTo: UserUpdateOneWithoutTasksAssignedToInput
   title: String
   description: String
   assets: AssetUpdateManyInput
-  taskList: TaskListUpdateOneRequiredWithoutTasksInput
+  taskList: TaskListUpdateOneWithoutTasksInput
   comments: CommentUpdateManyWithoutTaskInput
   dueDate: DateTime
   due: TaskDue
@@ -1411,7 +1440,7 @@ input TaskUpdateWithoutSubscribedUsersDataInput {
 }
 
 input TaskUpdateWithoutTaskListDataInput {
-  createdBy: UserUpdateOneRequiredWithoutTasksCreatedInput
+  createdBy: UserUpdateOneWithoutTasksCreatedInput
   assignedTo: UserUpdateOneWithoutTasksAssignedToInput
   title: String
   description: String
@@ -1589,6 +1618,7 @@ type User {
   signupTokenExpiry: Float
   status: UserStatus!
   subscribedTasks(where: TaskWhereInput, orderBy: TaskOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Task!]
+  mentions(where: CommentWhereInput, orderBy: CommentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Comment!]
 }
 
 type UserConnection {
@@ -1613,10 +1643,11 @@ input UserCreateInput {
   signupTokenExpiry: Float
   status: UserStatus
   subscribedTasks: TaskCreateManyWithoutSubscribedUsersInput
+  mentions: CommentCreateManyWithoutMentionsInput
 }
 
-input UserCreateManyInput {
-  create: [UserCreateInput!]
+input UserCreateManyWithoutMentionsInput {
+  create: [UserCreateWithoutMentionsInput!]
   connect: [UserWhereUniqueInput!]
 }
 
@@ -1660,6 +1691,25 @@ input UserCreateWithoutCommentsCreatedInput {
   signupTokenExpiry: Float
   status: UserStatus
   subscribedTasks: TaskCreateManyWithoutSubscribedUsersInput
+  mentions: CommentCreateManyWithoutMentionsInput
+}
+
+input UserCreateWithoutMentionsInput {
+  email: String!
+  name: String
+  avatar: String
+  slackHandle: String
+  tasksCreated: TaskCreateManyWithoutCreatedByInput
+  tasksAssignedTo: TaskCreateManyWithoutAssignedToInput
+  commentsCreated: CommentCreateManyWithoutCreatedByInput
+  role: Role
+  password: String
+  resetToken: String
+  resetTokenExpiry: Float
+  signupToken: String
+  signupTokenExpiry: Float
+  status: UserStatus
+  subscribedTasks: TaskCreateManyWithoutSubscribedUsersInput
 }
 
 input UserCreateWithoutSubscribedTasksInput {
@@ -1677,6 +1727,7 @@ input UserCreateWithoutSubscribedTasksInput {
   signupToken: String
   signupTokenExpiry: Float
   status: UserStatus
+  mentions: CommentCreateManyWithoutMentionsInput
 }
 
 input UserCreateWithoutTasksAssignedToInput {
@@ -1694,6 +1745,7 @@ input UserCreateWithoutTasksAssignedToInput {
   signupTokenExpiry: Float
   status: UserStatus
   subscribedTasks: TaskCreateManyWithoutSubscribedUsersInput
+  mentions: CommentCreateManyWithoutMentionsInput
 }
 
 input UserCreateWithoutTasksCreatedInput {
@@ -1711,6 +1763,7 @@ input UserCreateWithoutTasksCreatedInput {
   signupTokenExpiry: Float
   status: UserStatus
   subscribedTasks: TaskCreateManyWithoutSubscribedUsersInput
+  mentions: CommentCreateManyWithoutMentionsInput
 }
 
 type UserEdge {
@@ -1804,6 +1857,7 @@ input UserUpdateDataInput {
   signupTokenExpiry: Float
   status: UserStatus
   subscribedTasks: TaskUpdateManyWithoutSubscribedUsersInput
+  mentions: CommentUpdateManyWithoutMentionsInput
 }
 
 input UserUpdateInput {
@@ -1822,29 +1876,16 @@ input UserUpdateInput {
   signupTokenExpiry: Float
   status: UserStatus
   subscribedTasks: TaskUpdateManyWithoutSubscribedUsersInput
+  mentions: CommentUpdateManyWithoutMentionsInput
 }
 
-input UserUpdateManyInput {
-  create: [UserCreateInput!]
-  update: [UserUpdateWithWhereUniqueNestedInput!]
-  upsert: [UserUpsertWithWhereUniqueNestedInput!]
+input UserUpdateManyWithoutMentionsInput {
+  create: [UserCreateWithoutMentionsInput!]
   delete: [UserWhereUniqueInput!]
   connect: [UserWhereUniqueInput!]
   disconnect: [UserWhereUniqueInput!]
-}
-
-input UserUpdateManyMutationInput {
-  email: String
-  name: String
-  avatar: String
-  slackHandle: String
-  role: Role
-  password: String
-  resetToken: String
-  resetTokenExpiry: Float
-  signupToken: String
-  signupTokenExpiry: Float
-  status: UserStatus
+  update: [UserUpdateWithWhereUniqueWithoutMentionsInput!]
+  upsert: [UserUpsertWithWhereUniqueWithoutMentionsInput!]
 }
 
 input UserUpdateManyWithoutSubscribedTasksInput {
@@ -1856,24 +1897,19 @@ input UserUpdateManyWithoutSubscribedTasksInput {
   upsert: [UserUpsertWithWhereUniqueWithoutSubscribedTasksInput!]
 }
 
-input UserUpdateOneRequiredInput {
+input UserUpdateOneInput {
   create: UserCreateInput
   update: UserUpdateDataInput
   upsert: UserUpsertNestedInput
+  delete: Boolean
   connect: UserWhereUniqueInput
 }
 
-input UserUpdateOneRequiredWithoutCommentsCreatedInput {
+input UserUpdateOneWithoutCommentsCreatedInput {
   create: UserCreateWithoutCommentsCreatedInput
   update: UserUpdateWithoutCommentsCreatedDataInput
   upsert: UserUpsertWithoutCommentsCreatedInput
-  connect: UserWhereUniqueInput
-}
-
-input UserUpdateOneRequiredWithoutTasksCreatedInput {
-  create: UserCreateWithoutTasksCreatedInput
-  update: UserUpdateWithoutTasksCreatedDataInput
-  upsert: UserUpsertWithoutTasksCreatedInput
+  delete: Boolean
   connect: UserWhereUniqueInput
 }
 
@@ -1886,6 +1922,14 @@ input UserUpdateOneWithoutTasksAssignedToInput {
   connect: UserWhereUniqueInput
 }
 
+input UserUpdateOneWithoutTasksCreatedInput {
+  create: UserCreateWithoutTasksCreatedInput
+  update: UserUpdateWithoutTasksCreatedDataInput
+  upsert: UserUpsertWithoutTasksCreatedInput
+  delete: Boolean
+  connect: UserWhereUniqueInput
+}
+
 input UserUpdateWithoutCommentsCreatedDataInput {
   email: String
   name: String
@@ -1893,6 +1937,25 @@ input UserUpdateWithoutCommentsCreatedDataInput {
   slackHandle: String
   tasksCreated: TaskUpdateManyWithoutCreatedByInput
   tasksAssignedTo: TaskUpdateManyWithoutAssignedToInput
+  role: Role
+  password: String
+  resetToken: String
+  resetTokenExpiry: Float
+  signupToken: String
+  signupTokenExpiry: Float
+  status: UserStatus
+  subscribedTasks: TaskUpdateManyWithoutSubscribedUsersInput
+  mentions: CommentUpdateManyWithoutMentionsInput
+}
+
+input UserUpdateWithoutMentionsDataInput {
+  email: String
+  name: String
+  avatar: String
+  slackHandle: String
+  tasksCreated: TaskUpdateManyWithoutCreatedByInput
+  tasksAssignedTo: TaskUpdateManyWithoutAssignedToInput
+  commentsCreated: CommentUpdateManyWithoutCreatedByInput
   role: Role
   password: String
   resetToken: String
@@ -1918,6 +1981,7 @@ input UserUpdateWithoutSubscribedTasksDataInput {
   signupToken: String
   signupTokenExpiry: Float
   status: UserStatus
+  mentions: CommentUpdateManyWithoutMentionsInput
 }
 
 input UserUpdateWithoutTasksAssignedToDataInput {
@@ -1935,6 +1999,7 @@ input UserUpdateWithoutTasksAssignedToDataInput {
   signupTokenExpiry: Float
   status: UserStatus
   subscribedTasks: TaskUpdateManyWithoutSubscribedUsersInput
+  mentions: CommentUpdateManyWithoutMentionsInput
 }
 
 input UserUpdateWithoutTasksCreatedDataInput {
@@ -1952,11 +2017,12 @@ input UserUpdateWithoutTasksCreatedDataInput {
   signupTokenExpiry: Float
   status: UserStatus
   subscribedTasks: TaskUpdateManyWithoutSubscribedUsersInput
+  mentions: CommentUpdateManyWithoutMentionsInput
 }
 
-input UserUpdateWithWhereUniqueNestedInput {
+input UserUpdateWithWhereUniqueWithoutMentionsInput {
   where: UserWhereUniqueInput!
-  data: UserUpdateDataInput!
+  data: UserUpdateWithoutMentionsDataInput!
 }
 
 input UserUpdateWithWhereUniqueWithoutSubscribedTasksInput {
@@ -1984,10 +2050,10 @@ input UserUpsertWithoutTasksCreatedInput {
   create: UserCreateWithoutTasksCreatedInput!
 }
 
-input UserUpsertWithWhereUniqueNestedInput {
+input UserUpsertWithWhereUniqueWithoutMentionsInput {
   where: UserWhereUniqueInput!
-  update: UserUpdateDataInput!
-  create: UserCreateInput!
+  update: UserUpdateWithoutMentionsDataInput!
+  create: UserCreateWithoutMentionsInput!
 }
 
 input UserUpsertWithWhereUniqueWithoutSubscribedTasksInput {
@@ -2145,6 +2211,9 @@ input UserWhereInput {
   subscribedTasks_every: TaskWhereInput
   subscribedTasks_some: TaskWhereInput
   subscribedTasks_none: TaskWhereInput
+  mentions_every: CommentWhereInput
+  mentions_some: CommentWhereInput
+  mentions_none: CommentWhereInput
   AND: [UserWhereInput!]
   OR: [UserWhereInput!]
   NOT: [UserWhereInput!]

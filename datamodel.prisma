@@ -16,6 +16,7 @@ type User {
   signupTokenExpiry: Float
   status: UserStatus! @default(value: INVITED)
   subscribedTasks: [Task!]! @relation(name: "UserSubscribedToTask")
+  mentions: [Comment!]! @relation(name: "UserMentionedInComment")
 }
 
 enum Role {
@@ -110,6 +111,7 @@ type Comment {
 type Asset {
   id: ID! @unique
   createdBy: User!
+  title: String!
   assetUrl: String!
   createdAt: DateTime!
   assetType: AssetType!

@@ -104,4 +104,5 @@ input CreateRelatedCustomField {
 input CreateRelatedAsset {
   assetUrl: String!
   assetType: AssetType!
+  title: String!
 }
