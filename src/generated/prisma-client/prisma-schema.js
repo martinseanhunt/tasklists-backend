@@ -77,6 +77,52 @@ type AssetPreviousValues {
   assetType: AssetType!
 }
 
+input AssetScalarWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  assetUrl: String
+  assetUrl_not: String
+  assetUrl_in: [String!]
+  assetUrl_not_in: [String!]
+  assetUrl_lt: String
+  assetUrl_lte: String
+  assetUrl_gt: String
+  assetUrl_gte: String
+  assetUrl_contains: String
+  assetUrl_not_contains: String
+  assetUrl_starts_with: String
+  assetUrl_not_starts_with: String
+  assetUrl_ends_with: String
+  assetUrl_not_ends_with: String
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  assetType: AssetType
+  assetType_not: AssetType
+  assetType_in: [AssetType!]
+  assetType_not_in: [AssetType!]
+  AND: [AssetScalarWhereInput!]
+  OR: [AssetScalarWhereInput!]
+  NOT: [AssetScalarWhereInput!]
+}
+
 type AssetSubscriptionPayload {
   mutation: MutationType!
   node: Asset
@@ -113,6 +159,11 @@ input AssetUpdateInput {
   assetType: AssetType
 }
 
+input AssetUpdateManyDataInput {
+  assetUrl: String
+  assetType: AssetType
+}
+
 input AssetUpdateManyInput {
   create: [AssetCreateInput!]
   update: [AssetUpdateWithWhereUniqueNestedInput!]
@@ -120,11 +171,18 @@ input AssetUpdateManyInput {
   delete: [AssetWhereUniqueInput!]
   connect: [AssetWhereUniqueInput!]
   disconnect: [AssetWhereUniqueInput!]
+  deleteMany: [AssetScalarWhereInput!]
+  updateMany: [AssetUpdateManyWithWhereNestedInput!]
 }
 
 input AssetUpdateManyMutationInput {
   assetUrl: String
   assetType: AssetType
+}
+
+input AssetUpdateManyWithWhereNestedInput {
+  where: AssetScalarWhereInput!
+  data: AssetUpdateManyDataInput!
 }
 
 input AssetUpdateWithWhereUniqueNestedInput {
@@ -265,6 +323,56 @@ type CommentPreviousValues {
   updatedAt: DateTime!
 }
 
+input CommentScalarWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  comment: String
+  comment_not: String
+  comment_in: [String!]
+  comment_not_in: [String!]
+  comment_lt: String
+  comment_lte: String
+  comment_gt: String
+  comment_gte: String
+  comment_contains: String
+  comment_not_contains: String
+  comment_starts_with: String
+  comment_not_starts_with: String
+  comment_ends_with: String
+  comment_not_ends_with: String
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
+  AND: [CommentScalarWhereInput!]
+  OR: [CommentScalarWhereInput!]
+  NOT: [CommentScalarWhereInput!]
+}
+
 type CommentSubscriptionPayload {
   mutation: MutationType!
   node: Comment
@@ -291,6 +399,10 @@ input CommentUpdateInput {
   mentions: UserUpdateManyInput
 }
 
+input CommentUpdateManyDataInput {
+  comment: String
+}
+
 input CommentUpdateManyMutationInput {
   comment: String
 }
@@ -302,6 +414,8 @@ input CommentUpdateManyWithoutCreatedByInput {
   disconnect: [CommentWhereUniqueInput!]
   update: [CommentUpdateWithWhereUniqueWithoutCreatedByInput!]
   upsert: [CommentUpsertWithWhereUniqueWithoutCreatedByInput!]
+  deleteMany: [CommentScalarWhereInput!]
+  updateMany: [CommentUpdateManyWithWhereNestedInput!]
 }
 
 input CommentUpdateManyWithoutTaskInput {
@@ -311,6 +425,13 @@ input CommentUpdateManyWithoutTaskInput {
   disconnect: [CommentWhereUniqueInput!]
   update: [CommentUpdateWithWhereUniqueWithoutTaskInput!]
   upsert: [CommentUpsertWithWhereUniqueWithoutTaskInput!]
+  deleteMany: [CommentScalarWhereInput!]
+  updateMany: [CommentUpdateManyWithWhereNestedInput!]
+}
+
+input CommentUpdateManyWithWhereNestedInput {
+  where: CommentScalarWhereInput!
+  data: CommentUpdateManyDataInput!
 }
 
 input CommentUpdateWithoutCreatedByDataInput {
@@ -464,6 +585,58 @@ type CustomFieldPreviousValues {
   fieldValue: String!
 }
 
+input CustomFieldScalarWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  fieldName: String
+  fieldName_not: String
+  fieldName_in: [String!]
+  fieldName_not_in: [String!]
+  fieldName_lt: String
+  fieldName_lte: String
+  fieldName_gt: String
+  fieldName_gte: String
+  fieldName_contains: String
+  fieldName_not_contains: String
+  fieldName_starts_with: String
+  fieldName_not_starts_with: String
+  fieldName_ends_with: String
+  fieldName_not_ends_with: String
+  fieldType: FieldType
+  fieldType_not: FieldType
+  fieldType_in: [FieldType!]
+  fieldType_not_in: [FieldType!]
+  fieldValue: String
+  fieldValue_not: String
+  fieldValue_in: [String!]
+  fieldValue_not_in: [String!]
+  fieldValue_lt: String
+  fieldValue_lte: String
+  fieldValue_gt: String
+  fieldValue_gte: String
+  fieldValue_contains: String
+  fieldValue_not_contains: String
+  fieldValue_starts_with: String
+  fieldValue_not_starts_with: String
+  fieldValue_ends_with: String
+  fieldValue_not_ends_with: String
+  AND: [CustomFieldScalarWhereInput!]
+  OR: [CustomFieldScalarWhereInput!]
+  NOT: [CustomFieldScalarWhereInput!]
+}
+
 type CustomFieldSubscriptionPayload {
   mutation: MutationType!
   node: CustomField
@@ -496,6 +669,12 @@ input CustomFieldUpdateInput {
   taskListField: TaskListFieldUpdateOneRequiredInput
 }
 
+input CustomFieldUpdateManyDataInput {
+  fieldName: String
+  fieldType: FieldType
+  fieldValue: String
+}
+
 input CustomFieldUpdateManyInput {
   create: [CustomFieldCreateInput!]
   update: [CustomFieldUpdateWithWhereUniqueNestedInput!]
@@ -503,12 +682,19 @@ input CustomFieldUpdateManyInput {
   delete: [CustomFieldWhereUniqueInput!]
   connect: [CustomFieldWhereUniqueInput!]
   disconnect: [CustomFieldWhereUniqueInput!]
+  deleteMany: [CustomFieldScalarWhereInput!]
+  updateMany: [CustomFieldUpdateManyWithWhereNestedInput!]
 }
 
 input CustomFieldUpdateManyMutationInput {
   fieldName: String
   fieldType: FieldType
   fieldValue: String
+}
+
+input CustomFieldUpdateManyWithWhereNestedInput {
+  where: CustomFieldScalarWhereInput!
+  data: CustomFieldUpdateManyDataInput!
 }
 
 input CustomFieldUpdateWithWhereUniqueNestedInput {
@@ -949,6 +1135,44 @@ type TaskListFieldPreviousValues {
   fieldType: FieldType!
 }
 
+input TaskListFieldScalarWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  fieldName: String
+  fieldName_not: String
+  fieldName_in: [String!]
+  fieldName_not_in: [String!]
+  fieldName_lt: String
+  fieldName_lte: String
+  fieldName_gt: String
+  fieldName_gte: String
+  fieldName_contains: String
+  fieldName_not_contains: String
+  fieldName_starts_with: String
+  fieldName_not_starts_with: String
+  fieldName_ends_with: String
+  fieldName_not_ends_with: String
+  fieldType: FieldType
+  fieldType_not: FieldType
+  fieldType_in: [FieldType!]
+  fieldType_not_in: [FieldType!]
+  AND: [TaskListFieldScalarWhereInput!]
+  OR: [TaskListFieldScalarWhereInput!]
+  NOT: [TaskListFieldScalarWhereInput!]
+}
+
 type TaskListFieldSubscriptionPayload {
   mutation: MutationType!
   node: TaskListField
@@ -979,6 +1203,11 @@ input TaskListFieldUpdateInput {
   taskList: TaskListUpdateOneWithoutTaskListFieldsInput
 }
 
+input TaskListFieldUpdateManyDataInput {
+  fieldName: String
+  fieldType: FieldType
+}
+
 input TaskListFieldUpdateManyMutationInput {
   fieldName: String
   fieldType: FieldType
@@ -991,6 +1220,13 @@ input TaskListFieldUpdateManyWithoutTaskListInput {
   disconnect: [TaskListFieldWhereUniqueInput!]
   update: [TaskListFieldUpdateWithWhereUniqueWithoutTaskListInput!]
   upsert: [TaskListFieldUpsertWithWhereUniqueWithoutTaskListInput!]
+  deleteMany: [TaskListFieldScalarWhereInput!]
+  updateMany: [TaskListFieldUpdateManyWithWhereNestedInput!]
+}
+
+input TaskListFieldUpdateManyWithWhereNestedInput {
+  where: TaskListFieldScalarWhereInput!
+  data: TaskListFieldUpdateManyDataInput!
 }
 
 input TaskListFieldUpdateOneRequiredInput {
@@ -1262,6 +1498,86 @@ type TaskPreviousValues {
   status: TaskStatus!
 }
 
+input TaskScalarWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  title: String
+  title_not: String
+  title_in: [String!]
+  title_not_in: [String!]
+  title_lt: String
+  title_lte: String
+  title_gt: String
+  title_gte: String
+  title_contains: String
+  title_not_contains: String
+  title_starts_with: String
+  title_not_starts_with: String
+  title_ends_with: String
+  title_not_ends_with: String
+  description: String
+  description_not: String
+  description_in: [String!]
+  description_not_in: [String!]
+  description_lt: String
+  description_lte: String
+  description_gt: String
+  description_gte: String
+  description_contains: String
+  description_not_contains: String
+  description_starts_with: String
+  description_not_starts_with: String
+  description_ends_with: String
+  description_not_ends_with: String
+  dueDate: DateTime
+  dueDate_not: DateTime
+  dueDate_in: [DateTime!]
+  dueDate_not_in: [DateTime!]
+  dueDate_lt: DateTime
+  dueDate_lte: DateTime
+  dueDate_gt: DateTime
+  dueDate_gte: DateTime
+  due: TaskDue
+  due_not: TaskDue
+  due_in: [TaskDue!]
+  due_not_in: [TaskDue!]
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
+  status: TaskStatus
+  status_not: TaskStatus
+  status_in: [TaskStatus!]
+  status_not_in: [TaskStatus!]
+  AND: [TaskScalarWhereInput!]
+  OR: [TaskScalarWhereInput!]
+  NOT: [TaskScalarWhereInput!]
+}
+
 enum TaskStatus {
   CREATED
   ASSIGNED
@@ -1303,6 +1619,14 @@ input TaskUpdateInput {
   subscribedUsers: UserUpdateManyWithoutSubscribedTasksInput
 }
 
+input TaskUpdateManyDataInput {
+  title: String
+  description: String
+  dueDate: DateTime
+  due: TaskDue
+  status: TaskStatus
+}
+
 input TaskUpdateManyMutationInput {
   title: String
   description: String
@@ -1318,6 +1642,8 @@ input TaskUpdateManyWithoutAssignedToInput {
   disconnect: [TaskWhereUniqueInput!]
   update: [TaskUpdateWithWhereUniqueWithoutAssignedToInput!]
   upsert: [TaskUpsertWithWhereUniqueWithoutAssignedToInput!]
+  deleteMany: [TaskScalarWhereInput!]
+  updateMany: [TaskUpdateManyWithWhereNestedInput!]
 }
 
 input TaskUpdateManyWithoutCreatedByInput {
@@ -1327,6 +1653,8 @@ input TaskUpdateManyWithoutCreatedByInput {
   disconnect: [TaskWhereUniqueInput!]
   update: [TaskUpdateWithWhereUniqueWithoutCreatedByInput!]
   upsert: [TaskUpsertWithWhereUniqueWithoutCreatedByInput!]
+  deleteMany: [TaskScalarWhereInput!]
+  updateMany: [TaskUpdateManyWithWhereNestedInput!]
 }
 
 input TaskUpdateManyWithoutSubscribedUsersInput {
@@ -1336,6 +1664,8 @@ input TaskUpdateManyWithoutSubscribedUsersInput {
   disconnect: [TaskWhereUniqueInput!]
   update: [TaskUpdateWithWhereUniqueWithoutSubscribedUsersInput!]
   upsert: [TaskUpsertWithWhereUniqueWithoutSubscribedUsersInput!]
+  deleteMany: [TaskScalarWhereInput!]
+  updateMany: [TaskUpdateManyWithWhereNestedInput!]
 }
 
 input TaskUpdateManyWithoutTaskListInput {
@@ -1345,6 +1675,13 @@ input TaskUpdateManyWithoutTaskListInput {
   disconnect: [TaskWhereUniqueInput!]
   update: [TaskUpdateWithWhereUniqueWithoutTaskListInput!]
   upsert: [TaskUpsertWithWhereUniqueWithoutTaskListInput!]
+  deleteMany: [TaskScalarWhereInput!]
+  updateMany: [TaskUpdateManyWithWhereNestedInput!]
+}
+
+input TaskUpdateManyWithWhereNestedInput {
+  where: TaskScalarWhereInput!
+  data: TaskUpdateManyDataInput!
 }
 
 input TaskUpdateOneRequiredWithoutCommentsInput {
@@ -1764,6 +2101,148 @@ type UserPreviousValues {
   status: UserStatus!
 }
 
+input UserScalarWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  email: String
+  email_not: String
+  email_in: [String!]
+  email_not_in: [String!]
+  email_lt: String
+  email_lte: String
+  email_gt: String
+  email_gte: String
+  email_contains: String
+  email_not_contains: String
+  email_starts_with: String
+  email_not_starts_with: String
+  email_ends_with: String
+  email_not_ends_with: String
+  name: String
+  name_not: String
+  name_in: [String!]
+  name_not_in: [String!]
+  name_lt: String
+  name_lte: String
+  name_gt: String
+  name_gte: String
+  name_contains: String
+  name_not_contains: String
+  name_starts_with: String
+  name_not_starts_with: String
+  name_ends_with: String
+  name_not_ends_with: String
+  avatar: String
+  avatar_not: String
+  avatar_in: [String!]
+  avatar_not_in: [String!]
+  avatar_lt: String
+  avatar_lte: String
+  avatar_gt: String
+  avatar_gte: String
+  avatar_contains: String
+  avatar_not_contains: String
+  avatar_starts_with: String
+  avatar_not_starts_with: String
+  avatar_ends_with: String
+  avatar_not_ends_with: String
+  slackHandle: String
+  slackHandle_not: String
+  slackHandle_in: [String!]
+  slackHandle_not_in: [String!]
+  slackHandle_lt: String
+  slackHandle_lte: String
+  slackHandle_gt: String
+  slackHandle_gte: String
+  slackHandle_contains: String
+  slackHandle_not_contains: String
+  slackHandle_starts_with: String
+  slackHandle_not_starts_with: String
+  slackHandle_ends_with: String
+  slackHandle_not_ends_with: String
+  role: Role
+  role_not: Role
+  role_in: [Role!]
+  role_not_in: [Role!]
+  password: String
+  password_not: String
+  password_in: [String!]
+  password_not_in: [String!]
+  password_lt: String
+  password_lte: String
+  password_gt: String
+  password_gte: String
+  password_contains: String
+  password_not_contains: String
+  password_starts_with: String
+  password_not_starts_with: String
+  password_ends_with: String
+  password_not_ends_with: String
+  resetToken: String
+  resetToken_not: String
+  resetToken_in: [String!]
+  resetToken_not_in: [String!]
+  resetToken_lt: String
+  resetToken_lte: String
+  resetToken_gt: String
+  resetToken_gte: String
+  resetToken_contains: String
+  resetToken_not_contains: String
+  resetToken_starts_with: String
+  resetToken_not_starts_with: String
+  resetToken_ends_with: String
+  resetToken_not_ends_with: String
+  resetTokenExpiry: Float
+  resetTokenExpiry_not: Float
+  resetTokenExpiry_in: [Float!]
+  resetTokenExpiry_not_in: [Float!]
+  resetTokenExpiry_lt: Float
+  resetTokenExpiry_lte: Float
+  resetTokenExpiry_gt: Float
+  resetTokenExpiry_gte: Float
+  signupToken: String
+  signupToken_not: String
+  signupToken_in: [String!]
+  signupToken_not_in: [String!]
+  signupToken_lt: String
+  signupToken_lte: String
+  signupToken_gt: String
+  signupToken_gte: String
+  signupToken_contains: String
+  signupToken_not_contains: String
+  signupToken_starts_with: String
+  signupToken_not_starts_with: String
+  signupToken_ends_with: String
+  signupToken_not_ends_with: String
+  signupTokenExpiry: Float
+  signupTokenExpiry_not: Float
+  signupTokenExpiry_in: [Float!]
+  signupTokenExpiry_not_in: [Float!]
+  signupTokenExpiry_lt: Float
+  signupTokenExpiry_lte: Float
+  signupTokenExpiry_gt: Float
+  signupTokenExpiry_gte: Float
+  status: UserStatus
+  status_not: UserStatus
+  status_in: [UserStatus!]
+  status_not_in: [UserStatus!]
+  AND: [UserScalarWhereInput!]
+  OR: [UserScalarWhereInput!]
+  NOT: [UserScalarWhereInput!]
+}
+
 enum UserStatus {
   JOINED
   INVITED
@@ -1824,6 +2303,20 @@ input UserUpdateInput {
   subscribedTasks: TaskUpdateManyWithoutSubscribedUsersInput
 }
 
+input UserUpdateManyDataInput {
+  email: String
+  name: String
+  avatar: String
+  slackHandle: String
+  role: Role
+  password: String
+  resetToken: String
+  resetTokenExpiry: Float
+  signupToken: String
+  signupTokenExpiry: Float
+  status: UserStatus
+}
+
 input UserUpdateManyInput {
   create: [UserCreateInput!]
   update: [UserUpdateWithWhereUniqueNestedInput!]
@@ -1831,6 +2324,8 @@ input UserUpdateManyInput {
   delete: [UserWhereUniqueInput!]
   connect: [UserWhereUniqueInput!]
   disconnect: [UserWhereUniqueInput!]
+  deleteMany: [UserScalarWhereInput!]
+  updateMany: [UserUpdateManyWithWhereNestedInput!]
 }
 
 input UserUpdateManyMutationInput {
@@ -1854,6 +2349,13 @@ input UserUpdateManyWithoutSubscribedTasksInput {
   disconnect: [UserWhereUniqueInput!]
   update: [UserUpdateWithWhereUniqueWithoutSubscribedTasksInput!]
   upsert: [UserUpsertWithWhereUniqueWithoutSubscribedTasksInput!]
+  deleteMany: [UserScalarWhereInput!]
+  updateMany: [UserUpdateManyWithWhereNestedInput!]
+}
+
+input UserUpdateManyWithWhereNestedInput {
+  where: UserScalarWhereInput!
+  data: UserUpdateManyDataInput!
 }
 
 input UserUpdateOneRequiredInput {

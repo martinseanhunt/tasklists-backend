@@ -11,6 +11,7 @@ const Query = require('./resolvers/Query')
 const TaskList = require('./resolvers/TaskList')
 const Task = require('./resolvers/Task')
 const Comment = require('./resolvers/Comment')
+const createSuperAdmin = require('./utils/createSuperAdmin')
 
 sgMail.setApiKey(process.env.SENDGRID_KEY)
 
@@ -31,6 +32,9 @@ const server = new GraphQLServer({
 })
 
 server.express.use(cookieParser())
+
+// Create super admin (only use this once for initial db setup!)
+// createSuperAdmin('martinseanhunt@gmail.com', 'Martin Hunt', 'U5Z1B6CBC', prisma, sgMail)
 
 // Setup cron jobs
 cron()
