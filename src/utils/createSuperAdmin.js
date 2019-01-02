@@ -2,6 +2,14 @@ const { randomBytes } = require('crypto')
 const { promisify } = require('util')
 
 module.exports = async (email, name, slackHandle, prisma, sgMail) => {
+  // Check if there is already a superadmin
+  const users = await prisma.users({ where: { role: 'SUPERADMIN' } })
+  
+  // If there is return, otherwise invite the superadmin
+
+  // TODO: get the superadmin details from config file
+  if(users.length) return null
+
   const signupToken = (await promisify(randomBytes)(20)).toString('hex')
   const signupTokenExpiry = Date.now() + (3600000 * 24 * 14) // 1 week
 

@@ -206,6 +206,17 @@ module.exports = {
     }
 
     const task = await ctx.prisma.createTask(taskData)
+
+    console.log(args.assignedTo)
+
+    if (args.assignedTo) {
+      // Send slack message to assignee
+      const assignedUser = await ctx.prisma.user({ id: args.assignedTo })
+      console.log(assignedUser)
+
+      sendSlackDM(assignedUser.slackHandle, `👋 *Assigned to new task* \n \n <@${user.slackHandle}> created a new task assigned to you \`${task.title}\` \n \n Click here to view the task ${process.env.FRONTEND_URL}/task/${task.id} \r \n`)
+      console.log('sent')
+    }
     
     return task
   },

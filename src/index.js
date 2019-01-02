@@ -33,8 +33,8 @@ const server = new GraphQLServer({
 
 server.express.use(cookieParser())
 
-// Create super admin (only use this once for initial db setup!)
-// createSuperAdmin('martinseanhunt@gmail.com', 'Martin Hunt', 'U5Z1B6CBC', prisma, sgMail)
+// Invite superadmin if needed
+createSuperAdmin('martinseanhunt@gmail.com', 'Martin Hunt', 'U5Z1B6CBC', prisma, sgMail)
 
 // Setup cron jobs
 cron()
