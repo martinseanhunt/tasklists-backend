@@ -9,7 +9,8 @@ const validationSchemas = require('../validationSchemas')
 const { sendSlackDM } = require('../utils/slack')
 
 const cookieSettings = {
-  httpOnly: true, 
+  httpOnly: true,
+  domain: 'omstars.com', 
   maxAge: 1000 * 60 * 60 *24 * 365, // 1 year cookie
 }
 
