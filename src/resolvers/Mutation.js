@@ -114,7 +114,7 @@ module.exports = {
   },
 
   async signOut(root, args, ctx) {
-    ctx.response.clearCookie('token')
+    ctx.response.clearCookie('token', { domain: 'omstars.com' })
     return { message: 'Success' }
   },
 
