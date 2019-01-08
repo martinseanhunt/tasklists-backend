@@ -300,13 +300,37 @@ module.exports = {
     // Filter out dupliates - users mentioned more than once
     const usersToNotify = Array.from(new Set(args.notify))
 
+    // TODO refactor this in to it's own helper funciton
+
+    // TODO this will probably break if the user uses @ outside the context of a mention... test / Fix!
+
+    // Format comment to replace @mentions with markup to display.
+    // TODO this is absolutely horrible. I need to learn more about regexp to make this better ;) 
+
+    const regexp = /\[(.*?)\]/g
+    let matches = []
+    let match = regexp.exec(args.comment)
+
+    while (match != null) {
+      matches = [...matches, match[1]]
+      match = regexp.exec(args.comment)
+    }
+
+    let formattedComment = args.comment
+    let slackFormattedComment = args.comment
+
+    matches.forEach((m, i) => {
+      formattedComment = formattedComment.replace(/\@(.*?)\)/, `<span class="mention">${matches[i]}</span>`)
+      slackFormattedComment = slackFormattedComment.replace(/\@(.*?)\)/, `@${matches[i]}`)
+    })
+
     // Send slack message to all mentioned users
     const notified = usersToNotify.length 
       ? await Promise.all(usersToNotify.map(async uid => {
         const notifyUser = await ctx.prisma.user({ id: uid })
         if(!notifyUser) console.error('No user found')
 
-        sendSlackDM(notifyUser.slackHandle, `👋 <@${user.slackHandle}> mentioned you in a discussion the task \`${task.title}\`. \n \n *${user.name} wrote:* \n \`\`\`${args.comment}\`\`\` \n Click here to view the task and respond ${process.env.FRONTEND_URL}/task/${args.task} \r \n`)
+        sendSlackDM(notifyUser.slackHandle, `👋 <@${user.slackHandle}> mentioned you in a discussion the task \`${task.title}\`. \n \n *${user.name} wrote:* \n \`\`\`${slackFormattedComment}\`\`\` \n Click here to view the task and respond ${process.env.FRONTEND_URL}/task/${args.task} \r \n`)
 
         return uid
       }))
@@ -321,29 +345,9 @@ module.exports = {
       subscribedUsers.forEach(subscribedUser => {
         if(notified.includes(subscribedUser.id)) return true
 
-        sendSlackDM(subscribedUser.slackHandle, `👋 <@${user.slackHandle}> commented on the task \`${task.title}\` that you are subscribed to. \n \n *${user.name} wrote:* \n \`\`\`${args.comment}\`\`\` \n Click here to view the task ${process.env.FRONTEND_URL}/task/${args.task} \r \n`)
+        sendSlackDM(subscribedUser.slackHandle, `👋 <@${user.slackHandle}> commented on the task \`${task.title}\` that you are subscribed to. \n \n *${user.name} wrote:* \n \`\`\`${slackFormattedComment}\`\`\` \n Click here to view the task ${process.env.FRONTEND_URL}/task/${args.task} \r \n`)
       })
     }
-
-    // TODO refactor this in to it's own helper funciton
-
-    // TODO this will probably break if the user uses @ outside the context of a mention... test / Fix!
-
-    // Format comment to replace @mentions with markup to display... Question... Would this be better to do on the front end?
-    const regexp = /\[(.*?)\]/g
-    let matches = []
-    let match = regexp.exec(args.comment)
-
-    while (match != null) {
-      matches = [...matches, match[1]]
-      match = regexp.exec(args.comment)
-    }
-    
-    let formattedComment = args.comment
-    
-    matches.forEach((m, i) => {
-      formattedComment = formattedComment.replace(/\@(.*?)\)/, `<span class="mention">${matches[i]}</span>`) 
-    })
 
     // TODO want to send email here or keep to slack for now ?
 
