@@ -64,7 +64,7 @@ module.exports = {
           taskList: {
             slug: args.taskListSlug
           },
-          status_not: 'COMPLETED'
+          status_not_in: ['COMPLETED', 'CLOSED']
         }
       })
   },
@@ -171,7 +171,7 @@ module.exports = {
           createdBy: {
             id: userId
           },
-          status_not: 'COMPLETED'
+          status_not_in: ['COMPLETED', 'CLOSED']
         }
       })
   },

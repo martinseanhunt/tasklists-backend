@@ -10,7 +10,7 @@ const { sendSlackDM } = require('../utils/slack')
 
 const cookieSettings = {
   httpOnly: true,
-  domain: 'omstars.com', 
+  domain: process.env.domain, 
   maxAge: 1000 * 60 * 60 *24 * 365, // 1 year cookie
 }
 
@@ -114,7 +114,7 @@ module.exports = {
   },
 
   async signOut(root, args, ctx) {
-    ctx.response.clearCookie('token', { domain: 'omstars.com' })
+    ctx.response.clearCookie('token', { domain: cookieSettings.domain })
     return { message: 'Success' }
   },
 
