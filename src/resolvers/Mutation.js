@@ -10,8 +10,8 @@ const { sendSlackDM } = require('../utils/slack')
 
 const cookieSettings = {
   httpOnly: true,
-  domain: '.omstars.com',
-  secure: true,
+  domain: process.env.DOMAIN, // make sure this doesn't cause a problem on live server
+  secure: process.env.NODE_ENV === 'production', // make sure this doesn't cause a problem on live server
   maxAge: 1000 * 60 * 60 *24 * 365, // 1 year cookie
 }
 
