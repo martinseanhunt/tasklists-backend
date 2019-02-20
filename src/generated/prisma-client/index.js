@@ -45,6 +45,10 @@ var models = [
     embedded: false
   },
   {
+    name: "TaskPriority",
+    embedded: false
+  },
+  {
     name: "TaskStatus",
     embedded: false
   },

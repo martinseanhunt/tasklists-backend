@@ -353,8 +353,13 @@ export type TaskStatus =
   | "CREATED"
   | "ASSIGNED"
   | "AWAITINGINPUT"
+  | "AWAITINGASSETS"
+  | "AWAITINGFEEDBACK"
   | "COMPLETED"
-  | "CLOSED";
+  | "CLOSED"
+  | "CANCELLED";
+
+export type TaskPriority = "LOWEST" | "LOW" | "MEDIUM" | "HIGH" | "URGENT";
 
 export type TaskOrderByInput =
   | "id_ASC"
@@ -372,7 +377,9 @@ export type TaskOrderByInput =
   | "updatedAt_ASC"
   | "updatedAt_DESC"
   | "status_ASC"
-  | "status_DESC";
+  | "status_DESC"
+  | "priority_ASC"
+  | "priority_DESC";
 
 export type AssetOrderByInput =
   | "id_ASC"
@@ -563,6 +570,10 @@ export interface TaskWhereInput {
   status_not?: TaskStatus;
   status_in?: TaskStatus[] | TaskStatus;
   status_not_in?: TaskStatus[] | TaskStatus;
+  priority?: TaskPriority;
+  priority_not?: TaskPriority;
+  priority_in?: TaskPriority[] | TaskPriority;
+  priority_not_in?: TaskPriority[] | TaskPriority;
   subscribedUsers_every?: UserWhereInput;
   subscribedUsers_some?: UserWhereInput;
   subscribedUsers_none?: UserWhereInput;
@@ -1097,6 +1108,7 @@ export interface TaskCreateWithoutCreatedByInput {
   due?: TaskDue;
   customFields?: CustomFieldCreateManyInput;
   status?: TaskStatus;
+  priority?: TaskPriority;
   subscribedUsers?: UserCreateManyWithoutSubscribedTasksInput;
 }
 
@@ -1158,6 +1170,7 @@ export interface TaskCreateWithoutCommentsInput {
   due?: TaskDue;
   customFields?: CustomFieldCreateManyInput;
   status?: TaskStatus;
+  priority?: TaskPriority;
   subscribedUsers?: UserCreateManyWithoutSubscribedTasksInput;
 }
 
@@ -1202,6 +1215,7 @@ export interface TaskCreateWithoutAssignedToInput {
   due?: TaskDue;
   customFields?: CustomFieldCreateManyInput;
   status?: TaskStatus;
+  priority?: TaskPriority;
   subscribedUsers?: UserCreateManyWithoutSubscribedTasksInput;
 }
 
@@ -1284,6 +1298,7 @@ export interface TaskCreateWithoutSubscribedUsersInput {
   due?: TaskDue;
   customFields?: CustomFieldCreateManyInput;
   status?: TaskStatus;
+  priority?: TaskPriority;
 }
 
 export interface CustomFieldCreateManyInput {
@@ -1338,6 +1353,7 @@ export interface TaskCreateWithoutTaskListInput {
   due?: TaskDue;
   customFields?: CustomFieldCreateManyInput;
   status?: TaskStatus;
+  priority?: TaskPriority;
   subscribedUsers?: UserCreateManyWithoutSubscribedTasksInput;
 }
 
@@ -1470,6 +1486,7 @@ export interface TaskUpdateWithoutCreatedByDataInput {
   due?: TaskDue;
   customFields?: CustomFieldUpdateManyInput;
   status?: TaskStatus;
+  priority?: TaskPriority;
   subscribedUsers?: UserUpdateManyWithoutSubscribedTasksInput;
 }
 
@@ -1657,6 +1674,7 @@ export interface TaskUpdateWithoutCommentsDataInput {
   due?: TaskDue;
   customFields?: CustomFieldUpdateManyInput;
   status?: TaskStatus;
+  priority?: TaskPriority;
   subscribedUsers?: UserUpdateManyWithoutSubscribedTasksInput;
 }
 
@@ -1721,6 +1739,7 @@ export interface TaskUpdateWithoutAssignedToDataInput {
   due?: TaskDue;
   customFields?: CustomFieldUpdateManyInput;
   status?: TaskStatus;
+  priority?: TaskPriority;
   subscribedUsers?: UserUpdateManyWithoutSubscribedTasksInput;
 }
 
@@ -1920,6 +1939,7 @@ export interface TaskUpdateWithoutSubscribedUsersDataInput {
   due?: TaskDue;
   customFields?: CustomFieldUpdateManyInput;
   status?: TaskStatus;
+  priority?: TaskPriority;
 }
 
 export interface CustomFieldUpdateManyInput {
@@ -2016,6 +2036,7 @@ export interface TaskUpdateWithoutTaskListDataInput {
   due?: TaskDue;
   customFields?: CustomFieldUpdateManyInput;
   status?: TaskStatus;
+  priority?: TaskPriority;
   subscribedUsers?: UserUpdateManyWithoutSubscribedTasksInput;
 }
 
@@ -2407,6 +2428,10 @@ export interface TaskScalarWhereInput {
   status_not?: TaskStatus;
   status_in?: TaskStatus[] | TaskStatus;
   status_not_in?: TaskStatus[] | TaskStatus;
+  priority?: TaskPriority;
+  priority_not?: TaskPriority;
+  priority_in?: TaskPriority[] | TaskPriority;
+  priority_not_in?: TaskPriority[] | TaskPriority;
   AND?: TaskScalarWhereInput[] | TaskScalarWhereInput;
   OR?: TaskScalarWhereInput[] | TaskScalarWhereInput;
   NOT?: TaskScalarWhereInput[] | TaskScalarWhereInput;
@@ -2423,6 +2448,7 @@ export interface TaskUpdateManyDataInput {
   dueDate?: DateTimeInput;
   due?: TaskDue;
   status?: TaskStatus;
+  priority?: TaskPriority;
 }
 
 export interface TaskListUpsertWithoutTaskListFieldsInput {
@@ -2657,6 +2683,7 @@ export interface TaskCreateInput {
   due?: TaskDue;
   customFields?: CustomFieldCreateManyInput;
   status?: TaskStatus;
+  priority?: TaskPriority;
   subscribedUsers?: UserCreateManyWithoutSubscribedTasksInput;
 }
 
@@ -2672,6 +2699,7 @@ export interface TaskUpdateInput {
   due?: TaskDue;
   customFields?: CustomFieldUpdateManyInput;
   status?: TaskStatus;
+  priority?: TaskPriority;
   subscribedUsers?: UserUpdateManyWithoutSubscribedTasksInput;
 }
 
@@ -2681,6 +2709,7 @@ export interface TaskUpdateManyMutationInput {
   dueDate?: DateTimeInput;
   due?: TaskDue;
   status?: TaskStatus;
+  priority?: TaskPriority;
 }
 
 export interface TaskListCreateInput {
@@ -3009,10 +3038,11 @@ export interface Task {
   title: String;
   description: String;
   dueDate?: DateTimeOutput;
-  due: TaskDue;
+  due?: TaskDue;
   createdAt: DateTimeOutput;
   updatedAt: DateTimeOutput;
   status: TaskStatus;
+  priority?: TaskPriority;
 }
 
 export interface TaskPromise extends Promise<Task>, Fragmentable {
@@ -3054,6 +3084,7 @@ export interface TaskPromise extends Promise<Task>, Fragmentable {
     last?: Int;
   }) => T;
   status: () => Promise<TaskStatus>;
+  priority: () => Promise<TaskPriority>;
   subscribedUsers: <T = FragmentableArray<User>>(args?: {
     where?: UserWhereInput;
     orderBy?: UserOrderByInput;
@@ -3106,6 +3137,7 @@ export interface TaskSubscription
     last?: Int;
   }) => T;
   status: () => Promise<AsyncIterator<TaskStatus>>;
+  priority: () => Promise<AsyncIterator<TaskPriority>>;
   subscribedUsers: <T = Promise<AsyncIterator<UserSubscription>>>(args?: {
     where?: UserWhereInput;
     orderBy?: UserOrderByInput;
@@ -3899,10 +3931,11 @@ export interface TaskPreviousValues {
   title: String;
   description: String;
   dueDate?: DateTimeOutput;
-  due: TaskDue;
+  due?: TaskDue;
   createdAt: DateTimeOutput;
   updatedAt: DateTimeOutput;
   status: TaskStatus;
+  priority?: TaskPriority;
 }
 
 export interface TaskPreviousValuesPromise
@@ -3916,6 +3949,7 @@ export interface TaskPreviousValuesPromise
   createdAt: () => Promise<DateTimeOutput>;
   updatedAt: () => Promise<DateTimeOutput>;
   status: () => Promise<TaskStatus>;
+  priority: () => Promise<TaskPriority>;
 }
 
 export interface TaskPreviousValuesSubscription
@@ -3929,6 +3963,7 @@ export interface TaskPreviousValuesSubscription
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   status: () => Promise<AsyncIterator<TaskStatus>>;
+  priority: () => Promise<AsyncIterator<TaskPriority>>;
 }
 
 export interface TaskListSubscriptionPayload {
@@ -4186,6 +4221,10 @@ export const models: Model[] = [
   },
   {
     name: "TaskListField",
+    embedded: false
+  },
+  {
+    name: "TaskPriority",
     embedded: false
   },
   {

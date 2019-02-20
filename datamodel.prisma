@@ -31,7 +31,6 @@ enum UserStatus {
   DELETED
 }
 
-# get rid of dueWhenPossible and make due an enum
 type Task { 
   id: ID! @unique
   createdBy: User! @relation(name: "TaskCreatedByUser")
@@ -42,11 +41,12 @@ type Task {
   taskList: TaskList!
   comments: [Comment!]!
   dueDate: DateTime
-  due: TaskDue! @default(value: WHENPOSSIBLE)
+  due: TaskDue
   createdAt: DateTime!
   updatedAt: DateTime!
   customFields: [CustomField!]!
   status: TaskStatus! @default(value: CREATED)
+  priority: TaskPriority @default(value: LOW)
   subscribedUsers: [User!]! @relation(name: "UserSubscribedToTask")
 }
 
@@ -54,8 +54,12 @@ enum TaskStatus {
   CREATED,
   ASSIGNED,
   AWAITINGINPUT,
+  AWAITINGASSETS,
+  AWAITINGFEEDBACK,
+  INPROGRESS,
   COMPLETED, 
-  CLOSED
+  CLOSED,
+  CANCELLED
 }
 
 enum TaskDue { 
@@ -63,6 +67,14 @@ enum TaskDue {
   ASAP,
   BYDATE,
   ONDATE
+}
+
+enum TaskPriority {
+  LOWEST,
+  LOW,
+  MEDIUM,
+  HIGH,
+  URGENT
 }
 
 type CustomField {

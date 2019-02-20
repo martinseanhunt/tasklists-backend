@@ -10,6 +10,7 @@ const Task = {
   updatedAt: parent => parent.updatedAt,
   customFields: parent => parent.customFields,
   status: parent => parent.status,
+  priority: parent => parent.priority,
   // QUESTION is this the right way of thinking about 
   // getting the related nodes here ? 
   createdBy: (parent, args, ctx) =>

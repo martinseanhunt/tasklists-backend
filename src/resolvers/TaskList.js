@@ -3,7 +3,7 @@ const TaskList = {
   name: parent => parent.name,
   description: parent => parent.description,
   slug: parent => parent.slug,
-  color: parent => parent.color,
+  color: parent => parent.color || '#6758F3',
   tasks: (parent, args, ctx) => 
     ctx.prisma.tasks({ where: { taskList: { id: parent.id } } }),
   taskListFields: (parent, args, ctx) => 

@@ -168,7 +168,7 @@ module.exports = {
           taskList: {
             slug: args.taskListSlug
           },
-          createdBy: {
+          assignedTo: {
             id: userId
           },
           status_not_in: ['COMPLETED', 'CLOSED']

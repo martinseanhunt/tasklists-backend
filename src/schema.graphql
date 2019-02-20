@@ -35,7 +35,7 @@ type Mutation {
   createTask(
     title: String!
     description: String!
-    due: TaskDue!
+    due: TaskDue
     dueDate: String
     assignedTo: String
     customFields: [CreateRelatedCustomField]

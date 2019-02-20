@@ -972,11 +972,12 @@ type Task {
   taskList: TaskList!
   comments(where: CommentWhereInput, orderBy: CommentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Comment!]
   dueDate: DateTime
-  due: TaskDue!
+  due: TaskDue
   createdAt: DateTime!
   updatedAt: DateTime!
   customFields(where: CustomFieldWhereInput, orderBy: CustomFieldOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [CustomField!]
   status: TaskStatus!
+  priority: TaskPriority
   subscribedUsers(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User!]
 }
 
@@ -998,6 +999,7 @@ input TaskCreateInput {
   due: TaskDue
   customFields: CustomFieldCreateManyInput
   status: TaskStatus
+  priority: TaskPriority
   subscribedUsers: UserCreateManyWithoutSubscribedTasksInput
 }
 
@@ -1037,6 +1039,7 @@ input TaskCreateWithoutAssignedToInput {
   due: TaskDue
   customFields: CustomFieldCreateManyInput
   status: TaskStatus
+  priority: TaskPriority
   subscribedUsers: UserCreateManyWithoutSubscribedTasksInput
 }
 
@@ -1051,6 +1054,7 @@ input TaskCreateWithoutCommentsInput {
   due: TaskDue
   customFields: CustomFieldCreateManyInput
   status: TaskStatus
+  priority: TaskPriority
   subscribedUsers: UserCreateManyWithoutSubscribedTasksInput
 }
 
@@ -1065,6 +1069,7 @@ input TaskCreateWithoutCreatedByInput {
   due: TaskDue
   customFields: CustomFieldCreateManyInput
   status: TaskStatus
+  priority: TaskPriority
   subscribedUsers: UserCreateManyWithoutSubscribedTasksInput
 }
 
@@ -1080,6 +1085,7 @@ input TaskCreateWithoutSubscribedUsersInput {
   due: TaskDue
   customFields: CustomFieldCreateManyInput
   status: TaskStatus
+  priority: TaskPriority
 }
 
 input TaskCreateWithoutTaskListInput {
@@ -1093,6 +1099,7 @@ input TaskCreateWithoutTaskListInput {
   due: TaskDue
   customFields: CustomFieldCreateManyInput
   status: TaskStatus
+  priority: TaskPriority
   subscribedUsers: UserCreateManyWithoutSubscribedTasksInput
 }
 
@@ -1594,6 +1601,8 @@ enum TaskOrderByInput {
   updatedAt_DESC
   status_ASC
   status_DESC
+  priority_ASC
+  priority_DESC
 }
 
 type TaskPreviousValues {
@@ -1601,10 +1610,19 @@ type TaskPreviousValues {
   title: String!
   description: String!
   dueDate: DateTime
-  due: TaskDue!
+  due: TaskDue
   createdAt: DateTime!
   updatedAt: DateTime!
   status: TaskStatus!
+  priority: TaskPriority
+}
+
+enum TaskPriority {
+  LOWEST
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
 }
 
 input TaskScalarWhereInput {
@@ -1682,6 +1700,10 @@ input TaskScalarWhereInput {
   status_not: TaskStatus
   status_in: [TaskStatus!]
   status_not_in: [TaskStatus!]
+  priority: TaskPriority
+  priority_not: TaskPriority
+  priority_in: [TaskPriority!]
+  priority_not_in: [TaskPriority!]
   AND: [TaskScalarWhereInput!]
   OR: [TaskScalarWhereInput!]
   NOT: [TaskScalarWhereInput!]
@@ -1691,8 +1713,11 @@ enum TaskStatus {
   CREATED
   ASSIGNED
   AWAITINGINPUT
+  AWAITINGASSETS
+  AWAITINGFEEDBACK
   COMPLETED
   CLOSED
+  CANCELLED
 }
 
 type TaskSubscriptionPayload {
@@ -1725,6 +1750,7 @@ input TaskUpdateInput {
   due: TaskDue
   customFields: CustomFieldUpdateManyInput
   status: TaskStatus
+  priority: TaskPriority
   subscribedUsers: UserUpdateManyWithoutSubscribedTasksInput
 }
 
@@ -1734,6 +1760,7 @@ input TaskUpdateManyDataInput {
   dueDate: DateTime
   due: TaskDue
   status: TaskStatus
+  priority: TaskPriority
 }
 
 input TaskUpdateManyMutationInput {
@@ -1742,6 +1769,7 @@ input TaskUpdateManyMutationInput {
   dueDate: DateTime
   due: TaskDue
   status: TaskStatus
+  priority: TaskPriority
 }
 
 input TaskUpdateManyWithoutAssignedToInput {
@@ -1815,6 +1843,7 @@ input TaskUpdateWithoutAssignedToDataInput {
   due: TaskDue
   customFields: CustomFieldUpdateManyInput
   status: TaskStatus
+  priority: TaskPriority
   subscribedUsers: UserUpdateManyWithoutSubscribedTasksInput
 }
 
@@ -1829,6 +1858,7 @@ input TaskUpdateWithoutCommentsDataInput {
   due: TaskDue
   customFields: CustomFieldUpdateManyInput
   status: TaskStatus
+  priority: TaskPriority
   subscribedUsers: UserUpdateManyWithoutSubscribedTasksInput
 }
 
@@ -1843,6 +1873,7 @@ input TaskUpdateWithoutCreatedByDataInput {
   due: TaskDue
   customFields: CustomFieldUpdateManyInput
   status: TaskStatus
+  priority: TaskPriority
   subscribedUsers: UserUpdateManyWithoutSubscribedTasksInput
 }
 
@@ -1858,6 +1889,7 @@ input TaskUpdateWithoutSubscribedUsersDataInput {
   due: TaskDue
   customFields: CustomFieldUpdateManyInput
   status: TaskStatus
+  priority: TaskPriority
 }
 
 input TaskUpdateWithoutTaskListDataInput {
@@ -1871,6 +1903,7 @@ input TaskUpdateWithoutTaskListDataInput {
   due: TaskDue
   customFields: CustomFieldUpdateManyInput
   status: TaskStatus
+  priority: TaskPriority
   subscribedUsers: UserUpdateManyWithoutSubscribedTasksInput
 }
 
@@ -2010,6 +2043,10 @@ input TaskWhereInput {
   status_not: TaskStatus
   status_in: [TaskStatus!]
   status_not_in: [TaskStatus!]
+  priority: TaskPriority
+  priority_not: TaskPriority
+  priority_in: [TaskPriority!]
+  priority_not_in: [TaskPriority!]
   subscribedUsers_every: UserWhereInput
   subscribedUsers_some: UserWhereInput
   subscribedUsers_none: UserWhereInput
