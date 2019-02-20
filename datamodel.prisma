@@ -88,6 +88,7 @@ type TaskList {
   taskListFields: [TaskListField!]!
   tasks: [Task!]!
   slug: String! @unique
+  color: String @default(value: "#6758F3")
 }
 
 type TaskListField {

@@ -192,6 +192,7 @@ input AssetUpdateManyInput {
   upsert: [AssetUpsertWithWhereUniqueNestedInput!]
   delete: [AssetWhereUniqueInput!]
   connect: [AssetWhereUniqueInput!]
+  set: [AssetWhereUniqueInput!]
   disconnect: [AssetWhereUniqueInput!]
   deleteMany: [AssetScalarWhereInput!]
   updateMany: [AssetUpdateManyWithWhereNestedInput!]
@@ -460,6 +461,7 @@ input CommentUpdateManyWithoutCreatedByInput {
   create: [CommentCreateWithoutCreatedByInput!]
   delete: [CommentWhereUniqueInput!]
   connect: [CommentWhereUniqueInput!]
+  set: [CommentWhereUniqueInput!]
   disconnect: [CommentWhereUniqueInput!]
   update: [CommentUpdateWithWhereUniqueWithoutCreatedByInput!]
   upsert: [CommentUpsertWithWhereUniqueWithoutCreatedByInput!]
@@ -471,6 +473,7 @@ input CommentUpdateManyWithoutMentionsInput {
   create: [CommentCreateWithoutMentionsInput!]
   delete: [CommentWhereUniqueInput!]
   connect: [CommentWhereUniqueInput!]
+  set: [CommentWhereUniqueInput!]
   disconnect: [CommentWhereUniqueInput!]
   update: [CommentUpdateWithWhereUniqueWithoutMentionsInput!]
   upsert: [CommentUpsertWithWhereUniqueWithoutMentionsInput!]
@@ -482,6 +485,7 @@ input CommentUpdateManyWithoutTaskInput {
   create: [CommentCreateWithoutTaskInput!]
   delete: [CommentWhereUniqueInput!]
   connect: [CommentWhereUniqueInput!]
+  set: [CommentWhereUniqueInput!]
   disconnect: [CommentWhereUniqueInput!]
   update: [CommentUpdateWithWhereUniqueWithoutTaskInput!]
   upsert: [CommentUpsertWithWhereUniqueWithoutTaskInput!]
@@ -759,6 +763,7 @@ input CustomFieldUpdateManyInput {
   upsert: [CustomFieldUpsertWithWhereUniqueNestedInput!]
   delete: [CustomFieldWhereUniqueInput!]
   connect: [CustomFieldWhereUniqueInput!]
+  set: [CustomFieldWhereUniqueInput!]
   disconnect: [CustomFieldWhereUniqueInput!]
   deleteMany: [CustomFieldScalarWhereInput!]
   updateMany: [CustomFieldUpdateManyWithWhereNestedInput!]
@@ -1110,6 +1115,7 @@ type TaskList {
   taskListFields(where: TaskListFieldWhereInput, orderBy: TaskListFieldOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [TaskListField!]
   tasks(where: TaskWhereInput, orderBy: TaskOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Task!]
   slug: String!
+  color: String
 }
 
 type TaskListConnection {
@@ -1124,6 +1130,7 @@ input TaskListCreateInput {
   taskListFields: TaskListFieldCreateManyWithoutTaskListInput
   tasks: TaskCreateManyWithoutTaskListInput
   slug: String!
+  color: String
 }
 
 input TaskListCreateOneWithoutTaskListFieldsInput {
@@ -1141,6 +1148,7 @@ input TaskListCreateWithoutTaskListFieldsInput {
   description: String
   tasks: TaskCreateManyWithoutTaskListInput
   slug: String!
+  color: String
 }
 
 input TaskListCreateWithoutTasksInput {
@@ -1148,6 +1156,7 @@ input TaskListCreateWithoutTasksInput {
   description: String
   taskListFields: TaskListFieldCreateManyWithoutTaskListInput
   slug: String!
+  color: String
 }
 
 type TaskListEdge {
@@ -1295,6 +1304,7 @@ input TaskListFieldUpdateManyWithoutTaskListInput {
   create: [TaskListFieldCreateWithoutTaskListInput!]
   delete: [TaskListFieldWhereUniqueInput!]
   connect: [TaskListFieldWhereUniqueInput!]
+  set: [TaskListFieldWhereUniqueInput!]
   disconnect: [TaskListFieldWhereUniqueInput!]
   update: [TaskListFieldUpdateWithWhereUniqueWithoutTaskListInput!]
   upsert: [TaskListFieldUpsertWithWhereUniqueWithoutTaskListInput!]
@@ -1387,6 +1397,8 @@ enum TaskListOrderByInput {
   description_DESC
   slug_ASC
   slug_DESC
+  color_ASC
+  color_DESC
   createdAt_ASC
   createdAt_DESC
   updatedAt_ASC
@@ -1398,6 +1410,7 @@ type TaskListPreviousValues {
   name: String!
   description: String
   slug: String!
+  color: String
 }
 
 type TaskListSubscriptionPayload {
@@ -1424,12 +1437,14 @@ input TaskListUpdateInput {
   taskListFields: TaskListFieldUpdateManyWithoutTaskListInput
   tasks: TaskUpdateManyWithoutTaskListInput
   slug: String
+  color: String
 }
 
 input TaskListUpdateManyMutationInput {
   name: String
   description: String
   slug: String
+  color: String
 }
 
 input TaskListUpdateOneRequiredWithoutTasksInput {
@@ -1453,6 +1468,7 @@ input TaskListUpdateWithoutTaskListFieldsDataInput {
   description: String
   tasks: TaskUpdateManyWithoutTaskListInput
   slug: String
+  color: String
 }
 
 input TaskListUpdateWithoutTasksDataInput {
@@ -1460,6 +1476,7 @@ input TaskListUpdateWithoutTasksDataInput {
   description: String
   taskListFields: TaskListFieldUpdateManyWithoutTaskListInput
   slug: String
+  color: String
 }
 
 input TaskListUpsertWithoutTaskListFieldsInput {
@@ -1535,6 +1552,20 @@ input TaskListWhereInput {
   slug_not_starts_with: String
   slug_ends_with: String
   slug_not_ends_with: String
+  color: String
+  color_not: String
+  color_in: [String!]
+  color_not_in: [String!]
+  color_lt: String
+  color_lte: String
+  color_gt: String
+  color_gte: String
+  color_contains: String
+  color_not_contains: String
+  color_starts_with: String
+  color_not_starts_with: String
+  color_ends_with: String
+  color_not_ends_with: String
   AND: [TaskListWhereInput!]
   OR: [TaskListWhereInput!]
   NOT: [TaskListWhereInput!]
@@ -1717,6 +1748,7 @@ input TaskUpdateManyWithoutAssignedToInput {
   create: [TaskCreateWithoutAssignedToInput!]
   delete: [TaskWhereUniqueInput!]
   connect: [TaskWhereUniqueInput!]
+  set: [TaskWhereUniqueInput!]
   disconnect: [TaskWhereUniqueInput!]
   update: [TaskUpdateWithWhereUniqueWithoutAssignedToInput!]
   upsert: [TaskUpsertWithWhereUniqueWithoutAssignedToInput!]
@@ -1728,6 +1760,7 @@ input TaskUpdateManyWithoutCreatedByInput {
   create: [TaskCreateWithoutCreatedByInput!]
   delete: [TaskWhereUniqueInput!]
   connect: [TaskWhereUniqueInput!]
+  set: [TaskWhereUniqueInput!]
   disconnect: [TaskWhereUniqueInput!]
   update: [TaskUpdateWithWhereUniqueWithoutCreatedByInput!]
   upsert: [TaskUpsertWithWhereUniqueWithoutCreatedByInput!]
@@ -1739,6 +1772,7 @@ input TaskUpdateManyWithoutSubscribedUsersInput {
   create: [TaskCreateWithoutSubscribedUsersInput!]
   delete: [TaskWhereUniqueInput!]
   connect: [TaskWhereUniqueInput!]
+  set: [TaskWhereUniqueInput!]
   disconnect: [TaskWhereUniqueInput!]
   update: [TaskUpdateWithWhereUniqueWithoutSubscribedUsersInput!]
   upsert: [TaskUpsertWithWhereUniqueWithoutSubscribedUsersInput!]
@@ -1750,6 +1784,7 @@ input TaskUpdateManyWithoutTaskListInput {
   create: [TaskCreateWithoutTaskListInput!]
   delete: [TaskWhereUniqueInput!]
   connect: [TaskWhereUniqueInput!]
+  set: [TaskWhereUniqueInput!]
   disconnect: [TaskWhereUniqueInput!]
   update: [TaskUpdateWithWhereUniqueWithoutTaskListInput!]
   upsert: [TaskUpsertWithWhereUniqueWithoutTaskListInput!]
@@ -2439,6 +2474,7 @@ input UserUpdateManyWithoutMentionsInput {
   create: [UserCreateWithoutMentionsInput!]
   delete: [UserWhereUniqueInput!]
   connect: [UserWhereUniqueInput!]
+  set: [UserWhereUniqueInput!]
   disconnect: [UserWhereUniqueInput!]
   update: [UserUpdateWithWhereUniqueWithoutMentionsInput!]
   upsert: [UserUpsertWithWhereUniqueWithoutMentionsInput!]
@@ -2450,6 +2486,7 @@ input UserUpdateManyWithoutSubscribedTasksInput {
   create: [UserCreateWithoutSubscribedTasksInput!]
   delete: [UserWhereUniqueInput!]
   connect: [UserWhereUniqueInput!]
+  set: [UserWhereUniqueInput!]
   disconnect: [UserWhereUniqueInput!]
   update: [UserUpdateWithWhereUniqueWithoutSubscribedTasksInput!]
   upsert: [UserUpsertWithWhereUniqueWithoutSubscribedTasksInput!]

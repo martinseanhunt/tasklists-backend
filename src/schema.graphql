@@ -29,6 +29,7 @@ type Mutation {
     name: String!
     description: String!
     taskListFields: [TaskListFieldCreateWithoutTaskListInput]
+    color: String
   ): TaskList
 
   createTask(
@@ -82,6 +83,7 @@ type TaskList {
   slug: String!
   totalTaskCount: Int
   completedTaskCount: Int
+  color: String
 }
 
 # BIGQUESTION is creating my own input types here the answer for 

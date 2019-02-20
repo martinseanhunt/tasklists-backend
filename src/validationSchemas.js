@@ -13,6 +13,7 @@ exports.createUser = {
 
 exports.createTaskList = {
   name: Joi.string().min(3).max(100).required(),
+  color: Joi.string().regex(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/),
   description: Joi.string().min(3).max(500).required(),
   taskListFields: Joi.array().items(Joi.object().keys({
     fieldName: Joi.string().min(3).max(100).required(),
