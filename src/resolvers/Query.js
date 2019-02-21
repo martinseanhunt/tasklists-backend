@@ -43,15 +43,19 @@ module.exports = {
     const { request: { userId } } = ctx
     if(!userId) return []
 
+    const where = {
+      taskList: {
+        slug: args.taskListSlug
+      },
+      status_not_in: args.excludeStatus,
+    }
+
+    if(args.filterByStatus) {
+      where.status_in = args.filterByStatus
+    }
+
     return ctx.prisma
-      .tasks({
-        where: {
-          taskList: {
-            slug: args.taskListSlug
-          },
-          status_not_in: args.excludeStatus
-        }
-      })
+      .tasks({ where })
   },
 
   async openTasks(root, args, ctx) {
