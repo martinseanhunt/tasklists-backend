@@ -55,7 +55,10 @@ module.exports = {
     }
 
     return ctx.prisma
-      .tasks({ where })
+      .tasks({ 
+        where,
+        orderBy: args.orderBy
+      })
   },
 
   async openTasks(root, args, ctx) {

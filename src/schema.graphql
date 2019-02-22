@@ -8,7 +8,7 @@ type Query {
   users: [User]
   taskLists: [TaskList]
   taskList(slug: String!): TaskList
-  tasks(taskListSlug: String!, excludeStatus: [TaskStatus], filterByStatus: [TaskStatus]): [Task]
+  tasks(taskListSlug: String!, excludeStatus: [TaskStatus], filterByStatus: [TaskStatus], orderBy: String): [Task]
   openTasks(taskListSlug: String!): [Task]
   completedTasks(taskListSlug: String!): [Task]
   task(id: ID!): Task
