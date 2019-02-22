@@ -175,17 +175,26 @@ module.exports = {
     const { request: { userId } } = ctx
     if(!userId) return []
 
+    const where = {
+      taskList: {
+        slug: args.taskListSlug
+      },
+      assignedTo: {
+        id: userId
+      },
+      status_not_in: ['COMPLETED', 'CLOSED']
+    }
+
+    if(args.orderBy && args.orderBy.includes('dueDate')) {
+      // If we're sorting by due date ignore results that don't have a due date otherwise
+      // They will show up on top for ASC
+      where.dueDate_not = null
+    }
+
     return ctx.prisma
       .tasks({
-        where: {
-          taskList: {
-            slug: args.taskListSlug
-          },
-          assignedTo: {
-            id: userId
-          },
-          status_not_in: ['COMPLETED', 'CLOSED']
-        }
+        where,
+        orderBy: args.orderBy
       })
   },
 
@@ -193,9 +202,17 @@ module.exports = {
     const { request: { userId } } = ctx
     if(!userId) return []
 
+    const where = { status_not_in: ['COMPLETED', 'CLOSED'] }
+
+    if(args.orderBy && args.orderBy.includes('dueDate')) {
+      // If we're sorting by due date ignore results that don't have a due date otherwise
+      // They will show up on top for ASC
+      where.dueDate_not = null
+    }
+
     return ctx.prisma
       .user({ id: userId })
-      .subscribedTasks({ where: { status_not_in: ['COMPLETED', 'CLOSED'] } })
+      .subscribedTasks({ where, orderBy: args.orderBy })
   },
 
 }
