@@ -54,6 +54,12 @@ module.exports = {
       where.status_in = args.filterByStatus
     }
 
+    if(args.orderBy && args.orderBy.includes('dueDate')) {
+      // If we're sorting by due date ignore results that don't have a due date otherwise
+      // They will show up on top for ASC
+      where.dueDate_not = null
+    }
+
     return ctx.prisma
       .tasks({ 
         where,
