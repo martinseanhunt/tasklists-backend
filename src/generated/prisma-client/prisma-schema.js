@@ -968,6 +968,7 @@ type Task {
   assignedTo: User
   title: String!
   description: String!
+  richText: String
   assets(where: AssetWhereInput, orderBy: AssetOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Asset!]
   taskList: TaskList!
   comments(where: CommentWhereInput, orderBy: CommentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Comment!]
@@ -992,6 +993,7 @@ input TaskCreateInput {
   assignedTo: UserCreateOneWithoutTasksAssignedToInput
   title: String!
   description: String!
+  richText: String
   assets: AssetCreateManyInput
   taskList: TaskListCreateOneWithoutTasksInput!
   comments: CommentCreateManyWithoutTaskInput
@@ -1032,6 +1034,7 @@ input TaskCreateWithoutAssignedToInput {
   createdBy: UserCreateOneWithoutTasksCreatedInput!
   title: String!
   description: String!
+  richText: String
   assets: AssetCreateManyInput
   taskList: TaskListCreateOneWithoutTasksInput!
   comments: CommentCreateManyWithoutTaskInput
@@ -1048,6 +1051,7 @@ input TaskCreateWithoutCommentsInput {
   assignedTo: UserCreateOneWithoutTasksAssignedToInput
   title: String!
   description: String!
+  richText: String
   assets: AssetCreateManyInput
   taskList: TaskListCreateOneWithoutTasksInput!
   dueDate: DateTime
@@ -1062,6 +1066,7 @@ input TaskCreateWithoutCreatedByInput {
   assignedTo: UserCreateOneWithoutTasksAssignedToInput
   title: String!
   description: String!
+  richText: String
   assets: AssetCreateManyInput
   taskList: TaskListCreateOneWithoutTasksInput!
   comments: CommentCreateManyWithoutTaskInput
@@ -1078,6 +1083,7 @@ input TaskCreateWithoutSubscribedUsersInput {
   assignedTo: UserCreateOneWithoutTasksAssignedToInput
   title: String!
   description: String!
+  richText: String
   assets: AssetCreateManyInput
   taskList: TaskListCreateOneWithoutTasksInput!
   comments: CommentCreateManyWithoutTaskInput
@@ -1093,6 +1099,7 @@ input TaskCreateWithoutTaskListInput {
   assignedTo: UserCreateOneWithoutTasksAssignedToInput
   title: String!
   description: String!
+  richText: String
   assets: AssetCreateManyInput
   comments: CommentCreateManyWithoutTaskInput
   dueDate: DateTime
@@ -1591,6 +1598,8 @@ enum TaskOrderByInput {
   title_DESC
   description_ASC
   description_DESC
+  richText_ASC
+  richText_DESC
   dueDate_ASC
   dueDate_DESC
   due_ASC
@@ -1609,6 +1618,7 @@ type TaskPreviousValues {
   id: ID!
   title: String!
   description: String!
+  richText: String
   dueDate: DateTime
   due: TaskDue
   createdAt: DateTime!
@@ -1668,6 +1678,20 @@ input TaskScalarWhereInput {
   description_not_starts_with: String
   description_ends_with: String
   description_not_ends_with: String
+  richText: String
+  richText_not: String
+  richText_in: [String!]
+  richText_not_in: [String!]
+  richText_lt: String
+  richText_lte: String
+  richText_gt: String
+  richText_gte: String
+  richText_contains: String
+  richText_not_contains: String
+  richText_starts_with: String
+  richText_not_starts_with: String
+  richText_ends_with: String
+  richText_not_ends_with: String
   dueDate: DateTime
   dueDate_not: DateTime
   dueDate_in: [DateTime!]
@@ -1715,6 +1739,7 @@ enum TaskStatus {
   AWAITINGINPUT
   AWAITINGASSETS
   AWAITINGFEEDBACK
+  INPROGRESS
   COMPLETED
   CLOSED
   CANCELLED
@@ -1743,6 +1768,7 @@ input TaskUpdateInput {
   assignedTo: UserUpdateOneWithoutTasksAssignedToInput
   title: String
   description: String
+  richText: String
   assets: AssetUpdateManyInput
   taskList: TaskListUpdateOneRequiredWithoutTasksInput
   comments: CommentUpdateManyWithoutTaskInput
@@ -1757,6 +1783,7 @@ input TaskUpdateInput {
 input TaskUpdateManyDataInput {
   title: String
   description: String
+  richText: String
   dueDate: DateTime
   due: TaskDue
   status: TaskStatus
@@ -1766,6 +1793,7 @@ input TaskUpdateManyDataInput {
 input TaskUpdateManyMutationInput {
   title: String
   description: String
+  richText: String
   dueDate: DateTime
   due: TaskDue
   status: TaskStatus
@@ -1836,6 +1864,7 @@ input TaskUpdateWithoutAssignedToDataInput {
   createdBy: UserUpdateOneRequiredWithoutTasksCreatedInput
   title: String
   description: String
+  richText: String
   assets: AssetUpdateManyInput
   taskList: TaskListUpdateOneRequiredWithoutTasksInput
   comments: CommentUpdateManyWithoutTaskInput
@@ -1852,6 +1881,7 @@ input TaskUpdateWithoutCommentsDataInput {
   assignedTo: UserUpdateOneWithoutTasksAssignedToInput
   title: String
   description: String
+  richText: String
   assets: AssetUpdateManyInput
   taskList: TaskListUpdateOneRequiredWithoutTasksInput
   dueDate: DateTime
@@ -1866,6 +1896,7 @@ input TaskUpdateWithoutCreatedByDataInput {
   assignedTo: UserUpdateOneWithoutTasksAssignedToInput
   title: String
   description: String
+  richText: String
   assets: AssetUpdateManyInput
   taskList: TaskListUpdateOneRequiredWithoutTasksInput
   comments: CommentUpdateManyWithoutTaskInput
@@ -1882,6 +1913,7 @@ input TaskUpdateWithoutSubscribedUsersDataInput {
   assignedTo: UserUpdateOneWithoutTasksAssignedToInput
   title: String
   description: String
+  richText: String
   assets: AssetUpdateManyInput
   taskList: TaskListUpdateOneRequiredWithoutTasksInput
   comments: CommentUpdateManyWithoutTaskInput
@@ -1897,6 +1929,7 @@ input TaskUpdateWithoutTaskListDataInput {
   assignedTo: UserUpdateOneWithoutTasksAssignedToInput
   title: String
   description: String
+  richText: String
   assets: AssetUpdateManyInput
   comments: CommentUpdateManyWithoutTaskInput
   dueDate: DateTime
@@ -2001,6 +2034,20 @@ input TaskWhereInput {
   description_not_starts_with: String
   description_ends_with: String
   description_not_ends_with: String
+  richText: String
+  richText_not: String
+  richText_in: [String!]
+  richText_not_in: [String!]
+  richText_lt: String
+  richText_lte: String
+  richText_gt: String
+  richText_gte: String
+  richText_contains: String
+  richText_not_contains: String
+  richText_starts_with: String
+  richText_not_starts_with: String
+  richText_ends_with: String
+  richText_not_ends_with: String
   assets_every: AssetWhereInput
   assets_some: AssetWhereInput
   assets_none: AssetWhereInput

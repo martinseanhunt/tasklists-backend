@@ -13,7 +13,7 @@ module.exports = {
     if(!userId) return []
 
     const user = await ctx.prisma.user({ id: userId })
-    if(!user || (user.role !== 'ADMIN' && user.role !== 'SUPERADMIN')) return []
+    if(!user) return []
 
     return ctx.prisma.users()
   },

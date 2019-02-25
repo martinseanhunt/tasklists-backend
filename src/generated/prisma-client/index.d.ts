@@ -355,6 +355,7 @@ export type TaskStatus =
   | "AWAITINGINPUT"
   | "AWAITINGASSETS"
   | "AWAITINGFEEDBACK"
+  | "INPROGRESS"
   | "COMPLETED"
   | "CLOSED"
   | "CANCELLED";
@@ -368,6 +369,8 @@ export type TaskOrderByInput =
   | "title_DESC"
   | "description_ASC"
   | "description_DESC"
+  | "richText_ASC"
+  | "richText_DESC"
   | "dueDate_ASC"
   | "dueDate_DESC"
   | "due_ASC"
@@ -528,6 +531,20 @@ export interface TaskWhereInput {
   description_not_starts_with?: String;
   description_ends_with?: String;
   description_not_ends_with?: String;
+  richText?: String;
+  richText_not?: String;
+  richText_in?: String[] | String;
+  richText_not_in?: String[] | String;
+  richText_lt?: String;
+  richText_lte?: String;
+  richText_gt?: String;
+  richText_gte?: String;
+  richText_contains?: String;
+  richText_not_contains?: String;
+  richText_starts_with?: String;
+  richText_not_starts_with?: String;
+  richText_ends_with?: String;
+  richText_not_ends_with?: String;
   assets_every?: AssetWhereInput;
   assets_some?: AssetWhereInput;
   assets_none?: AssetWhereInput;
@@ -1101,6 +1118,7 @@ export interface TaskCreateWithoutCreatedByInput {
   assignedTo?: UserCreateOneWithoutTasksAssignedToInput;
   title: String;
   description: String;
+  richText?: String;
   assets?: AssetCreateManyInput;
   taskList: TaskListCreateOneWithoutTasksInput;
   comments?: CommentCreateManyWithoutTaskInput;
@@ -1164,6 +1182,7 @@ export interface TaskCreateWithoutCommentsInput {
   assignedTo?: UserCreateOneWithoutTasksAssignedToInput;
   title: String;
   description: String;
+  richText?: String;
   assets?: AssetCreateManyInput;
   taskList: TaskListCreateOneWithoutTasksInput;
   dueDate?: DateTimeInput;
@@ -1208,6 +1227,7 @@ export interface TaskCreateWithoutAssignedToInput {
   createdBy: UserCreateOneWithoutTasksCreatedInput;
   title: String;
   description: String;
+  richText?: String;
   assets?: AssetCreateManyInput;
   taskList: TaskListCreateOneWithoutTasksInput;
   comments?: CommentCreateManyWithoutTaskInput;
@@ -1291,6 +1311,7 @@ export interface TaskCreateWithoutSubscribedUsersInput {
   assignedTo?: UserCreateOneWithoutTasksAssignedToInput;
   title: String;
   description: String;
+  richText?: String;
   assets?: AssetCreateManyInput;
   taskList: TaskListCreateOneWithoutTasksInput;
   comments?: CommentCreateManyWithoutTaskInput;
@@ -1347,6 +1368,7 @@ export interface TaskCreateWithoutTaskListInput {
   assignedTo?: UserCreateOneWithoutTasksAssignedToInput;
   title: String;
   description: String;
+  richText?: String;
   assets?: AssetCreateManyInput;
   comments?: CommentCreateManyWithoutTaskInput;
   dueDate?: DateTimeInput;
@@ -1479,6 +1501,7 @@ export interface TaskUpdateWithoutCreatedByDataInput {
   assignedTo?: UserUpdateOneWithoutTasksAssignedToInput;
   title?: String;
   description?: String;
+  richText?: String;
   assets?: AssetUpdateManyInput;
   taskList?: TaskListUpdateOneRequiredWithoutTasksInput;
   comments?: CommentUpdateManyWithoutTaskInput;
@@ -1668,6 +1691,7 @@ export interface TaskUpdateWithoutCommentsDataInput {
   assignedTo?: UserUpdateOneWithoutTasksAssignedToInput;
   title?: String;
   description?: String;
+  richText?: String;
   assets?: AssetUpdateManyInput;
   taskList?: TaskListUpdateOneRequiredWithoutTasksInput;
   dueDate?: DateTimeInput;
@@ -1732,6 +1756,7 @@ export interface TaskUpdateWithoutAssignedToDataInput {
   createdBy?: UserUpdateOneRequiredWithoutTasksCreatedInput;
   title?: String;
   description?: String;
+  richText?: String;
   assets?: AssetUpdateManyInput;
   taskList?: TaskListUpdateOneRequiredWithoutTasksInput;
   comments?: CommentUpdateManyWithoutTaskInput;
@@ -1932,6 +1957,7 @@ export interface TaskUpdateWithoutSubscribedUsersDataInput {
   assignedTo?: UserUpdateOneWithoutTasksAssignedToInput;
   title?: String;
   description?: String;
+  richText?: String;
   assets?: AssetUpdateManyInput;
   taskList?: TaskListUpdateOneRequiredWithoutTasksInput;
   comments?: CommentUpdateManyWithoutTaskInput;
@@ -2030,6 +2056,7 @@ export interface TaskUpdateWithoutTaskListDataInput {
   assignedTo?: UserUpdateOneWithoutTasksAssignedToInput;
   title?: String;
   description?: String;
+  richText?: String;
   assets?: AssetUpdateManyInput;
   comments?: CommentUpdateManyWithoutTaskInput;
   dueDate?: DateTimeInput;
@@ -2396,6 +2423,20 @@ export interface TaskScalarWhereInput {
   description_not_starts_with?: String;
   description_ends_with?: String;
   description_not_ends_with?: String;
+  richText?: String;
+  richText_not?: String;
+  richText_in?: String[] | String;
+  richText_not_in?: String[] | String;
+  richText_lt?: String;
+  richText_lte?: String;
+  richText_gt?: String;
+  richText_gte?: String;
+  richText_contains?: String;
+  richText_not_contains?: String;
+  richText_starts_with?: String;
+  richText_not_starts_with?: String;
+  richText_ends_with?: String;
+  richText_not_ends_with?: String;
   dueDate?: DateTimeInput;
   dueDate_not?: DateTimeInput;
   dueDate_in?: DateTimeInput[] | DateTimeInput;
@@ -2445,6 +2486,7 @@ export interface TaskUpdateManyWithWhereNestedInput {
 export interface TaskUpdateManyDataInput {
   title?: String;
   description?: String;
+  richText?: String;
   dueDate?: DateTimeInput;
   due?: TaskDue;
   status?: TaskStatus;
@@ -2676,6 +2718,7 @@ export interface TaskCreateInput {
   assignedTo?: UserCreateOneWithoutTasksAssignedToInput;
   title: String;
   description: String;
+  richText?: String;
   assets?: AssetCreateManyInput;
   taskList: TaskListCreateOneWithoutTasksInput;
   comments?: CommentCreateManyWithoutTaskInput;
@@ -2692,6 +2735,7 @@ export interface TaskUpdateInput {
   assignedTo?: UserUpdateOneWithoutTasksAssignedToInput;
   title?: String;
   description?: String;
+  richText?: String;
   assets?: AssetUpdateManyInput;
   taskList?: TaskListUpdateOneRequiredWithoutTasksInput;
   comments?: CommentUpdateManyWithoutTaskInput;
@@ -2706,6 +2750,7 @@ export interface TaskUpdateInput {
 export interface TaskUpdateManyMutationInput {
   title?: String;
   description?: String;
+  richText?: String;
   dueDate?: DateTimeInput;
   due?: TaskDue;
   status?: TaskStatus;
@@ -3037,6 +3082,7 @@ export interface Task {
   id: ID_Output;
   title: String;
   description: String;
+  richText?: String;
   dueDate?: DateTimeOutput;
   due?: TaskDue;
   createdAt: DateTimeOutput;
@@ -3051,6 +3097,7 @@ export interface TaskPromise extends Promise<Task>, Fragmentable {
   assignedTo: <T = UserPromise>() => T;
   title: () => Promise<String>;
   description: () => Promise<String>;
+  richText: () => Promise<String>;
   assets: <T = FragmentableArray<Asset>>(args?: {
     where?: AssetWhereInput;
     orderBy?: AssetOrderByInput;
@@ -3104,6 +3151,7 @@ export interface TaskSubscription
   assignedTo: <T = UserSubscription>() => T;
   title: () => Promise<AsyncIterator<String>>;
   description: () => Promise<AsyncIterator<String>>;
+  richText: () => Promise<AsyncIterator<String>>;
   assets: <T = Promise<AsyncIterator<AssetSubscription>>>(args?: {
     where?: AssetWhereInput;
     orderBy?: AssetOrderByInput;
@@ -3930,6 +3978,7 @@ export interface TaskPreviousValues {
   id: ID_Output;
   title: String;
   description: String;
+  richText?: String;
   dueDate?: DateTimeOutput;
   due?: TaskDue;
   createdAt: DateTimeOutput;
@@ -3944,6 +3993,7 @@ export interface TaskPreviousValuesPromise
   id: () => Promise<ID_Output>;
   title: () => Promise<String>;
   description: () => Promise<String>;
+  richText: () => Promise<String>;
   dueDate: () => Promise<DateTimeOutput>;
   due: () => Promise<TaskDue>;
   createdAt: () => Promise<DateTimeOutput>;
@@ -3958,6 +4008,7 @@ export interface TaskPreviousValuesSubscription
   id: () => Promise<AsyncIterator<ID_Output>>;
   title: () => Promise<AsyncIterator<String>>;
   description: () => Promise<AsyncIterator<String>>;
+  richText: () => Promise<AsyncIterator<String>>;
   dueDate: () => Promise<AsyncIterator<DateTimeOutput>>;
   due: () => Promise<AsyncIterator<TaskDue>>;
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;

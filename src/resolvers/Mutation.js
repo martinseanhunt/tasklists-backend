@@ -209,15 +209,45 @@ module.exports = {
 
     const task = await ctx.prisma.createTask(taskData)
 
-    console.log(args.assignedTo)
+    // Create array of mentioned users to notify
+    let usersToNotify = []
+    if(args.richText) {
+      const richText = JSON.parse(args.richText)
+      const { entityMap } = richText
+      Object.keys(entityMap).forEach(key => 
+        entityMap[key].type === "mention"
+          ? usersToNotify.push(entityMap[key].data.mention)
+          : null
+      )
+    }
+    
+    // If there are users in the notify array, 
+    // filter out duplicates then send them slack messages
+    // Only try to send these if there's a rich text description
+    if(usersToNotify.length && task.richText) {
+      const notifiedUsers = await Promise.all(Array.from(new Set(usersToNotify))
+        .map(async userToNotify => {
+          sendSlackDM(userToNotify.slackHandle, `👋 <@${user.slackHandle}> mentioned you in the task \`${task.title}\`. \n \n *${user.name} wrote:* \n \`\`\`${task.description}\`\`\` \n You've been automatically subscribed to this task so you'll recieve notifications for all activity. Click here to view the task, respond or change your subscription preferences ${process.env.FRONTEND_URL}/task/${task.id} \r \n`)
+
+          return userToNotify.id
+        }))
+
+      // Now subscribe these users to the task
+      notifiedUsers.length && notifiedUsers.forEach(async (notifiedUserId) => {
+        const res = await ctx.prisma.updateTask({ 
+          where: { id: task.id },
+          data: {
+            subscribedUsers: { connect: { id: notifiedUserId } }
+          }
+         })
+      })
+    }
 
     if (args.assignedTo) {
       // Send slack message to assignee
       const assignedUser = await ctx.prisma.user({ id: args.assignedTo })
-      console.log(assignedUser)
 
       sendSlackDM(assignedUser.slackHandle, `👋 *Assigned to new task* \n \n <@${user.slackHandle}> created a new task assigned to you \`${task.title}\` \n \n Click here to view the task ${process.env.FRONTEND_URL}/task/${task.id} \r \n`)
-      console.log('sent')
     }
     
     return task

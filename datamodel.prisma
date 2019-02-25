@@ -37,6 +37,7 @@ type Task {
   assignedTo: User @relation(name: "TaskAssignedToUser")
   title: String!
   description: String!
+  richText: String
   assets: [Asset!]!
   taskList: TaskList!
   comments: [Comment!]!
