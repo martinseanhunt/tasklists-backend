@@ -292,6 +292,7 @@ type BatchPayload {
 type Comment {
   id: ID!
   comment: String!
+  richText: String
   createdBy: User!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -308,6 +309,7 @@ type CommentConnection {
 
 input CommentCreateInput {
   comment: String!
+  richText: String
   createdBy: UserCreateOneWithoutCommentsCreatedInput!
   assets: AssetCreateManyInput
   task: TaskCreateOneWithoutCommentsInput!
@@ -331,6 +333,7 @@ input CommentCreateManyWithoutTaskInput {
 
 input CommentCreateWithoutCreatedByInput {
   comment: String!
+  richText: String
   assets: AssetCreateManyInput
   task: TaskCreateOneWithoutCommentsInput!
   mentions: UserCreateManyWithoutMentionsInput
@@ -338,6 +341,7 @@ input CommentCreateWithoutCreatedByInput {
 
 input CommentCreateWithoutMentionsInput {
   comment: String!
+  richText: String
   createdBy: UserCreateOneWithoutCommentsCreatedInput!
   assets: AssetCreateManyInput
   task: TaskCreateOneWithoutCommentsInput!
@@ -345,6 +349,7 @@ input CommentCreateWithoutMentionsInput {
 
 input CommentCreateWithoutTaskInput {
   comment: String!
+  richText: String
   createdBy: UserCreateOneWithoutCommentsCreatedInput!
   assets: AssetCreateManyInput
   mentions: UserCreateManyWithoutMentionsInput
@@ -360,6 +365,8 @@ enum CommentOrderByInput {
   id_DESC
   comment_ASC
   comment_DESC
+  richText_ASC
+  richText_DESC
   createdAt_ASC
   createdAt_DESC
   updatedAt_ASC
@@ -369,6 +376,7 @@ enum CommentOrderByInput {
 type CommentPreviousValues {
   id: ID!
   comment: String!
+  richText: String
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -402,6 +410,20 @@ input CommentScalarWhereInput {
   comment_not_starts_with: String
   comment_ends_with: String
   comment_not_ends_with: String
+  richText: String
+  richText_not: String
+  richText_in: [String!]
+  richText_not_in: [String!]
+  richText_lt: String
+  richText_lte: String
+  richText_gt: String
+  richText_gte: String
+  richText_contains: String
+  richText_not_contains: String
+  richText_starts_with: String
+  richText_not_starts_with: String
+  richText_ends_with: String
+  richText_not_ends_with: String
   createdAt: DateTime
   createdAt_not: DateTime
   createdAt_in: [DateTime!]
@@ -443,6 +465,7 @@ input CommentSubscriptionWhereInput {
 
 input CommentUpdateInput {
   comment: String
+  richText: String
   createdBy: UserUpdateOneRequiredWithoutCommentsCreatedInput
   assets: AssetUpdateManyInput
   task: TaskUpdateOneRequiredWithoutCommentsInput
@@ -451,10 +474,12 @@ input CommentUpdateInput {
 
 input CommentUpdateManyDataInput {
   comment: String
+  richText: String
 }
 
 input CommentUpdateManyMutationInput {
   comment: String
+  richText: String
 }
 
 input CommentUpdateManyWithoutCreatedByInput {
@@ -500,6 +525,7 @@ input CommentUpdateManyWithWhereNestedInput {
 
 input CommentUpdateWithoutCreatedByDataInput {
   comment: String
+  richText: String
   assets: AssetUpdateManyInput
   task: TaskUpdateOneRequiredWithoutCommentsInput
   mentions: UserUpdateManyWithoutMentionsInput
@@ -507,6 +533,7 @@ input CommentUpdateWithoutCreatedByDataInput {
 
 input CommentUpdateWithoutMentionsDataInput {
   comment: String
+  richText: String
   createdBy: UserUpdateOneRequiredWithoutCommentsCreatedInput
   assets: AssetUpdateManyInput
   task: TaskUpdateOneRequiredWithoutCommentsInput
@@ -514,6 +541,7 @@ input CommentUpdateWithoutMentionsDataInput {
 
 input CommentUpdateWithoutTaskDataInput {
   comment: String
+  richText: String
   createdBy: UserUpdateOneRequiredWithoutCommentsCreatedInput
   assets: AssetUpdateManyInput
   mentions: UserUpdateManyWithoutMentionsInput
@@ -581,6 +609,20 @@ input CommentWhereInput {
   comment_not_starts_with: String
   comment_ends_with: String
   comment_not_ends_with: String
+  richText: String
+  richText_not: String
+  richText_in: [String!]
+  richText_not_in: [String!]
+  richText_lt: String
+  richText_lte: String
+  richText_gt: String
+  richText_gte: String
+  richText_contains: String
+  richText_not_contains: String
+  richText_starts_with: String
+  richText_not_starts_with: String
+  richText_ends_with: String
+  richText_not_ends_with: String
   createdBy: UserWhereInput
   createdAt: DateTime
   createdAt_not: DateTime

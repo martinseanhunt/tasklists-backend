@@ -328,45 +328,44 @@ module.exports = {
     
     // TODO refactor this. These slack sending blocks should be in their own functions
 
-    // Filter out dupliates - users mentioned more than once
-    const usersToNotify = Array.from(new Set(args.notify))
+    // Create array of mentioned users to notify
+    let usersToNotify = []
+    if(args.richText) {
+      const richText = JSON.parse(args.richText)
+      const { entityMap } = richText
+      Object.keys(entityMap).forEach(key => 
+        entityMap[key].type === "mention"
+          ? usersToNotify.push(entityMap[key].data.mention)
+          : null
+      )
+    }
+    
+    // If there are users in the notify array, 
+    // filter out duplicates then send them slack messages
+    // Only try to send these if there's a rich text description
+    // Store results of who we've notified in notified variable so we don't
+    // Send out double notifications with the subscribed users
+    let notifiedUsers = []
+    
+    if(usersToNotify.length && args.richText) {
+      notifiedUsers = await Promise.all(Array.from(new Set(usersToNotify))
+        .map(async userToNotify => {
+          sendSlackDM(userToNotify.slackHandle, `👋 <@${user.slackHandle}> mentioned you in a discussion the task \`${task.title}\`. \n \n *${user.name} wrote:* \n \`\`\`${args.comment}\`\`\` \n Click here to view the task and respond ${process.env.FRONTEND_URL}/task/${args.task} \r \n`)
 
-    // TODO refactor this in to it's own helper funciton
+          return userToNotify.id
+        }))
 
-    // TODO this will probably break if the user uses @ outside the context of a mention... test / Fix!
-
-    // Format comment to replace @mentions with markup to display.
-    // TODO this is absolutely horrible. I need to learn more about regexp to make this better ;) 
-
-    const regexp = /\[(.*?)\]/g
-    let matches = []
-    let match = regexp.exec(args.comment)
-
-    while (match != null) {
-      matches = [...matches, match[1]]
-      match = regexp.exec(args.comment)
+      // Now subscribe these users to the task
+      notifiedUsers.length && notifiedUsers.forEach(async (notifiedUserId) => {
+        const res = await ctx.prisma.updateTask({ 
+          where: { id: task.id },
+          data: {
+            subscribedUsers: { connect: { id: notifiedUserId } }
+          }
+         })
+      })
     }
 
-    let formattedComment = args.comment
-    let slackFormattedComment = args.comment
-
-    matches.forEach((m, i) => {
-      formattedComment = formattedComment.replace(/\@(.*?)\)/, `<span class="mention">${matches[i]}</span>`)
-      slackFormattedComment = slackFormattedComment.replace(/\@(.*?)\)/, `@${matches[i]}`)
-    })
-
-    // Send slack message to all mentioned users
-    const notified = usersToNotify.length 
-      ? await Promise.all(usersToNotify.map(async uid => {
-        const notifyUser = await ctx.prisma.user({ id: uid })
-        if(!notifyUser) console.error('No user found')
-
-        sendSlackDM(notifyUser.slackHandle, `👋 <@${user.slackHandle}> mentioned you in a discussion the task \`${task.title}\`. \n \n *${user.name} wrote:* \n \`\`\`${slackFormattedComment}\`\`\` \n Click here to view the task and respond ${process.env.FRONTEND_URL}/task/${args.task} \r \n`)
-
-        return uid
-      }))
-      : []
-  
     // TODO different messages if you are the task creator or asignee
 
     // Send slack message to all users subscribed to Task as long as the user hasn't
@@ -374,16 +373,17 @@ module.exports = {
     const subscribedUsers = await ctx.prisma.task({ id: args.task }).subscribedUsers()
     if(subscribedUsers.length) {
       subscribedUsers.forEach(subscribedUser => {
-        if(notified.includes(subscribedUser.id)) return true
+        if(notifiedUsers.includes(subscribedUser.id)) return true
 
-        sendSlackDM(subscribedUser.slackHandle, `👋 <@${user.slackHandle}> commented on the task \`${task.title}\` that you are subscribed to. \n \n *${user.name} wrote:* \n \`\`\`${slackFormattedComment}\`\`\` \n Click here to view the task ${process.env.FRONTEND_URL}/task/${args.task} \r \n`)
+        sendSlackDM(subscribedUser.slackHandle, `👋 <@${user.slackHandle}> commented on the task \`${task.title}\` that you are subscribed to. \n \n *${user.name} wrote:* \n \`\`\`${args.comment}\`\`\` \n Click here to view the task ${process.env.FRONTEND_URL}/task/${args.task} \r \n`)
       })
     }
 
     // TODO want to send email here or keep to slack for now ?
 
     const comment = {
-      comment: formattedComment,
+      comment: args.comment,
+      richText: args.richText,
       task: {
         connect: {
           id: args.task
@@ -395,7 +395,7 @@ module.exports = {
         }
       },
       mentions: {
-        connect: args.notify.map(u => ({ id: u }))
+        connect: usersToNotify.map(u => ({ id: u.id }))
       }
     }
 

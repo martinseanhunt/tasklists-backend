@@ -415,6 +415,8 @@ export type CommentOrderByInput =
   | "id_DESC"
   | "comment_ASC"
   | "comment_DESC"
+  | "richText_ASC"
+  | "richText_DESC"
   | "createdAt_ASC"
   | "createdAt_DESC"
   | "updatedAt_ASC"
@@ -785,6 +787,20 @@ export interface CommentWhereInput {
   comment_not_starts_with?: String;
   comment_ends_with?: String;
   comment_not_ends_with?: String;
+  richText?: String;
+  richText_not?: String;
+  richText_in?: String[] | String;
+  richText_not_in?: String[] | String;
+  richText_lt?: String;
+  richText_lte?: String;
+  richText_gt?: String;
+  richText_gte?: String;
+  richText_contains?: String;
+  richText_not_contains?: String;
+  richText_starts_with?: String;
+  richText_not_starts_with?: String;
+  richText_ends_with?: String;
+  richText_not_ends_with?: String;
   createdBy?: UserWhereInput;
   createdAt?: DateTimeInput;
   createdAt_not?: DateTimeInput;
@@ -1162,6 +1178,7 @@ export interface CommentCreateManyWithoutCreatedByInput {
 
 export interface CommentCreateWithoutCreatedByInput {
   comment: String;
+  richText?: String;
   assets?: AssetCreateManyInput;
   task: TaskCreateOneWithoutCommentsInput;
   mentions?: UserCreateManyWithoutMentionsInput;
@@ -1271,6 +1288,7 @@ export interface CommentCreateManyWithoutTaskInput {
 
 export interface CommentCreateWithoutTaskInput {
   comment: String;
+  richText?: String;
   createdBy: UserCreateOneWithoutCommentsCreatedInput;
   assets?: AssetCreateManyInput;
   mentions?: UserCreateManyWithoutMentionsInput;
@@ -1413,6 +1431,7 @@ export interface CommentCreateManyWithoutMentionsInput {
 
 export interface CommentCreateWithoutMentionsInput {
   comment: String;
+  richText?: String;
   createdBy: UserCreateOneWithoutCommentsCreatedInput;
   assets?: AssetCreateManyInput;
   task: TaskCreateOneWithoutCommentsInput;
@@ -1567,6 +1586,7 @@ export interface CommentUpdateWithWhereUniqueWithoutCreatedByInput {
 
 export interface CommentUpdateWithoutCreatedByDataInput {
   comment?: String;
+  richText?: String;
   assets?: AssetUpdateManyInput;
   task?: TaskUpdateOneRequiredWithoutCommentsInput;
   mentions?: UserUpdateManyWithoutMentionsInput;
@@ -1897,6 +1917,7 @@ export interface CommentUpdateWithWhereUniqueWithoutTaskInput {
 
 export interface CommentUpdateWithoutTaskDataInput {
   comment?: String;
+  richText?: String;
   createdBy?: UserUpdateOneRequiredWithoutCommentsCreatedInput;
   assets?: AssetUpdateManyInput;
   mentions?: UserUpdateManyWithoutMentionsInput;
@@ -2137,6 +2158,7 @@ export interface CommentUpdateWithWhereUniqueWithoutMentionsInput {
 
 export interface CommentUpdateWithoutMentionsDataInput {
   comment?: String;
+  richText?: String;
   createdBy?: UserUpdateOneRequiredWithoutCommentsCreatedInput;
   assets?: AssetUpdateManyInput;
   task?: TaskUpdateOneRequiredWithoutCommentsInput;
@@ -2177,6 +2199,20 @@ export interface CommentScalarWhereInput {
   comment_not_starts_with?: String;
   comment_ends_with?: String;
   comment_not_ends_with?: String;
+  richText?: String;
+  richText_not?: String;
+  richText_in?: String[] | String;
+  richText_not_in?: String[] | String;
+  richText_lt?: String;
+  richText_lte?: String;
+  richText_gt?: String;
+  richText_gte?: String;
+  richText_contains?: String;
+  richText_not_contains?: String;
+  richText_starts_with?: String;
+  richText_not_starts_with?: String;
+  richText_ends_with?: String;
+  richText_not_ends_with?: String;
   createdAt?: DateTimeInput;
   createdAt_not?: DateTimeInput;
   createdAt_in?: DateTimeInput[] | DateTimeInput;
@@ -2205,6 +2241,7 @@ export interface CommentUpdateManyWithWhereNestedInput {
 
 export interface CommentUpdateManyDataInput {
   comment?: String;
+  richText?: String;
 }
 
 export interface UserUpsertWithWhereUniqueWithoutSubscribedTasksInput {
@@ -2682,6 +2719,7 @@ export interface AssetUpdateManyMutationInput {
 
 export interface CommentCreateInput {
   comment: String;
+  richText?: String;
   createdBy: UserCreateOneWithoutCommentsCreatedInput;
   assets?: AssetCreateManyInput;
   task: TaskCreateOneWithoutCommentsInput;
@@ -2690,6 +2728,7 @@ export interface CommentCreateInput {
 
 export interface CommentUpdateInput {
   comment?: String;
+  richText?: String;
   createdBy?: UserUpdateOneRequiredWithoutCommentsCreatedInput;
   assets?: AssetUpdateManyInput;
   task?: TaskUpdateOneRequiredWithoutCommentsInput;
@@ -2698,6 +2737,7 @@ export interface CommentUpdateInput {
 
 export interface CommentUpdateManyMutationInput {
   comment?: String;
+  richText?: String;
 }
 
 export interface CustomFieldUpdateInput {
@@ -3288,6 +3328,7 @@ export interface TaskListFieldSubscription
 export interface Comment {
   id: ID_Output;
   comment: String;
+  richText?: String;
   createdAt: DateTimeOutput;
   updatedAt: DateTimeOutput;
 }
@@ -3295,6 +3336,7 @@ export interface Comment {
 export interface CommentPromise extends Promise<Comment>, Fragmentable {
   id: () => Promise<ID_Output>;
   comment: () => Promise<String>;
+  richText: () => Promise<String>;
   createdBy: <T = UserPromise>() => T;
   createdAt: () => Promise<DateTimeOutput>;
   updatedAt: () => Promise<DateTimeOutput>;
@@ -3324,6 +3366,7 @@ export interface CommentSubscription
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
   comment: () => Promise<AsyncIterator<String>>;
+  richText: () => Promise<AsyncIterator<String>>;
   createdBy: <T = UserSubscription>() => T;
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
@@ -3877,6 +3920,7 @@ export interface CommentSubscriptionPayloadSubscription
 export interface CommentPreviousValues {
   id: ID_Output;
   comment: String;
+  richText?: String;
   createdAt: DateTimeOutput;
   updatedAt: DateTimeOutput;
 }
@@ -3886,6 +3930,7 @@ export interface CommentPreviousValuesPromise
     Fragmentable {
   id: () => Promise<ID_Output>;
   comment: () => Promise<String>;
+  richText: () => Promise<String>;
   createdAt: () => Promise<DateTimeOutput>;
   updatedAt: () => Promise<DateTimeOutput>;
 }
@@ -3895,6 +3940,7 @@ export interface CommentPreviousValuesSubscription
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
   comment: () => Promise<AsyncIterator<String>>;
+  richText: () => Promise<AsyncIterator<String>>;
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
 }

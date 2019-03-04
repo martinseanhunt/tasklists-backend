@@ -114,6 +114,7 @@ type TaskListField {
 type Comment {
   id: ID! @unique
   comment: String!
+  richText: String
   createdBy: User! @relation(name: "CommentCreatedByUser")
   createdAt: DateTime!
   updatedAt: DateTime!

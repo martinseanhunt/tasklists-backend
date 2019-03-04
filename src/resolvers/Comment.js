@@ -3,6 +3,7 @@
 const Comment = {
   id: parent => parent.id,
   comment: parent => parent.comment,
+  richText: parent => parent.richText,
   createdAt: parent => parent.createdAt,
   updatedAt: parent => parent.updatedAt,
   createdBy: (parent, args, ctx) => 

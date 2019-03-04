@@ -4,6 +4,7 @@ const Task = {
   id: parent => parent.id,
   title: parent => parent.title,
   description: parent => parent.description,
+  richText: parent => parent.richText,
   dueDate: parent => parent.dueDate,
   due: parent => parent.due,
   createdAt: parent => parent.createdAt,
