@@ -5,15 +5,31 @@ var typeDefs = require("./prisma-schema").typeDefs;
 
 var models = [
   {
-    name: "Asset",
+    name: "User",
     embedded: false
   },
   {
-    name: "AssetType",
+    name: "Role",
     embedded: false
   },
   {
-    name: "Comment",
+    name: "UserStatus",
+    embedded: false
+  },
+  {
+    name: "Task",
+    embedded: false
+  },
+  {
+    name: "TaskStatus",
+    embedded: false
+  },
+  {
+    name: "TaskDue",
+    embedded: false
+  },
+  {
+    name: "TaskPriority",
     embedded: false
   },
   {
@@ -25,18 +41,6 @@ var models = [
     embedded: false
   },
   {
-    name: "Role",
-    embedded: false
-  },
-  {
-    name: "Task",
-    embedded: false
-  },
-  {
-    name: "TaskDue",
-    embedded: false
-  },
-  {
     name: "TaskList",
     embedded: false
   },
@@ -45,19 +49,15 @@ var models = [
     embedded: false
   },
   {
-    name: "TaskPriority",
+    name: "Comment",
     embedded: false
   },
   {
-    name: "TaskStatus",
+    name: "Asset",
     embedded: false
   },
   {
-    name: "User",
-    embedded: false
-  },
-  {
-    name: "UserStatus",
+    name: "AssetType",
     embedded: false
   }
 ];
