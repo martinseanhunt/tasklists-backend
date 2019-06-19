@@ -45,6 +45,20 @@ type Mutation {
     priority: TaskPriority
   ): Task
 
+  editTask(
+    id: ID!
+    title: String!
+    description: String!
+    richText: String
+    due: TaskDue
+    dueDate: String
+    assignedTo: String
+    customFields: [CreateRelatedCustomField]
+    taskList: String!
+    assets: [CreateRelatedAsset]
+    priority: TaskPriority
+  ): Task
+
   signUp(token: String!, password: String!, avatar: String): User
   
   signIn(email: String!, password: String!): User
@@ -109,4 +123,5 @@ input CreateRelatedAsset {
   assetUrl: String!
   assetType: AssetType!
   title: String!
+  id: ID
 }

@@ -253,6 +253,109 @@ module.exports = {
     return task
   },
 
+  async editTask(root, args, ctx) {
+    const { userId } = ctx.request
+    if(!userId) throw new Error('You must be logged in to do this')
+
+    const user = await ctx.prisma.user({ id: userId })
+    if(!user) throw new Error('You must be logged in to do this')
+
+    const task = await ctx.prisma.task({ id: args.id })
+    if(!task) throw new Error('The task could not be found')
+
+    let assignedTo = await ctx.prisma.task({ id: args.id }).assignedTo()
+    
+    if(assignedTo) assignedTo = assignedTo.id
+
+    if(user.role !== 'SUPERADMIN' && task.createdBy.id !== user.id)
+      throw new Error('You do not have permission to edit this task')
+
+    // TODO Validation
+
+    // TODO refactor for clarity
+
+    const taskData = {
+      ...args,
+      taskList: {
+        connect: {
+          slug: args.taskList
+        }
+      },
+      customFields: task.customFields,
+      assignedTo: args.assignedTo && args.assignedTo !== '' ? {
+        connect: {
+          id: args.assignedTo
+        }
+      } : null,
+      assets: {
+        upsert: args.assets
+          .filter(a => a.assetUrl)
+          .map(a => ({
+            where: {
+              id: a.id || "noID"
+            },
+            update: {
+              assetUrl: a.assetUrl,
+              assetType: a.assetType,
+              title: a.title,
+              createdBy: {
+                connect: { id: user.id } 
+              }
+            },
+            create: {
+              assetUrl: a.assetUrl,
+              assetType: a.assetType,
+              title: a.title,
+              createdBy: {
+                connect: { id: user.id } 
+              }
+            }
+          }
+        ))
+      },
+      subscribedUsers: task.subscribedUsers
+    }
+
+    delete taskData.id
+
+    if(args.due === null) {
+      taskData.dueDate = null
+    }
+
+    if(args.assignedTo && args.assignedTo !== '' && args.assignedTo !== assignedTo) {
+      taskData.subscribedUsers = { connect: [
+        { id: args.assignedTo }
+      ] }
+    }
+
+    if(args.assignedTo && args.assignedTo !== '' && task.status === 'CREATED') {
+      taskData.status = 'ASSIGNED'
+    }
+
+    if(!args.assignedTo && task.status === 'ASSIGNED') {
+      taskData.status = 'CREATED'
+    }
+
+    if(!args.assignedTo && assignedTo) {
+      // disconnect assignee if deleted on edit
+      taskData.assignedTo = { disconnect: true }
+    }
+
+    const editedTask = await ctx.prisma.updateTask({
+      data: taskData, 
+      where: { id: args.id }
+    })
+
+    if (args.assignedTo && args.assignedTo !== assignedTo) {
+      // Send slack message to assignee
+      const assignedUser = await ctx.prisma.user({ id: args.assignedTo })
+
+      sendSlackDM(assignedUser.slackHandle, `👋 *Assigned to a task* \n \n <@${user.slackHandle}> assigned you to the task \`${task.title}\` \n \n Click here to view the task ${process.env.FRONTEND_URL}/task/${task.id} \r \n`)
+    }
+    
+    return editedTask
+  },
+
   async updateTaskStatus(root, args, ctx) {
     const { userId } = ctx.request
     if(!userId) throw new Error('You must be logged in to do this')
