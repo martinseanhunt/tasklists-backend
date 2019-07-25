@@ -182,7 +182,7 @@ module.exports = {
       assignedTo: {
         id: userId
       },
-      status_not_in: ['COMPLETED', 'CLOSED']
+      status_not_in: ['COMPLETED', 'CLOSED', 'CANCELLED']
     }
 
     if(args.orderBy && args.orderBy.includes('dueDate')) {
@@ -202,7 +202,7 @@ module.exports = {
     const { request: { userId } } = ctx
     if(!userId) return []
 
-    const where = { status_not_in: ['COMPLETED', 'CLOSED'] }
+    const where = { status_not_in: ['COMPLETED', 'CLOSED', 'CANCELLED'] }
 
     if(args.orderBy && args.orderBy.includes('dueDate')) {
       // If we're sorting by due date ignore results that don't have a due date otherwise
