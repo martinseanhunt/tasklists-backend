@@ -197,7 +197,7 @@ module.exports = {
       ] },
       status: args.assignedTo && args.assignedTo !== '' 
         ? 'ASSIGNED'
-        : 'CREATED' 
+        : 'CREATED',
     }
 
     if(args.assignedTo && args.assignedTo !== '') {
@@ -205,6 +205,10 @@ module.exports = {
         { id: user.id },
         { id: args.assignedTo }
       ] }
+    }
+
+    if(['BYDATE', 'ONDATE'].includes(args.due)) {
+      taskData.priority = null
     }
 
     const task = await ctx.prisma.createTask(taskData)
@@ -339,6 +343,10 @@ module.exports = {
     if(!args.assignedTo && assignedTo) {
       // disconnect assignee if deleted on edit
       taskData.assignedTo = { disconnect: true }
+    }
+
+    if(['BYDATE', 'ONDATE'].includes(args.due)) {
+      taskData.priority = null
     }
 
     const editedTask = await ctx.prisma.updateTask({
