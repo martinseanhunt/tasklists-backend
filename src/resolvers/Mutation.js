@@ -231,6 +231,9 @@ module.exports = {
     if(usersToNotify.length && task.richText) {
       const notifiedUsers = await Promise.all(Array.from(new Set(usersToNotify))
         .map(async userToNotify => {
+          // Don't send to user taking action
+           if(userToNotify.id === user.id) return userToNotify.id
+
           sendSlackDM(userToNotify.slackHandle, `👋 <@${user.slackHandle}> mentioned you in the task \`${task.title}\`. \n \n *${user.name} wrote:* \n \`\`\`${task.description}\`\`\` \n You've been automatically subscribed to this task so you'll recieve notifications for all activity. Click here to view the task, respond or change your subscription preferences ${process.env.FRONTEND_URL}/task/${task.id} \r \n`)
 
           return userToNotify.id
@@ -250,6 +253,8 @@ module.exports = {
     if (args.assignedTo) {
       // Send slack message to assignee
       const assignedUser = await ctx.prisma.user({ id: args.assignedTo })
+      // Don't send to user taking action
+      if(assignedUser.id === user.id) return true
 
       sendSlackDM(assignedUser.slackHandle, `👋 *Assigned to new task* \n \n <@${user.slackHandle}> created a new task assigned to you \`${task.title}\` \n \n Click here to view the task ${process.env.FRONTEND_URL}/task/${task.id} \r \n`)
     }
@@ -357,7 +362,10 @@ module.exports = {
     if (args.assignedTo && args.assignedTo !== assignedTo) {
       // Send slack message to assignee
       const assignedUser = await ctx.prisma.user({ id: args.assignedTo })
-
+      
+      // Don't send to user taking action
+      if(assignedUser.id === user.id) return true
+      
       sendSlackDM(assignedUser.slackHandle, `👋 *Assigned to a task* \n \n <@${user.slackHandle}> assigned you to the task \`${task.title}\` \n \n Click here to view the task ${process.env.FRONTEND_URL}/task/${task.id} \r \n`)
     }
     
@@ -415,7 +423,8 @@ module.exports = {
     const subscribedUsers = await ctx.prisma.task({ id: task.id }).subscribedUsers()
     if(subscribedUsers.length) {
       subscribedUsers.forEach(subscribedUser => {
-        //if(subscribedUser.id === user.id) return true
+        // Don't send to user taking action
+        if(subscribedUser.id === user.id) return true
 
         sendSlackDM(subscribedUser.slackHandle, `👋 *${statusMessage.title}* \n \n <@${user.slackHandle}> ${statusMessage.message} the task \`${task.title}\` that you are subscribed to. \n \n Click here to view the task ${process.env.FRONTEND_URL}/task/${args.task} \r \n`)
       })
@@ -461,6 +470,9 @@ module.exports = {
     if(usersToNotify.length && args.richText) {
       notifiedUsers = await Promise.all(Array.from(new Set(usersToNotify))
         .map(async userToNotify => {
+          // No need to notify the user who's writing the comment!
+          if(userToNotify.id === user.id) return userToNotify.id
+
           sendSlackDM(userToNotify.slackHandle, `👋 <@${user.slackHandle}> mentioned you in a discussion the task \`${task.title}\`. \n \n *${user.name} wrote:* \n \`\`\`${args.comment}\`\`\` \n Click here to view the task and respond ${process.env.FRONTEND_URL}/task/${args.task} \r \n`)
 
           return userToNotify.id
@@ -480,11 +492,11 @@ module.exports = {
     // TODO different messages if you are the task creator or asignee
 
     // Send slack message to all users subscribed to Task as long as the user hasn't
-    // already been notified because of a mentiion
+    // already been notified because of a mentiion. Also don't send to comment author
     const subscribedUsers = await ctx.prisma.task({ id: args.task }).subscribedUsers()
     if(subscribedUsers.length) {
       subscribedUsers.forEach(subscribedUser => {
-        if(notifiedUsers.includes(subscribedUser.id)) return true
+        if(notifiedUsers.includes(subscribedUser.id) || subscribedUser.id === user.id) return true
 
         sendSlackDM(subscribedUser.slackHandle, `👋 <@${user.slackHandle}> commented on the task \`${task.title}\` that you are subscribed to. \n \n *${user.name} wrote:* \n \`\`\`${args.comment}\`\`\` \n Click here to view the task ${process.env.FRONTEND_URL}/task/${args.task} \r \n`)
       })
