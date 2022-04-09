@@ -19,7 +19,7 @@
     "graphql-yoga": "^1.16.7",
     "joi": "^14.0.2",
     "jsonwebtoken": "^8.3.0",
-    "moment": "^2.22.2",
+    "moment": "^2.29.2",
     "node-cron": "^2.0.3",
     "prisma-client-lib": "^1.19.1",
     "slug": "^0.9.2"
